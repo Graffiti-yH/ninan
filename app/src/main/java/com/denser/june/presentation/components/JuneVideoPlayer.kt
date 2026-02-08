@@ -3,6 +3,7 @@
 package com.denser.june.presentation.components
 
 import android.net.Uri
+import android.view.LayoutInflater
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -38,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -58,7 +58,6 @@ fun JuneVideoPlayer(
     isVisible: Boolean,
     onVisibilityChange: (Boolean) -> Unit
 ) {
-    val context = LocalContext.current
     var isPlaying by remember { mutableStateOf(false) }
     var isMuted by remember { mutableStateOf(true) }
     var totalDuration by remember { mutableLongStateOf(0L) }
@@ -104,12 +103,13 @@ fun JuneVideoPlayer(
             }
     ) {
         AndroidView(
-            factory = {
-                PlayerView(context).apply {
-                    useController = false
-                    controllerAutoShow = false
-                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+            factory = { ctx ->
+                val playerView = LayoutInflater.from(ctx)
+                    .inflate(R.layout.custom_player_view, null, false) as PlayerView
+
+                playerView.apply {
                     player = exoPlayer
+                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
                 }
             },
             modifier = Modifier.fillMaxSize()

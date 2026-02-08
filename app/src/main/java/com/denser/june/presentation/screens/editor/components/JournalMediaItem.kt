@@ -1,6 +1,7 @@
 package com.denser.june.presentation.screens.editor.components
 
 import android.net.Uri
+import android.view.LayoutInflater
 import androidx.annotation.OptIn
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -46,7 +47,6 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import coil.ImageLoader
 import coil.compose.AsyncImage
@@ -274,7 +274,6 @@ fun VideoPlayer(
     onTimestampChanged: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val exoPlayer = rememberManagedExoPlayer(
         uri = uri,
         onIsPlayingChanged = onPlayingChanged
@@ -290,12 +289,11 @@ fun VideoPlayer(
     }
 
     AndroidView(
-        factory = {
-            PlayerView(context).apply {
-                useController = false
-                resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                player = exoPlayer
-            }
+        factory = { ctx ->
+            val playerView = LayoutInflater.from(ctx)
+                .inflate(R.layout.custom_player_view, null, false) as PlayerView
+            playerView.player = exoPlayer
+            playerView
         },
         modifier = modifier
     )
