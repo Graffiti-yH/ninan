@@ -43,8 +43,13 @@ interface JournalDao {
             :query IS NULL OR :query = '' OR
             title LIKE '%' || :query || '%' OR 
             content LIKE '%' || :query || '%' OR
-            
-            (
+            id IN (
+                SELECT ref.id 
+                FROM journal_tag_cross_ref ref 
+                INNER JOIN tags t ON ref.tagId = t.tagId 
+                WHERE t.name LIKE '%' || :query || '%'
+            ) OR
+        (
             (CASE strftime('%m', dateTime / 1000, 'unixepoch')
                 WHEN '01' THEN 'January' WHEN '02' THEN 'February' WHEN '03' THEN 'March'
                 WHEN '04' THEN 'April'   WHEN '05' THEN 'May'      WHEN '06' THEN 'June'
@@ -90,6 +95,15 @@ interface JournalDao {
     """)
     fun getJournalsByTagName(tagName: String): Flow<List<JournalEntity>>
 
+    @Transaction
+    @Query("""
+        SELECT j.* FROM journals j
+        INNER JOIN journal_tag_cross_ref ref ON j.id = ref.id
+        INNER JOIN tags t ON ref.tagId = t.tagId
+        WHERE t.name = :tagName
+    """)
+    suspend fun getJournalsByTagNameSync(tagName: String): List<JournalEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTag(tag: TagEntity): Long
 
@@ -107,4 +121,34 @@ interface JournalDao {
 
     @Query("SELECT name FROM tags ORDER BY name ASC")
     fun getAllUniqueTags(): Flow<List<String>>
+
+    @Query("""
+        SELECT t.name, COUNT(ref.id) as count
+        FROM tags t
+        INNER JOIN journal_tag_cross_ref ref ON t.tagId = ref.tagId
+        GROUP BY t.name
+    """)
+    fun getAllTagCounts(): Flow<List<TagCount>>
+
+    @Query("""
+        SELECT j.* FROM journals j
+        INNER JOIN journal_tag_cross_ref ref ON j.id = ref.id
+        INNER JOIN tags t ON ref.tagId = t.tagId
+        WHERE t.name IN (:tags)
+        GROUP BY j.id
+        HAVING COUNT(DISTINCT t.name) = :tagCount
+        ORDER BY j.dateTime DESC
+    """)
+    fun getJournalsWithAllTags(tags: List<String>, tagCount: Int): Flow<List<JournalEntity>>
+
+    @Query("UPDATE tags SET name = :newName WHERE name = :oldName")
+    suspend fun updateTagName(oldName: String, newName: String)
+
+    @Query("DELETE FROM tags WHERE name = :tagName")
+    suspend fun deleteTag(tagName: String)
 }
+
+data class TagCount(
+    val name: String,
+    val count: Int
+)

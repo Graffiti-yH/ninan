@@ -27,4 +27,8 @@ interface JournalRepo {
 
     fun getUniqueTags(): Flow<List<String>>
     fun getTagSuggestions(query: String): Flow<List<String>>
+    fun getTagCounts(): Flow<Map<String, Int>>
+    fun getJournalsByMultipleTags(tags: List<String>): Flow<List<Journal>>
+    suspend fun renameTag(oldName: String, newName: String)
+    suspend fun deleteTag(tagName: String)
 }

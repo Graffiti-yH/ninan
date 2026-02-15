@@ -13,22 +13,26 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.denser.june.R
+import com.denser.june.core.domain.enums.TagCategory
 import com.denser.june.presentation.components.JuneAppBarType
 import com.denser.june.presentation.components.JuneTopAppBar
 import com.denser.june.presentation.utils.UiUtils
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun JournalTagsSheet(
+fun JournalTagsDialog(
     tags: List<String>,
     suggestions: List<String>,
     isEditMode: Boolean,
@@ -125,39 +129,27 @@ fun JournalTagsSheet(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
+                TagCategory.entries.forEach { category ->
+                    val spec = UiUtils.getCategoryUiSpec(category)
+                    val categoryTags = tags.filter { tag ->
+                        when (category) {
+                            TagCategory.People -> tag.startsWith("@")
+                            TagCategory.Themes -> tag.startsWith("#")
+                            TagCategory.Spaces -> !tag.startsWith("@") && !tag.startsWith("#")
+                        }
+                    }
 
-                TagSectionCard(
-                    title = "People",
-                    prefix = "@",
-                    iconRes = R.drawable.person_24px,
-                    tags = tags.filter { it.startsWith("@") },
-                    isEditMode = isEditMode,
-                    onRemove = onRemoveTag,
-                    emptyMessage = "Who was there? (@name)",
-                    tintColor = MaterialTheme.colorScheme.tertiary
-                )
-
-                TagSectionCard(
-                    title = "Themes",
-                    prefix = "#",
-                    iconRes = R.drawable.flare_24px,
-                    tags = tags.filter { it.startsWith("#") },
-                    isEditMode = isEditMode,
-                    onRemove = onRemoveTag,
-                    emptyMessage = "What is this about? (#theme)",
-                    tintColor = MaterialTheme.colorScheme.primary
-                )
-
-                TagSectionCard(
-                    title = "Labels",
-                    prefix = null,
-                    iconRes = R.drawable.label_24px,
-                    tags = tags.filter { !it.startsWith("@") && !it.startsWith("#") },
-                    isEditMode = isEditMode,
-                    onRemove = onRemoveTag,
-                    emptyMessage = "Categorize this entry",
-                    tintColor = MaterialTheme.colorScheme.secondary
-                )
+                    TagSectionCard(
+                        title = category.label,
+                        prefix = category.prefix,
+                        iconRes = spec.iconRes,
+                        tags = categoryTags,
+                        isEditMode = isEditMode,
+                        onRemove = onRemoveTag,
+                        emptyMessage = spec.emptyMessage,
+                        tintColor = spec.color
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(100.dp))
             }
@@ -273,6 +265,26 @@ fun TagInputArea(
     onAddTag: (String) -> Unit,
     onInsertPrefix: (String) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(text = tagInput, selection = TextRange(tagInput.length)))
+    }
+
+    SideEffect {
+        if (tagInput != textFieldValue.text) {
+            textFieldValue = TextFieldValue(
+                text = tagInput,
+                selection = TextRange(tagInput.length)
+            )
+        }
+    }
+
+    val isInputValid = remember(tagInput) {
+        val trimmed = tagInput.trim()
+        trimmed.isNotBlank() && trimmed != "@" && trimmed != "#"
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
@@ -304,36 +316,37 @@ fun TagInputArea(
                     }
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
-            }
-            else if (tagInput.isBlank()) {
+            } else if (tagInput.isBlank()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    SuggestionChip(
-                        onClick = { onInsertPrefix("@") },
-                        label = { Text("Person") },
-                        icon = { Text("@", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onTertiaryContainer) },
-                        colors = SuggestionChipDefaults.suggestionChipColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f),
-                            labelColor = MaterialTheme.colorScheme.onTertiaryContainer
-                        ),
-                        border = null,
-                        shape = CircleShape
-                    )
-                    SuggestionChip(
-                        onClick = { onInsertPrefix("#") },
-                        label = { Text("Theme") },
-                        icon = { Text("#", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer) },
-                        colors = SuggestionChipDefaults.suggestionChipColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-                            labelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        border = null,
-                        shape = CircleShape
-                    )
+                    TagCategory.entries.filter { it.prefix != null }.forEach { category ->
+                        SuggestionChip(
+                            onClick = {
+                                onInsertPrefix(category.prefix!!)
+                                focusRequester.requestFocus()
+                            },
+                            label = { Text(category.singularLabel) },
+                            icon = {
+                                Text(
+                                    category.prefix!!,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (category == TagCategory.Themes) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onTertiaryContainer
+                                )
+                            },
+                            colors = SuggestionChipDefaults.suggestionChipColors(
+                                containerColor = (if (category == TagCategory.Themes) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer).copy(
+                                    alpha = 0.5f
+                                ),
+                                labelColor = if (category == TagCategory.Themes) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onTertiaryContainer
+                            ),
+                            border = null,
+                            shape = CircleShape
+                        )
+                    }
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
             }
@@ -346,8 +359,11 @@ fun TagInputArea(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 TextField(
-                    value = tagInput,
-                    onValueChange = onInputChange,
+                    value = textFieldValue,
+                    onValueChange = { newValue ->
+                        textFieldValue = newValue
+                        onInputChange(newValue.text)
+                    },
                     placeholder = {
                         Text(
                             "Add tag...",
@@ -355,7 +371,9 @@ fun TagInputArea(
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                         )
                     },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester),
                     shape = RoundedCornerShape(12.dp),
                     colors = UiUtils.getTransparentTextFieldColors().copy(
                         focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -364,7 +382,7 @@ fun TagInputArea(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        if (tagInput.isNotBlank()) onAddTag(tagInput)
+                        if (isInputValid) onAddTag(tagInput)
                     }),
                     trailingIcon = {
                         Box(
@@ -372,7 +390,7 @@ fun TagInputArea(
                         ) {
                             FilledIconButton(
                                 onClick = { onAddTag(tagInput) },
-                                enabled = tagInput.isNotBlank(),
+                                enabled = isInputValid,
                                 modifier = Modifier.size(40.dp),
                                 colors = IconButtonDefaults.filledIconButtonColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
@@ -393,136 +411,6 @@ fun TagInputArea(
                             }
                         }
                     }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun TagInfoDialog(onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        modifier = Modifier.padding(horizontal = 24.dp),
-        confirmButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Got it") }
-        },
-        icon = {
-            Icon(
-                painterResource(R.drawable.sell_24px),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        title = {
-            Text(
-                "How Tags Work",
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
-            )
-        },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(
-                    "Tag entries by people, themes, and labels to find them later.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    TagInfoRow(
-                        iconRes = R.drawable.person_24px,
-                        prefix = "@",
-                        title = "People",
-                        description = "Tag people to track who appears across entries.",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                    )
-                    TagInfoRow(
-                        iconRes = R.drawable.flare_24px,
-                        prefix = "#",
-                        title = "Themes",
-                        description = "Themes or projects to connect related thoughts.",
-                        color = MaterialTheme.colorScheme.primary,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                    TagInfoRow(
-                        iconRes = R.drawable.label_24px,
-                        title = "Labels",
-                        description = "Broad categories like Work, Travel or Dream.",
-                        color = MaterialTheme.colorScheme.secondary,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                }
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-private fun TagInfoRow(
-    prefix: String? = null,
-    iconRes: Int? = null,
-    title: String,
-    description: String,
-    color: Color,
-    containerColor: Color
-) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = containerColor.copy(alpha = 0.2f),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Surface(
-                shape = MaterialShapes.Cookie4Sided.toShape(),
-                color = containerColor,
-                modifier = Modifier.size(40.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    if (iconRes != null) {
-                        Icon(
-                            painter = painterResource(iconRes),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = color
-                        )
-                    }
-                }
-            }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (prefix != null) {
-                        Text(
-                            text = prefix,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = color
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                    }
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = MaterialTheme.typography.bodySmall.fontSize * 1.4
                 )
             }
         }

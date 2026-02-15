@@ -55,14 +55,12 @@ fun HomeBottomBar(
 
                 ToolbarTab(
                     selected = isSelected,
-                    enabled = tab.enabled,
                     iconRes = tab.iconRes,
+                    filledIconRes = tab.filledIconRes,
                     label = tab.label,
                     onClick = {
-                        if (tab.enabled) {
-                            scope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
                         }
                     }
                 )
@@ -74,9 +72,9 @@ fun HomeBottomBar(
 @Composable
 private fun ToolbarTab(
     selected: Boolean,
-    enabled: Boolean,
     onClick: () -> Unit,
     iconRes: Int,
+    filledIconRes: Int,
     label: String
 ) {
     val backgroundColor = when {
@@ -85,7 +83,6 @@ private fun ToolbarTab(
     }
 
     val contentColor = when {
-        !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         selected -> MaterialTheme.colorScheme.onSecondaryContainer
         else -> MaterialTheme.colorScheme.onSurfaceVariant
     }
@@ -95,10 +92,9 @@ private fun ToolbarTab(
         shape = CircleShape,
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 2.dp)
-            .size(56.dp, 40.dp)
+            .size(52.dp, 40.dp)
             .clip(CircleShape)
             .clickable(
-                enabled = enabled,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) { onClick() }
@@ -108,7 +104,7 @@ private fun ToolbarTab(
             modifier = Modifier.fillMaxSize()
         ) {
             Icon(
-                painter = painterResource(iconRes),
+                painter = painterResource(if (selected)  filledIconRes else iconRes),
                 contentDescription = label,
                 tint = contentColor,
                 modifier = Modifier.size(24.dp)

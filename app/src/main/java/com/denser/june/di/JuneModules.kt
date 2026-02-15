@@ -19,6 +19,7 @@ import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.navigation.AppNavigatorImpl
 import com.denser.june.presentation.screens.home.journals.JournalsVM
 import com.denser.june.presentation.screens.editor.EditorVM
+import com.denser.june.presentation.screens.home.tags.TagsVM
 import com.denser.june.presentation.screens.search.SearchVM
 import com.denser.june.presentation.screens.settings.SettingsVM
 import com.denser.june.presentation.screens.home.timeline.TimelineVM
@@ -52,6 +53,7 @@ val juneModules = module {
     viewModelOf(::SettingsVM)
     viewModelOf(::EditorVM)
     viewModelOf(::JournalsVM)
+    viewModelOf(::TagsVM)
     viewModelOf(::TimelineVM)
     viewModelOf(::SearchVM)
 

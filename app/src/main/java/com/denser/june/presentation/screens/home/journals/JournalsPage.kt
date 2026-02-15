@@ -17,11 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.denser.june.presentation.screens.home.journals.components.JournalCard
-import com.denser.june.presentation.screens.home.journals.components.RecentJournalCard
+import com.denser.june.presentation.screens.home.components.JournalCard
+import com.denser.june.presentation.screens.home.components.RecentJournalCard
 import org.koin.compose.viewmodel.koinViewModel
 
 import com.denser.june.R
+import com.denser.june.presentation.screens.home.components.EmptyPage
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -34,53 +35,14 @@ fun JournalsPage() {
     val bookmarkedJournals = remember(journals) { journals.filter { it.isBookmarked } }
 
     val nonDrafts = remember(journals) {
-        journals
-            .filter { !it.isDraft }
-            .sortedByDescending { it.dateTime }
+        journals.filter { !it.isDraft }.sortedByDescending { it.dateTime }
     }
 
     val recentJournal = remember(nonDrafts) { nonDrafts.firstOrNull() }
     val moreJournals = remember(nonDrafts) { nonDrafts.drop(1) }
 
 
-    if (journals.isEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(32.dp))
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.auto_stories_off_24px),
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                )
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "No journals yet",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Start capturing your journey by creating your first entry.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 12.dp)
-            )
-        }
-    } else {
+    if (journals.isNotEmpty()) {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -95,16 +57,14 @@ fun JournalsPage() {
                 if (recentJournal != null) {
                     item(key = "header_recent") {
                         SectionHeader(
-                            title = "Recent",
-                            modifier = Modifier
+                            title = "Recent", modifier = Modifier
                                 .padding(top = 8.dp)
                                 .animateItem()
                         )
                     }
                     item(key = "recent_${recentJournal.id}") {
                         RecentJournalCard(
-                            journal = recentJournal,
-                            modifier = Modifier.animateItem()
+                            journal = recentJournal, modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -112,14 +72,12 @@ fun JournalsPage() {
                 if (draftJournals.isNotEmpty()) {
                     item(key = "header_drafts") {
                         SectionHeader(
-                            title = "Drafts",
-                            modifier = Modifier.animateItem()
+                            title = "Drafts", modifier = Modifier.animateItem()
                         )
                     }
                     items(draftJournals, key = { "draft_${it.id}" }) { journal ->
                         JournalCard(
-                            journal = journal,
-                            modifier = Modifier.animateItem()
+                            journal = journal, modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -135,8 +93,7 @@ fun JournalsPage() {
                     }
                     items(bookmarkedJournals, key = { "bm_${it.id}" }) { journal ->
                         JournalCard(
-                            journal = journal,
-                            modifier = Modifier.animateItem()
+                            journal = journal, modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -152,8 +109,7 @@ fun JournalsPage() {
                     }
                     items(moreJournals, key = { "more_${it.id}" }) { journal ->
                         JournalCard(
-                            journal = journal,
-                            modifier = Modifier.animateItem()
+                            journal = journal, modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -161,13 +117,18 @@ fun JournalsPage() {
                 item { Spacer(modifier = Modifier.height(100.dp)) }
             }
         }
+    } else {
+        EmptyPage(
+            icon = R.drawable.auto_stories_off_24px,
+            title = "No journals yet",
+            subtitle = "Start capturing your journey by creating your first entry."
+        )
     }
 }
 
 @Composable
 fun SectionHeader(
-    title: String,
-    modifier: Modifier = Modifier
+    title: String, modifier: Modifier = Modifier
 ) {
     Text(
         text = title,

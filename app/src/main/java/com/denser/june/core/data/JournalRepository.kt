@@ -88,4 +88,58 @@ class JournalRepository(
     override fun getUniqueTags(): Flow<List<String>> = localDao.getAllUniqueTags()
 
     override fun getTagSuggestions(query: String): Flow<List<String>> = localDao.getTagSuggestions(query)
+
+    override fun getTagCounts(): Flow<Map<String, Int>> {
+        return localDao.getAllTagCounts()
+            .map { list ->
+                list.associate { it.name to it.count }
+            }
+    }
+
+    override fun getJournalsByMultipleTags(tags: List<String>): Flow<List<Journal>> {
+        if (tags.isEmpty()) {
+            return getJournals()
+        }
+        return localDao.getJournalsWithAllTags(tags, tags.size)
+            .map { entities -> entities.map { it.toJournal() } }
+    }
+
+    override suspend fun renameTag(oldName: String, newName: String) {
+        withContext(Dispatchers.IO) {
+            val existingTagId = localDao.getTagIdByName(newName)
+            if (existingTagId != null) {
+                val affectedJournals = localDao.getJournalsByTagNameSync(oldName)
+                affectedJournals.forEach { entity ->
+                    val journal = entity.toJournal()
+                    val updatedTags = journal.tags.map { if (it == oldName) newName else it }.distinct()
+                    updateJournal(journal.copy(tags = updatedTags))
+                }
+                localDao.deleteTag(oldName)
+
+            } else {
+                val affectedJournals = localDao.getJournalsByTagNameSync(oldName)
+                localDao.updateTagName(oldName, newName)
+
+                affectedJournals.forEach { entity ->
+                    val journal = entity.toJournal()
+                    val updatedTags = journal.tags.map { if (it == oldName) newName else it }
+                    updateJournal(journal.copy(tags = updatedTags))
+                }
+            }
+        }
+    }
+    override suspend fun deleteTag(tagName: String) {
+        withContext(Dispatchers.IO) {
+            val affectedJournals = localDao.getJournalsByTagNameSync(tagName)
+            localDao.deleteTag(tagName)
+
+            affectedJournals.forEach { entity ->
+                val journal = entity.toJournal()
+                if (journal.tags.contains(tagName)) {
+                    val updatedTags = journal.tags.filter { it != tagName }
+                    updateJournal(journal.copy(tags = updatedTags))
+                }
+            }
+        }
+    }
 }

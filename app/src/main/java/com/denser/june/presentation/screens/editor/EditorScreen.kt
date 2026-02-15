@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -47,7 +46,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.denser.june.R
 import com.denser.june.core.utils.toFullTime
 import com.denser.june.core.utils.toLocalTime
-import com.denser.june.presentation.screens.editor.components.JournalTagsSheet
+import com.denser.june.presentation.screens.editor.components.JournalTagsDialog
 import com.denser.june.presentation.utils.UiUtils
 import java.time.LocalTime
 
@@ -638,7 +637,7 @@ fun JournalScreen() {
     }
 
     if (showTagsDialog) {
-        JournalTagsSheet(
+        JournalTagsDialog(
             tags = state.tags,
             suggestions = state.tagSuggestions,
             isEditMode = state.isEditMode,

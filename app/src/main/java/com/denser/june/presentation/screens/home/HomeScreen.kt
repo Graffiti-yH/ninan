@@ -17,14 +17,16 @@ import com.denser.june.presentation.components.JuneTopAppBar
 import com.denser.june.presentation.screens.home.components.HomeBottomBar
 import com.denser.june.presentation.screens.home.journals.JournalsPage
 import com.denser.june.presentation.screens.home.timeline.TimelinePage
+import com.denser.june.presentation.screens.home.tags.TagsPage
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 import com.denser.june.R
 
-enum class HomeTab(val label: String, val iconRes: Int, val enabled: Boolean = true) {
-    Journals("Journals", R.drawable.list_alt_24px),
-    Timeline("Timeline", R.drawable.event_note_24px),
+enum class HomeTab(val label: String, val iconRes: Int, val filledIconRes: Int) {
+    Journals("Journals", R.drawable.home_24px, R.drawable.home_24px_fill),
+    Tags("Tags", R.drawable.view_cozy_24px, R.drawable.view_cozy_24px_fill),
+    Timeline("Timeline", R.drawable.event_note_24px, R.drawable.event_note_24px_fill),
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -34,7 +36,7 @@ fun HomeScreen() {
     val pagerState = rememberPagerState(pageCount = { HomeTab.entries.size })
     val scope = rememberCoroutineScope()
 
-    BackHandler(enabled = pagerState.currentPage == 1) {
+    BackHandler(enabled = pagerState.currentPage != 0) {
         scope.launch { pagerState.animateScrollToPage(0) }
     }
 
@@ -93,6 +95,7 @@ fun HomeScreen() {
             ) { page ->
                 when (HomeTab.entries[page]) {
                     HomeTab.Journals -> JournalsPage()
+                    HomeTab.Tags -> TagsPage()
                     HomeTab.Timeline -> TimelinePage()
                 }
             }

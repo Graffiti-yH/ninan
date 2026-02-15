@@ -47,7 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.R
 import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.components.JuneTopAppBar
-import com.denser.june.presentation.screens.home.journals.components.JournalCard
+import com.denser.june.presentation.screens.home.components.JournalCard
 import com.denser.june.presentation.utils.UiUtils
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel

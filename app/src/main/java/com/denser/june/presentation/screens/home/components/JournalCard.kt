@@ -1,4 +1,4 @@
-package com.denser.june.presentation.screens.home.journals.components
+package com.denser.june.presentation.screens.home.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
