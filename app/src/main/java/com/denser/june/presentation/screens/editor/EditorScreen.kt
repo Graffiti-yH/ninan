@@ -10,6 +10,8 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,6 +47,8 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.denser.june.R
 import com.denser.june.core.utils.toFullTime
 import com.denser.june.core.utils.toLocalTime
+import com.denser.june.presentation.screens.editor.components.JournalTagsSheet
+import com.denser.june.presentation.utils.UiUtils
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -70,6 +74,7 @@ fun JournalScreen() {
     var showCameraSelectionDialog by remember { mutableStateOf(false) }
     var showSongSheet by remember { mutableStateOf(false) }
     var showLocationDialog by remember { mutableStateOf(false) }
+    var showTagsDialog by remember { mutableStateOf(false) }
 
     var tempCameraUri by remember { mutableStateOf<Uri?>(null) }
     var tempVideoUri by remember { mutableStateOf<Uri?>(null) }
@@ -164,7 +169,7 @@ fun JournalScreen() {
                 title = {},
                 navigationIcon = {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         FilledIconButton(
@@ -200,7 +205,7 @@ fun JournalScreen() {
                                     )
                                 } else {
                                     Icon(
-                                        painter = painterResource(R.drawable.sentiment_very_satisfied_24px),
+                                        painter = painterResource(if (showEmojiPicker) R.drawable.sentiment_very_satisfied_24px_fill else R.drawable.sentiment_very_satisfied_24px),
                                         contentDescription = "Add Emoji"
                                     )
                                 }
@@ -221,6 +226,20 @@ fun JournalScreen() {
                                     contentDescription = "Add Attachment"
                                 )
                             }
+                            FilledIconButton(
+                                onClick = { showTagsDialog = true },
+                                colors = IconButtonDefaults.filledIconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                        alpha = 0.75F
+                                    )
+                                ),
+                            ) {
+                                Icon(
+                                    painter = painterResource(if (showTagsDialog) R.drawable.sell_24px_fill else R.drawable.sell_24px),
+                                    contentDescription = "Add Tags"
+                                )
+                            }
                         }
                     }
                 },
@@ -237,9 +256,8 @@ fun JournalScreen() {
                                 contentDescription = "Toggle Bookmark"
                             )
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                     }
-
                     if (state.isEditMode) {
                         Button(
                             onClick = {
@@ -251,7 +269,6 @@ fun JournalScreen() {
                         }
                         Spacer(modifier = Modifier.width(4.dp))
                     }
-
                     Box {
                         IconButton(
                             onClick = { showMenu = true },
@@ -363,7 +380,7 @@ fun JournalScreen() {
                     textStyle = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.SemiBold
                     ),
-                    colors = transparentTextFieldColors()
+                    colors = UiUtils.getTransparentTextFieldColors()
                 )
 
                 Row(
@@ -418,6 +435,26 @@ fun JournalScreen() {
                     }
                 }
 
+                if (state.tags.isNotEmpty()) {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showTagsDialog = true },
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.tags) { tag ->
+                            SuggestionChip(
+                                onClick = { showTagsDialog = true },
+                                label = { Text(tag, fontSize = 12.sp) },
+                                shape = RoundedCornerShape(8.dp),
+                                border = null,
+                                colors = UiUtils.getTagSuggestionChipColors(tag)
+                            )
+                        }
+                    }
+                }
+
                 TextField(
                     value = state.content,
                     onValueChange = { viewModel.onAction(EditorAction.ChangeContent(it)) },
@@ -435,7 +472,7 @@ fun JournalScreen() {
                             )
                         }
                     } else null,
-                    colors = transparentTextFieldColors()
+                    colors = UiUtils.getTransparentTextFieldColors()
                 )
             }
         }
@@ -599,18 +636,16 @@ fun JournalScreen() {
             onDismiss = { showEmojiPicker = false }
         )
     }
-}
 
-@Composable
-fun transparentTextFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.Transparent,
-    unfocusedContainerColor = Color.Transparent,
-    disabledContainerColor = Color.Transparent,
-    focusedIndicatorColor = Color.Transparent,
-    unfocusedIndicatorColor = Color.Transparent,
-    disabledIndicatorColor = Color.Transparent,
-    cursorColor = MaterialTheme.colorScheme.primary,
-    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-    disabledTextColor = MaterialTheme.colorScheme.onSurface
-)
+    if (showTagsDialog) {
+        JournalTagsSheet(
+            tags = state.tags,
+            suggestions = state.tagSuggestions,
+            isEditMode = state.isEditMode,
+            onAddTag = { viewModel.onAction(EditorAction.AddTag(it)) },
+            onRemoveTag = { viewModel.onAction(EditorAction.RemoveTag(it)) },
+            onSearchTags = { viewModel.onAction(EditorAction.SearchTags(it)) },
+            onDismiss = { showTagsDialog = false }
+        )
+    }
+}

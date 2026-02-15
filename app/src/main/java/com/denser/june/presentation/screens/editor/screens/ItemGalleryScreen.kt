@@ -1,4 +1,4 @@
-package com.denser.june.presentation.screens.editor.section
+package com.denser.june.presentation.screens.editor.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

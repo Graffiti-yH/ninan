@@ -24,7 +24,7 @@ import com.denser.june.presentation.navigation.Route
 import com.denser.june.presentation.components.JuneMediaLightbox
 import com.denser.june.presentation.screens.home.HomeScreen
 import com.denser.june.presentation.screens.editor.JournalScreen
-import com.denser.june.presentation.screens.editor.section.ItemGalleryScreen
+import com.denser.june.presentation.screens.editor.screens.ItemGalleryScreen
 import com.denser.june.presentation.screens.search.SearchScreen
 import com.denser.june.presentation.screens.settings.SettingsScreen
 import com.denser.june.presentation.screens.settings.screens.AboutLibrariesScreen

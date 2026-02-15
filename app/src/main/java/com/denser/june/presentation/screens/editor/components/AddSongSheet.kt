@@ -21,6 +21,7 @@ import com.denser.june.core.domain.data_classes.SongDetails
 import kotlinx.coroutines.launch
 
 import com.denser.june.R
+import com.denser.june.presentation.utils.UiUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,13 +159,7 @@ fun SongInputCard(
                         }
                     }
                 },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                ),
+                colors = UiUtils.getTransparentTextFieldColors(),
                 shape = RoundedCornerShape(16.dp),
                 textStyle = MaterialTheme.typography.bodyLarge,
                 singleLine = true

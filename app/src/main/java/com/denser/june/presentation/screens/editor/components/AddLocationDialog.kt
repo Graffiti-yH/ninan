@@ -37,6 +37,7 @@ import com.denser.june.presentation.components.MapLocationPin
 import com.denser.june.presentation.components.MapAttributions
 import com.denser.june.presentation.theme.LocalAppTheme
 import com.denser.june.presentation.utils.MapTilerUtils
+import com.denser.june.presentation.utils.UiUtils
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -530,16 +531,7 @@ fun MapSearchBar(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { onSearch() }),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                ),
+                colors = UiUtils.getTransparentTextFieldColors(),
                 textStyle = MaterialTheme.typography.bodyLarge
             )
             IconButton(onClick = onSearch, enabled = !isSearching) {

@@ -12,6 +12,8 @@ data class EditorState(
     val images: List<String> = emptyList(),
     val location: JournalLocation? = null,
     val songDetails: SongDetails? = null,
+    val tags: List<String> = emptyList(),
+    val tagSuggestions: List<String> = emptyList(),
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long? = null,
     val dateTime: Long = getTodayAtMidnight(),

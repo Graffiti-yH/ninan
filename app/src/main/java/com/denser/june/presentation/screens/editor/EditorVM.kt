@@ -76,6 +76,23 @@ class EditorVM(
                 }
             }
 
+            is EditorAction.AddTag -> {
+                val normalizedTag = action.tag.trim().lowercase()
+                if (normalizedTag.isNotBlank() && !_state.value.tags.contains(normalizedTag)) {
+                    updateState { it.copy(tags = it.tags + normalizedTag) }
+                }
+            }
+            is EditorAction.RemoveTag -> {
+                updateState { it.copy(tags = it.tags - action.tag) }
+            }
+            is EditorAction.SearchTags -> {
+                viewModelScope.launch {
+                    journalRepo.getTagSuggestions(action.query).collect { suggestions ->
+                        _state.update { it.copy(tagSuggestions = suggestions) }
+                    }
+                }
+            }
+
             is EditorAction.FetchSong -> fetchSongDetails(action.url)
             is EditorAction.RemoveSong -> updateState { it.copy(songDetails = null) }
 
@@ -106,6 +123,7 @@ class EditorVM(
 
         return original.title != currentState.title ||
                 original.content != currentState.content ||
+                original.tags != currentState.tags ||
                 original.emoji != currentState.emoji ||
                 original.images != currentState.images ||
                 original.location != currentState.location ||
@@ -164,6 +182,7 @@ class EditorVM(
                         images = journal.images,
                         location = journal.location,
                         songDetails = journal.songDetails,
+                        tags = journal.tags,
                         createdAt = journal.createdAt,
                         updatedAt = journal.updatedAt,
                         dateTime = journal.dateTime,
@@ -238,6 +257,7 @@ class EditorVM(
                 images = currentState.images,
                 location = currentState.location,
                 songDetails = currentState.songDetails,
+                tags = currentState.tags,
                 createdAt = existingJournal?.createdAt ?: currentTime,
                 updatedAt = currentTime,
                 dateTime = currentState.dateTime,
