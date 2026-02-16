@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,9 +22,10 @@ import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
 import com.denser.june.presentation.screens.home.components.EmptyPage
 import com.denser.june.presentation.screens.home.components.JournalCard
-import com.denser.june.presentation.screens.home.tags.components.EditTagDialog
+import com.denser.june.presentation.screens.home.tags.components.DeleteTagDialog
 import com.denser.june.presentation.screens.home.tags.components.FilterBottomSheet
 import com.denser.june.presentation.screens.home.tags.components.FilterFab
+import com.denser.june.presentation.screens.home.tags.components.RenameTagDialog
 import com.denser.june.presentation.utils.UiUtils
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -41,7 +43,9 @@ fun TagsPage() {
     val availableFilters by viewModel.availableFilters.collectAsStateWithLifecycle()
     val selectedFilters by viewModel.selectedFilters.collectAsStateWithLifecycle()
 
-    var showEditDialog by remember { mutableStateOf(false) }
+    var showRenameDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showMenu by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
 
     val filterSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -93,11 +97,6 @@ fun TagsPage() {
                     items(primaryTags, key = { it }) { fullTag ->
                         val isSelected = selectedPrimaryTag == fullTag
                         val count = tagCounts[fullTag] ?: 0
-                        val displayText = when (selectedCategory) {
-                            TagCategory.People -> fullTag.removePrefix("@")
-                            TagCategory.Themes -> fullTag.removePrefix("#")
-                            else -> fullTag
-                        }
 
                         FilterChip(
                             selected = isSelected,
@@ -106,22 +105,64 @@ fun TagsPage() {
                             shape = RoundedCornerShape(16.dp),
                             label = {
                                 Text(
-                                    text = displayText,
+                                    text = fullTag,
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                 )
                             },
                             trailingIcon = {
                                 if (isSelected) {
-                                    IconButton(
-                                        onClick = { showEditDialog = true },
-                                        modifier = Modifier.size(24.dp)
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.more_vert_24px),
-                                            contentDescription = "Edit",
-                                            modifier = Modifier.size(18.dp)
-                                        )
+                                    Box {
+                                        IconButton(
+                                            onClick = { showMenu = true },
+                                            modifier = Modifier.size(24.dp)
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.more_vert_24px),
+                                                contentDescription = "Options",
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+
+                                        DropdownMenu(
+                                            modifier = Modifier
+                                                .defaultMinSize(minWidth = 200.dp)
+                                                .padding(horizontal = 8.dp),
+                                            expanded = showMenu,
+                                            onDismissRequest = { showMenu = false },
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                            shape = RoundedCornerShape(24.dp),
+                                            tonalElevation = 3.dp
+                                        ) {
+                                            DropdownMenuItem(
+                                                modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                                                text = { Text("Rename Tag") },
+                                                onClick = {
+                                                    showMenu = false
+                                                    showRenameDialog = true
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painterResource(R.drawable.edit_24px),
+                                                        null
+                                                    )
+                                                }
+                                            )
+                                            DropdownMenuItem(
+                                                modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                                                text = { Text("Delete Tag") },
+                                                onClick = {
+                                                    showMenu = false
+                                                    showDeleteDialog = true
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painterResource(R.drawable.delete_24px),
+                                                        null
+                                                    )
+                                                }
+                                            )
+                                        }
                                     }
                                 } else if (count > 0) {
                                     Surface(
@@ -165,7 +206,7 @@ fun TagsPage() {
                 EmptyPage(
                     icon = currentCategorySpec.iconRes,
                     title = "No ${selectedCategory.label.lowercase()} yet",
-                    subtitle = "Tag a journal entry with a ${selectedCategory.label.lowercase()} to get started."
+                    subtitle = "Tag a journal entry with a ${selectedCategory.singularLabel.lowercase()} to get started."
                 )
             }
 
@@ -217,17 +258,30 @@ fun TagsPage() {
             )
         }
 
-        if (showEditDialog && selectedPrimaryTag != null) {
-            EditTagDialog(
-                currentTagName = selectedPrimaryTag!!,
-                category = selectedCategory,
-                existingTags = allTags,
-                onDismiss = { showEditDialog = false },
-                onRename = { newName ->
-                    viewModel.renameCurrentTag(newName); showEditDialog = false
-                },
-                onDelete = { viewModel.deleteCurrentTag(); showEditDialog = false }
-            )
+        if (selectedPrimaryTag != null) {
+            if (showRenameDialog) {
+                RenameTagDialog(
+                    currentTagName = selectedPrimaryTag!!,
+                    category = selectedCategory,
+                    existingTags = allTags,
+                    onDismiss = { showRenameDialog = false },
+                    onRename = { newName ->
+                        viewModel.renameCurrentTag(newName)
+                        showRenameDialog = false
+                    }
+                )
+            }
+
+            if (showDeleteDialog) {
+                DeleteTagDialog(
+                    tagName = selectedPrimaryTag!!,
+                    onDismiss = { showDeleteDialog = false },
+                    onConfirm = {
+                        viewModel.deleteCurrentTag()
+                        showDeleteDialog = false
+                    }
+                )
+            }
         }
     }
 }

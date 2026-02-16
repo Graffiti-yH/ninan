@@ -77,9 +77,9 @@ class EditorVM(
             }
 
             is EditorAction.AddTag -> {
-                val normalizedTag = action.tag.trim().lowercase()
-                if (normalizedTag.isNotBlank() && !_state.value.tags.contains(normalizedTag)) {
-                    updateState { it.copy(tags = it.tags + normalizedTag) }
+                val trimmedTag = action.tag.trim()
+                if (trimmedTag.isNotBlank() && !_state.value.tags.contains(trimmedTag)) {
+                    updateState { it.copy(tags = it.tags + trimmedTag) }
                 }
             }
             is EditorAction.RemoveTag -> {

@@ -137,9 +137,7 @@ fun FilterBottomSheet(
                             )
                         },
                         colors = InputChipDefaults.inputChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.errorContainer.copy(
-                                alpha = 0.6f
-                            ),
+                            selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                             selectedLabelColor = MaterialTheme.colorScheme.error,
                             selectedTrailingIconColor = MaterialTheme.colorScheme.error
                         ),
