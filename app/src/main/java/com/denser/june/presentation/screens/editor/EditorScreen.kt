@@ -47,6 +47,7 @@ import com.denser.june.R
 import com.denser.june.core.utils.toFullTime
 import com.denser.june.core.utils.toLocalTime
 import com.denser.june.presentation.screens.editor.components.JournalTagsDialog
+import com.denser.june.presentation.utils.TagUtils
 import com.denser.june.presentation.utils.UiUtils
 import java.time.LocalTime
 
@@ -448,7 +449,7 @@ fun JournalScreen() {
                                 label = { Text(tag, fontSize = 12.sp) },
                                 shape = RoundedCornerShape(8.dp),
                                 border = null,
-                                colors = UiUtils.getTagSuggestionChipColors(tag)
+                                colors = TagUtils.getTagSuggestionChipColors(tag)
                             )
                         }
                     }

@@ -26,6 +26,7 @@ import com.denser.june.presentation.screens.home.tags.components.DeleteTagDialog
 import com.denser.june.presentation.screens.home.tags.components.FilterBottomSheet
 import com.denser.june.presentation.screens.home.tags.components.FilterFab
 import com.denser.june.presentation.screens.home.tags.components.RenameTagDialog
+import com.denser.june.presentation.utils.TagUtils
 import com.denser.june.presentation.utils.UiUtils
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -52,7 +53,7 @@ fun TagsPage() {
 
     val hasAvailableFilters = availableFilters.isNotEmpty() || selectedFilters.isNotEmpty()
     val activeFilterCount = selectedFilters.size
-    val currentCategorySpec = UiUtils.getCategoryUiSpec(selectedCategory)
+    val currentCategorySpec = TagUtils.getCategoryUiSpec(selectedCategory)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -63,7 +64,7 @@ fun TagsPage() {
                 divider = { HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainerHigh) }
             ) {
                 TagCategory.entries.forEach { category ->
-                    val spec = UiUtils.getCategoryUiSpec(category)
+                    val spec = TagUtils.getCategoryUiSpec(category)
                     val isSelected = selectedCategory == category
 
                     Tab(
@@ -71,7 +72,7 @@ fun TagsPage() {
                         onClick = { viewModel.selectCategory(category) },
                         icon = {
                             Icon(
-                                painter = painterResource(spec.iconRes),
+                                painter = painterResource(if (isSelected) spec.filledIconRes else spec.iconRes),
                                 contentDescription = category.label,
                                 modifier = Modifier.size(22.dp)
                             )

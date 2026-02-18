@@ -73,18 +73,56 @@ fun JournalItemsPreview(
         list
     }
 
-    val songIndex = verticalSlides.indexOfFirst { it is JournalPreviewItem.Song }
-    val imagesIndex = verticalSlides.indexOfFirst { it is JournalPreviewItem.Images }
-    val mapIndex = verticalSlides.indexOfFirst { it is JournalPreviewItem.Map }
-
     val pagerState = rememberPagerState(pageCount = { verticalSlides.size })
+    val currentSlide = if (verticalSlides.isNotEmpty()) verticalSlides.getOrNull(pagerState.currentPage) else null
 
-    val currentItem =
-        if (verticalSlides.isNotEmpty()) verticalSlides.getOrNull(pagerState.currentPage) else null
+    data class ButtonConfig(
+        val type: String,
+        val iconRes: Int,
+        val filledIconRes: Int,
+        val isSelected: Boolean,
+        val exists: Boolean,
+        val onClick: () -> Unit
+    )
 
-    val onAddSong = { mediaOperations.onSongSheetToggle(true) }
-    val onAddMedia = { mediaOperations.onItemSheetToggle(true) }
-    val onAddLocation = { mediaOperations.onLocationDialogToggle(true) }
+    val buttons = listOf(
+        ButtonConfig(
+            type = "Images",
+            iconRes = R.drawable.art_track_24px,
+            filledIconRes = R.drawable.art_track_24px_fill,
+            isSelected = currentSlide is JournalPreviewItem.Images,
+            exists = mediaPaths.isNotEmpty(),
+            onClick = {
+                val idx = verticalSlides.indexOfFirst { it is JournalPreviewItem.Images }
+                if (idx != -1) scope.launch { pagerState.animateScrollToPage(idx) }
+                else mediaOperations.onItemSheetToggle(true)
+            }
+        ),
+        ButtonConfig(
+            type = "Song",
+            iconRes = R.drawable.music_video_24px,
+            filledIconRes = R.drawable.music_video_24px_fill,
+            isSelected = currentSlide is JournalPreviewItem.Song,
+            exists = songDetails != null,
+            onClick = {
+                val idx = verticalSlides.indexOfFirst { it is JournalPreviewItem.Song }
+                if (idx != -1) scope.launch { pagerState.animateScrollToPage(idx) }
+                else mediaOperations.onSongSheetToggle(true)
+            }
+        ),
+        ButtonConfig(
+            type = "Map",
+            iconRes = R.drawable.location_chip_24px,
+            filledIconRes = R.drawable.location_chip_24px_fill,
+            isSelected = currentSlide is JournalPreviewItem.Map,
+            exists = location != null,
+            onClick = {
+                val idx = verticalSlides.indexOfFirst { it is JournalPreviewItem.Map }
+                if (idx != -1) scope.launch { pagerState.animateScrollToPage(idx) }
+                else mediaOperations.onLocationDialogToggle(true)
+            }
+        )
+    )
 
     Column {
         VerticalPager(
@@ -110,7 +148,6 @@ fun JournalItemsPreview(
                             )
                         }
                     }
-
                     is JournalPreviewItem.Map -> {
                         Box(Modifier.padding(horizontal = 16.dp)) {
                             JournalMapItem(
@@ -121,7 +158,6 @@ fun JournalItemsPreview(
                             )
                         }
                     }
-
                     is JournalPreviewItem.Images -> {
                         val chunks = remember(slide.paths) {
                             slide.paths.reversed().chunked(3)
@@ -164,87 +200,40 @@ fun JournalItemsPreview(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
                 ) {
-                    val isImagesSelected = currentItem is JournalPreviewItem.Images
-                    val imagesExist = imagesIndex != -1
-                    ToggleButton(
-                        checked = isImagesSelected,
-                        enabled = imagesIndex != -1 || mediaOperations.isEditMode,
-                        onCheckedChange = {
-                            if (imagesExist) {
-                                scope.launch { pagerState.animateScrollToPage(imagesIndex) }
-                            } else {
-                                onAddMedia()
-                            }
-                        },
-                        colors = ToggleButtonDefaults.toggleButtonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            checkedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            checkedContentColor = MaterialTheme.colorScheme.tertiaryContainer
-                        ),
-                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes()
-                    ) {
-                        Icon(
-                            painter = painterResource(if (isImagesSelected) R.drawable.art_track_24px_fill else R.drawable.art_track_24px),
-                            contentDescription = "Images",
-                        )
-                    }
-                    val isSongSelected = currentItem is JournalPreviewItem.Song
-                    val songExists = songIndex != -1
-                    ToggleButton(
-                        checked = isSongSelected,
-                        enabled = songExists || mediaOperations.isEditMode,
-                        onCheckedChange = {
-                            if (songExists) {
-                                scope.launch { pagerState.animateScrollToPage(songIndex) }
-                            } else {
-                                onAddSong()
-                            }
-                        },
-                        colors = ToggleButtonDefaults.toggleButtonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            checkedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            checkedContentColor = MaterialTheme.colorScheme.tertiaryContainer
-                        ),
-                        shapes = ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    ) {
-                        Icon(
-                            painter = painterResource(if (isSongSelected) R.drawable.music_video_24px_fill else R.drawable.music_video_24px),
-                            contentDescription = "Song",
-                        )
-                    }
-                    val isMapSelected = currentItem is JournalPreviewItem.Map
-                    val mapExists = mapIndex != -1
-                    ToggleButton(
-                        checked = isMapSelected,
-                        enabled = mapExists || mediaOperations.isEditMode,
-                        onCheckedChange = {
-                            if (mapExists) {
-                                scope.launch { pagerState.animateScrollToPage(mapIndex) }
-                            } else {
-                                onAddLocation()
-                            }
-                        },
-                        colors = ToggleButtonDefaults.toggleButtonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            checkedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            checkedContentColor = MaterialTheme.colorScheme.tertiaryContainer
-                        ),
-                        shapes = ButtonGroupDefaults.connectedTrailingButtonShapes()
-                    ) {
-                        Icon(
-                            painter = painterResource(if (isMapSelected) R.drawable.location_chip_24px_fill else R.drawable.location_chip_24px),
-                            contentDescription = "Location",
-                        )
+                    buttons.forEachIndexed { index, config ->
+                        val shape = when (index) {
+                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                            buttons.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                        }
+
+                        ToggleButton(
+                            checked = config.isSelected,
+                            onCheckedChange = { config.onClick() },
+                            enabled = config.exists || mediaOperations.isEditMode,
+                            shapes = shape,
+                            colors = ToggleButtonDefaults.toggleButtonColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                checkedContainerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                checkedContentColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(if (config.isSelected) config.filledIconRes else config.iconRes),
+                                contentDescription = config.type
+                            )
+                        }
                     }
                 }
+
                 Spacer(modifier = Modifier.weight(1f))
 
                 TextButton(

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
-import com.denser.june.presentation.utils.UiUtils
+import com.denser.june.presentation.utils.TagUtils
 
 @Composable
 fun FilterFab(
@@ -68,16 +68,11 @@ fun FilterBottomSheet(
     onClearAll: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val grouped = remember(availableFilters) {
-        TagCategory.entries.associateWith { category ->
-            availableFilters.filter { tag ->
-                when (category) {
-                    TagCategory.People -> tag.startsWith("@")
-                    TagCategory.Themes -> tag.startsWith("#")
-                    TagCategory.Spaces -> !tag.startsWith("@") && !tag.startsWith("#")
-                }
-            }
-        }.filter { it.value.isNotEmpty() }
+    val groupedTags = remember(availableFilters) {
+        availableFilters
+            .groupBy { TagUtils.getCategoryForTag(it) }
+            .filterValues { it.isNotEmpty() }
+            .toSortedMap(compareBy { it.ordinal })
     }
 
     ModalBottomSheet(
@@ -156,7 +151,7 @@ fun FilterBottomSheet(
             ) {
                 if (availableFilters.isEmpty()) {
                     Text(
-                        "No tags found in this space.",
+                        "No additional tags to filter by.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
@@ -165,10 +160,10 @@ fun FilterBottomSheet(
                             .padding(vertical = 32.dp)
                     )
                 } else {
-                    grouped.entries.forEach { entry ->
+                    groupedTags.forEach { (category, tags) ->
                         FilterCategorySection(
-                            category = entry.key,
-                            tags = entry.value,
+                            category = category,
+                            tags = tags,
                             selectedFilters = selectedFilters,
                             onToggle = onToggle
                         )
@@ -187,7 +182,7 @@ private fun FilterCategorySection(
     selectedFilters: Set<String>,
     onToggle: (String) -> Unit
 ) {
-    val spec = UiUtils.getCategoryUiSpec(category)
+    val spec = TagUtils.getCategoryUiSpec(category)
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -221,8 +216,7 @@ private fun FilterCategorySection(
         ) {
             tags.forEach { tag ->
                 val isActive = tag in selectedFilters
-                val chipLabel =
-                    if (category.prefix != null) tag.removePrefix(category.prefix) else tag
+                val chipLabel = TagUtils.getCleanTagName(tag)
 
                 FilterChip(
                     selected = isActive,

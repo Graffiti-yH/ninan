@@ -7,10 +7,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
-import com.denser.june.presentation.utils.UiUtils
+import com.denser.june.presentation.utils.TagUtils
 
 private enum class WarningType {
     None, Switch, Merge
@@ -25,15 +26,12 @@ fun RenameTagDialog(
     onRename: (String) -> Unit
 ) {
     var newName by remember { mutableStateOf(currentTagName) }
+    val charLimit = TagUtils.TAG_CHARACTER_LIMIT
 
     val targetTag = newName.trim()
-    val cleanName = targetTag.removePrefix("@").removePrefix("#")
+    val cleanName = TagUtils.getCleanTagName(targetTag)
 
-    val targetCategory = when {
-        targetTag.startsWith("@") -> TagCategory.People
-        targetTag.startsWith("#") -> TagCategory.Themes
-        else -> TagCategory.Spaces
-    }
+    val targetCategory = TagUtils.getCategoryForTag(targetTag)
 
     val isChanged = targetTag != currentTagName
     val isConflict = isChanged && existingTags.contains(targetTag)
@@ -50,7 +48,8 @@ fun RenameTagDialog(
         icon = {
             Icon(
                 painterResource(R.drawable.edit_24px),
-                null
+                null,
+                tint = MaterialTheme.colorScheme.primary
             )
         },
         title = { Text("Rename Tag") },
@@ -64,13 +63,15 @@ fun RenameTagDialog(
                     )
                     OutlinedTextField(
                         value = newName,
-                        onValueChange = { newName = it },
+                        onValueChange = {
+                            if (it.length <= charLimit) newName = it
+                        },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(14.dp),
                         isError = isConflict,
                         leadingIcon = {
-                            val spec = UiUtils.getCategoryUiSpec(targetCategory)
+                            val spec = TagUtils.getCategoryUiSpec(targetCategory)
                             Icon(
                                 painter = painterResource(spec.iconRes),
                                 contentDescription = null,
@@ -78,6 +79,23 @@ fun RenameTagDialog(
                                 tint = if (isConflict) MaterialTheme.colorScheme.error
                                 else MaterialTheme.colorScheme.primary
                             )
+                        },
+                        supportingText = {
+                            Text(
+                                text = "${newName.length}/$charLimit",
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.End,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (newName.length >= charLimit) MaterialTheme.colorScheme.error
+                                else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        trailingIcon = {
+                            if (newName.isNotEmpty()) {
+                                IconButton(onClick = { newName = "" }) {
+                                    Icon(painterResource(R.drawable.close_24px), "Clear")
+                                }
+                            }
                         }
                     )
                 }

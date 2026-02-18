@@ -28,9 +28,10 @@ import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
 import com.denser.june.presentation.components.JuneAppBarType
 import com.denser.june.presentation.components.JuneTopAppBar
+import com.denser.june.presentation.utils.TagUtils
 import com.denser.june.presentation.utils.UiUtils
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalTagsDialog(
     tags: List<String>,
@@ -130,15 +131,8 @@ fun JournalTagsDialog(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 TagCategory.entries.forEach { category ->
-                    val spec = UiUtils.getCategoryUiSpec(category)
-                    val categoryTags = tags.filter { tag ->
-                        when (category) {
-                            TagCategory.People -> tag.startsWith("@")
-                            TagCategory.Themes -> tag.startsWith("#")
-                            TagCategory.Spaces -> !tag.startsWith("@") && !tag.startsWith("#")
-                        }
-                    }
-
+                    val spec = TagUtils.getCategoryUiSpec(category)
+                    val categoryTags = TagUtils.filterTagsByCategory(tags, category)
                     TagSectionCard(
                         title = category.label,
                         prefix = category.prefix,
@@ -237,7 +231,7 @@ fun TagSectionCard(
                                     )
                                 },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = UiUtils.getTagInputChipColors(tag),
+                                colors = TagUtils.getTagInputChipColors(tag),
                                 border = null
                             )
                         } else {
@@ -245,7 +239,7 @@ fun TagSectionCard(
                                 onClick = {},
                                 label = { Text(tag) },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = UiUtils.getTagSuggestionChipColors(tag),
+                                colors = TagUtils.getTagSuggestionChipColors(tag),
                                 border = null
                             )
                         }
@@ -256,7 +250,6 @@ fun TagSectionCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TagInputArea(
     tagInput: String,
@@ -266,7 +259,7 @@ fun TagInputArea(
     onInsertPrefix: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
-
+    val charLimit = TagUtils.TAG_CHARACTER_LIMIT
     var textFieldValue by remember {
         mutableStateOf(TextFieldValue(text = tagInput, selection = TextRange(tagInput.length)))
     }
@@ -324,6 +317,7 @@ fun TagInputArea(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     TagCategory.entries.filter { it.prefix != null }.forEach { category ->
+                        val spec = TagUtils.getCategoryUiSpec(category)
                         SuggestionChip(
                             onClick = {
                                 onInsertPrefix(category.prefix!!)
@@ -334,14 +328,12 @@ fun TagInputArea(
                                 Text(
                                     category.prefix!!,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (category == TagCategory.Themes) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onTertiaryContainer
+                                    color = spec.color
                                 )
                             },
                             colors = SuggestionChipDefaults.suggestionChipColors(
-                                containerColor = (if (category == TagCategory.Themes) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer).copy(
-                                    alpha = 0.5f
-                                ),
-                                labelColor = if (category == TagCategory.Themes) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onTertiaryContainer
+                                containerColor = spec.containerColor.copy(alpha = 0.5f),
+                                labelColor = spec.color
                             ),
                             border = null,
                             shape = CircleShape
@@ -361,8 +353,10 @@ fun TagInputArea(
                 TextField(
                     value = textFieldValue,
                     onValueChange = { newValue ->
-                        textFieldValue = newValue
-                        onInputChange(newValue.text)
+                        if (newValue.text.length <= charLimit) {
+                            textFieldValue = newValue
+                            onInputChange(newValue.text)
+                        }
                     },
                     placeholder = {
                         Text(
@@ -385,9 +379,20 @@ fun TagInputArea(
                         if (isInputValid) onAddTag(tagInput)
                     }),
                     trailingIcon = {
-                        Box(
-                            modifier = Modifier.padding(end = 8.dp),
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(end = 8.dp)
                         ) {
+                            if (tagInput.isNotEmpty()) {
+                                Text(
+                                    text = "${tagInput.length}/$charLimit",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (tagInput.length == charLimit) MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            }
+
                             FilledIconButton(
                                 onClick = { onAddTag(tagInput) },
                                 enabled = isInputValid,

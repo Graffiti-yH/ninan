@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.denser.june.core.data.JournalRepository
 import com.denser.june.core.domain.data_classes.Journal
 import com.denser.june.core.domain.enums.TagCategory
+import com.denser.june.presentation.utils.TagUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -28,14 +29,7 @@ class TagsVM(
 
     val primaryTags: StateFlow<List<String>> =
         combine(allUniqueTags, _selectedCategory) { tags, category ->
-            val filtered = tags.filter { tag ->
-                when (category) {
-                    TagCategory.Spaces -> !tag.startsWith("@") && !tag.startsWith("#")
-                    TagCategory.People -> tag.startsWith("@")
-                    TagCategory.Themes -> tag.startsWith("#")
-                }
-            }.sorted()
-            filtered
+            TagUtils.filterTagsByCategory(tags, category).sorted()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
@@ -48,7 +42,7 @@ class TagsVM(
         }
     }
 
-    val tagCounts: StateFlow<Map<String, Int>> = repository.getTagCounts().map { it }
+    val tagCounts: StateFlow<Map<String, Int>> = repository.getTagCounts()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
     val journals: StateFlow<List<Journal>> = combine(
@@ -64,7 +58,9 @@ class TagsVM(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val availableFilters: StateFlow<List<String>> = journals.map { currentJournals ->
-        currentJournals.flatMap { it.tags }.distinct().filter { it != _selectedPrimaryTag.value }
+        currentJournals.flatMap { it.tags }
+            .distinct()
+            .filter { it != _selectedPrimaryTag.value }
             .sorted()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -81,19 +77,9 @@ class TagsVM(
     fun renameCurrentTag(newNameInput: String) {
         val oldTag = _selectedPrimaryTag.value ?: return
         val trimmedInput = newNameInput.trim()
-
-        val targetCategory = when {
-            trimmedInput.startsWith("@") -> TagCategory.People
-            trimmedInput.startsWith("#") -> TagCategory.Themes
-            else -> TagCategory.Spaces
-        }
-
-        val cleanName = trimmedInput.removePrefix("@").removePrefix("#")
-        val newTag = when (targetCategory) {
-            TagCategory.People -> "@$cleanName"
-            TagCategory.Themes -> "#$cleanName"
-            TagCategory.Spaces -> cleanName
-        }
+        val targetCategory = TagUtils.getCategoryForTag(trimmedInput)
+        val cleanName = TagUtils.getCleanTagName(trimmedInput)
+        val newTag = TagUtils.appendPrefix(cleanName, targetCategory)
 
         if (oldTag == newTag) return
 

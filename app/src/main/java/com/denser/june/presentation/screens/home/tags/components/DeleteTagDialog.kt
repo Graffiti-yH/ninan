@@ -5,15 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.denser.june.R
-import com.denser.june.core.domain.enums.TagCategory
-import com.denser.june.presentation.utils.UiUtils
+import com.denser.june.presentation.utils.TagUtils
 
 @Composable
 fun DeleteTagDialog(
@@ -21,15 +18,6 @@ fun DeleteTagDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    val category = remember(tagName) {
-        when {
-            tagName.startsWith("@") -> TagCategory.People
-            tagName.startsWith("#") -> TagCategory.Themes
-            else -> TagCategory.Spaces
-        }
-    }
-    val spec = UiUtils.getCategoryUiSpec(category)
-
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = {
@@ -60,7 +48,7 @@ fun DeleteTagDialog(
                         )
                     },
                     shape = RoundedCornerShape(12.dp),
-                    colors = UiUtils.getTagInputChipColors(tagName),
+                    colors = TagUtils.getTagInputChipColors(tagName),
                     border = null
                 )
                 Text(
