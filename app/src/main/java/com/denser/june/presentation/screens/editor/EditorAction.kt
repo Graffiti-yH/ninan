@@ -13,8 +13,7 @@ sealed interface EditorAction {
     data class RemoveImage(val uri: String) : EditorAction
     data class MoveImageToFront(val uri: String) : EditorAction
 
-    data class AddTag(val tag: String) : EditorAction
-    data class RemoveTag(val tag: String) : EditorAction
+    data class UpdateTags(val tags: List<String>) : EditorAction
     data class SearchTags(val query: String) : EditorAction
 
     data class FetchSong(val url: String) : EditorAction

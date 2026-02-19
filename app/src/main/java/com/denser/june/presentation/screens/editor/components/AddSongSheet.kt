@@ -21,6 +21,8 @@ import com.denser.june.core.domain.data_classes.SongDetails
 import kotlinx.coroutines.launch
 
 import com.denser.june.R
+import com.denser.june.presentation.components.JuneFloatingAction
+import com.denser.june.presentation.components.JuneFloatingActionBar
 import com.denser.june.presentation.utils.UiUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,17 +54,29 @@ fun AddSongSheet(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             topBar = { AddSongSheetHeader() },
             floatingActionButton = {
-                AddSongBottomBar(
-                    onPaste = {
-                        scope.launch {
-                            val clipEntry = clipboard.getClipEntry()
-                            val text = clipEntry?.clipData?.getItemAt(0)?.text?.toString() ?: ""
-                            songLink = text
-                            onFetchDetails(text)
-                        }
-                    },
-                    onDone = onDismiss
-                )
+                JuneFloatingActionBar(
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    JuneFloatingAction(
+                        onClick = {
+                            scope.launch {
+                                val clipEntry = clipboard.getClipEntry()
+                                val text = clipEntry?.clipData?.getItemAt(0)?.text?.toString() ?: ""
+                                songLink = text
+                                onFetchDetails(text)
+                            }
+                        },
+                        label = "Paste",
+                        icon = { Icon(painterResource(R.drawable.content_paste_go_24px), contentDescription = null) },
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    JuneFloatingAction(
+                        onClick = onDismiss,
+                        label = "Done",
+                        icon = { Icon(painterResource(R.drawable.check_24px), contentDescription = null) }
+                    )
+                }
             },
             floatingActionButtonPosition = FabPosition.Center
         ) { paddingValues ->
@@ -234,63 +248,5 @@ private fun AddSongSheetHeader() {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
         )
-    }
-}
-
-@Composable
-private fun AddSongBottomBar(
-    onPaste: () -> Unit,
-    onDone: () -> Unit
-) {
-    Surface(
-        modifier = Modifier.padding(bottom = 16.dp),
-        color = Color.Transparent
-    ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = RoundedCornerShape(percent = 50)
-                )
-                .padding(6.dp)
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ExtendedFloatingActionButton(
-                    onClick = onPaste,
-                    icon = {
-                        Icon(
-                            painterResource(R.drawable.content_paste_go_24px),
-                            contentDescription = null
-                        )
-                    },
-                    text = { Text("Paste") },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    shape = CircleShape,
-                    modifier = Modifier.height(40.dp),
-                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-                )
-
-                ExtendedFloatingActionButton(
-                    onClick = onDone,
-                    icon = {
-                        Icon(
-                            painterResource(R.drawable.check_24px),
-                            contentDescription = null
-                        )
-                    },
-                    text = { Text("Done") },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    shape = CircleShape,
-                    modifier = Modifier.height(40.dp),
-                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-                )
-            }
-        }
     }
 }

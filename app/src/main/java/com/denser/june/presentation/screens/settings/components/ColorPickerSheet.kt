@@ -39,6 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.denser.june.R
+import com.denser.june.presentation.components.JuneFloatingAction
+import com.denser.june.presentation.components.JuneFloatingActionBar
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -91,12 +93,25 @@ fun ColorPickerSheet(
                 }
             },
             floatingActionButton = {
-                ColorPickerBottombar(
-                    onClose = onDismiss,
-                    onDone = {
-                        onSelect(controller.selectedColor.value)
-                        onDismiss()
-                    })
+                JuneFloatingActionBar(
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    JuneFloatingAction(
+                        onClick = onDismiss,
+                        label = stringResource(R.string.close),
+                        icon = { Icon(painterResource(R.drawable.close_24px), contentDescription = null) },
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    JuneFloatingAction(
+                        onClick = {
+                            onSelect(controller.selectedColor.value)
+                            onDismiss()
+                        },
+                        label = "Save",
+                        icon = { Icon(painterResource(R.drawable.check_24px), contentDescription = null) }
+                    )
+                }
             }, floatingActionButtonPosition = FabPosition.Center
         ) { paddingValues ->
             Column(
@@ -202,58 +217,6 @@ fun ColorPickerSheet(
                     }
                 }
                 Spacer(modifier = Modifier.height(100.dp))
-            }
-        }
-    }
-}
-
-@Composable
-fun ColorPickerBottombar(
-    modifier: Modifier = Modifier,
-    onClose: () -> Unit,
-    onDone: () -> Unit,
-) {
-    Surface(
-        modifier = modifier.padding(bottom = 16.dp),
-        color = Color.Transparent,
-        shadowElevation = 0.dp
-    ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = RoundedCornerShape(percent = 50)
-                )
-                .padding(6.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                ExtendedFloatingActionButton(
-                    onClick = onClose,
-                    icon = { Icon(painterResource(R.drawable.close_24px), contentDescription = null) },
-                    text = { Text(stringResource(R.string.close)) },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    shape = CircleShape,
-                    modifier = Modifier.height(40.dp),
-                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-                )
-
-                ExtendedFloatingActionButton(
-                    onClick = onDone,
-                    icon = { Icon(painterResource(R.drawable.check_24px), contentDescription = null) },
-                    text = { Text(stringResource(R.string.done)) },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    shape = CircleShape,
-                    modifier = Modifier.height(40.dp),
-                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-                )
             }
         }
     }

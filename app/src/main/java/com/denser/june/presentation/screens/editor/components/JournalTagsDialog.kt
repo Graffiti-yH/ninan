@@ -27,6 +27,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
 import com.denser.june.presentation.components.JuneAppBarType
+import com.denser.june.presentation.components.JuneFloatingAction
+import com.denser.june.presentation.components.JuneFloatingActionBar
 import com.denser.june.presentation.components.JuneTopAppBar
 import com.denser.june.presentation.utils.TagUtils
 import com.denser.june.presentation.utils.UiUtils
@@ -37,25 +39,64 @@ fun JournalTagsDialog(
     tags: List<String>,
     suggestions: List<String>,
     isEditMode: Boolean,
-    onAddTag: (String) -> Unit,
-    onRemoveTag: (String) -> Unit,
+    onSaveTags: (List<String>) -> Unit,
     onSearchTags: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
+    var localTags by remember { mutableStateOf(tags) }
+    val hasChanges = localTags != tags
+
     var tagInput by remember { mutableStateOf("") }
     var showInfoDialog by remember { mutableStateOf(false) }
+    var showExitDialog by remember { mutableStateOf(false) }
 
     fun onInsertPrefix(prefix: String) {
         tagInput = prefix
         onSearchTags(prefix)
     }
 
+    fun handleDismiss() {
+        if (hasChanges && isEditMode) {
+            showExitDialog = true
+        } else {
+            onDismiss()
+        }
+    }
+
     if (showInfoDialog) {
         TagInfoDialog(onDismiss = { showInfoDialog = false })
     }
 
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            icon = {
+                Icon(
+                    painterResource(R.drawable.file_save_24px),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            },
+            title = { Text("Save Changes?") },
+            text = { Text("You have unsaved changes to your tags. Do you want to save them before exiting?") },
+            confirmButton = {
+                Button(onClick = {
+                    showExitDialog = false
+                    onSaveTags(localTags)
+                    onDismiss()
+                }) { Text("Save") }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = {
+                    showExitDialog = false
+                    onDismiss()
+                }) { Text("Discard") }
+            }
+        )
+    }
+
     Dialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = ::handleDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false
@@ -76,7 +117,7 @@ fun JournalTagsDialog(
                     },
                     navigationIcon = {
                         FilledIconButton(
-                            onClick = onDismiss,
+                            onClick = ::handleDismiss,
                             colors = IconButtonDefaults.filledIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f)
@@ -102,22 +143,58 @@ fun JournalTagsDialog(
                     )
                 )
             },
+            floatingActionButtonPosition = FabPosition.Center,
+            floatingActionButton = {
+                JuneFloatingActionBar {
+                    if (isEditMode) {
+                        JuneFloatingAction(
+                            onClick = { if (hasChanges) localTags = tags },
+                            label = "Reset",
+                            icon = { Icon(painterResource(R.drawable.replay_24px), null) },
+                            enabled = hasChanges,
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
+                    JuneFloatingAction(
+                        onClick = {
+                            if (hasChanges && isEditMode) {
+                                onSaveTags(localTags)
+                            }
+                            onDismiss()
+                        },
+                        label = if (isEditMode) "Done" else "Close",
+                        icon = {
+                            val iconRes = if (isEditMode) R.drawable.check_24px else R.drawable.close_24px
+                            Icon(painterResource(iconRes), null)
+                        }
+                    )
+                }
+            },
             bottomBar = {
                 if (isEditMode) {
-                    TagInputArea(
-                        tagInput = tagInput,
-                        onInputChange = {
-                            tagInput = it
-                            onSearchTags(it)
-                        },
-                        suggestions = suggestions,
-                        onAddTag = {
-                            onAddTag(it)
-                            tagInput = ""
-                            onSearchTags("")
-                        },
-                        onInsertPrefix = ::onInsertPrefix
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        TagInputArea(
+                            tagInput = tagInput,
+                            onInputChange = {
+                                tagInput = it
+                                onSearchTags(it)
+                            },
+                            suggestions = suggestions,
+                            onAddTag = { newTag ->
+                                val trimmed = newTag.trim()
+                                if (trimmed.isNotBlank() && !localTags.contains(trimmed)) {
+                                    localTags = localTags + trimmed
+                                }
+                                tagInput = ""
+                                onSearchTags("")
+                            },
+                            onInsertPrefix = ::onInsertPrefix
+                        )
+                    }
                 }
             }
         ) { paddingValues ->
@@ -132,20 +209,21 @@ fun JournalTagsDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 TagCategory.entries.forEach { category ->
                     val spec = TagUtils.getCategoryUiSpec(category)
-                    val categoryTags = TagUtils.filterTagsByCategory(tags, category)
+                    val categoryTags = TagUtils.filterTagsByCategory(localTags, category)
                     TagSectionCard(
                         title = category.label,
                         prefix = category.prefix,
                         iconRes = spec.iconRes,
                         tags = categoryTags,
                         isEditMode = isEditMode,
-                        onRemove = onRemoveTag,
+                        onRemove = { tagToRemove ->
+                            localTags = localTags - tagToRemove
+                        },
                         emptyMessage = spec.emptyMessage,
                         tintColor = spec.color
                     )
                 }
-
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(120.dp))
             }
         }
     }

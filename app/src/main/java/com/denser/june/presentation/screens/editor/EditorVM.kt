@@ -61,9 +61,8 @@ class EditorVM(
             is EditorAction.ChangeEmoji -> updateState { it.copy(emoji = action.emoji) }
 
             is EditorAction.AddImage -> updateState { it.copy(images = it.images + action.uri) }
-            is EditorAction.AddImages -> {
-                updateState { it.copy(images = it.images + action.uris) }
-            }
+            is EditorAction.AddImages -> updateState { it.copy(images = it.images + action.uris) }
+
             is EditorAction.RemoveImage -> {
                 FileUtils.deleteMedia(action.uri)
                 updateState { it.copy(images = it.images - action.uri) }
@@ -76,15 +75,7 @@ class EditorVM(
                 }
             }
 
-            is EditorAction.AddTag -> {
-                val trimmedTag = action.tag.trim()
-                if (trimmedTag.isNotBlank() && !_state.value.tags.contains(trimmedTag)) {
-                    updateState { it.copy(tags = it.tags + trimmedTag) }
-                }
-            }
-            is EditorAction.RemoveTag -> {
-                updateState { it.copy(tags = it.tags - action.tag) }
-            }
+            is EditorAction.UpdateTags -> updateState { it.copy(tags = action.tags) }
             is EditorAction.SearchTags -> {
                 viewModelScope.launch {
                     journalRepo.getTagSuggestions(action.query).collect { suggestions ->
@@ -209,7 +200,8 @@ class EditorVM(
                 currentState.emoji == null &&
                 currentState.images.isEmpty() &&
                 currentState.songDetails == null &&
-                currentState.location == null
+                currentState.location == null &&
+                currentState.tags.isEmpty()
             ) return@launch
 
             val currentTime = System.currentTimeMillis()
@@ -223,6 +215,7 @@ class EditorVM(
                 images = currentState.images,
                 location = currentState.location,
                 songDetails = currentState.songDetails,
+                tags = currentState.tags,
                 createdAt = existingJournal?.createdAt ?: currentTime,
                 updatedAt = currentTime,
                 dateTime = currentState.dateTime,

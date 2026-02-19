@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.presentation.screens.home.timeline.components.TimelineCalendarPage
 import com.denser.june.presentation.screens.home.timeline.components.TimelineMonthStrip
 import com.denser.june.presentation.screens.home.timeline.components.TimelineTabs
+import com.denser.june.presentation.utils.UiUtils
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
@@ -190,7 +191,7 @@ fun TimelinePage(
             journals = journalsInMonth,
             onTabSelected = { viewModel.onTabChange(it) },
             modifier = Modifier.weight(1f),
-            bottomPadding = 80.dp
+            bottomPadding = UiUtils.BOTTOM_BAR_PADDING
         )
     }
 }

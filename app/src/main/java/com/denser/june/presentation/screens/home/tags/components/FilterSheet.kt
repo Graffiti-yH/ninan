@@ -15,6 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
+import com.denser.june.presentation.components.JuneFloatingAction
+import com.denser.june.presentation.components.JuneFloatingActionBar
 import com.denser.june.presentation.utils.TagUtils
 
 @Composable
@@ -85,7 +87,7 @@ fun FilterBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(bottom = 32.dp),
+                .padding(bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -102,51 +104,21 @@ fun FilterBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .padding(top = 8.dp)
-                    .padding(horizontal = 20.dp),
+                    .padding(top = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Filter",
+                    text = "Filter Entries",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.Center)
+                    fontWeight = FontWeight.Bold
                 )
-
-                if (selectedFilters.isNotEmpty()) {
-                    InputChip(
-                        selected = true,
-                        onClick = onClearAll,
-                        label = {
-                            Text(
-                                text = "${selectedFilters.size}",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.close_24px),
-                                contentDescription = "Clear filters",
-                                modifier = Modifier.size(14.dp)
-                            )
-                        },
-                        colors = InputChipDefaults.inputChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            selectedLabelColor = MaterialTheme.colorScheme.error,
-                            selectedTrailingIconColor = MaterialTheme.colorScheme.error
-                        ),
-                        border = null,
-                        shape = CircleShape,
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                    )
-                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .padding(horizontal = 24.dp)
+                    .weight(1f, fill = false),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 if (availableFilters.isEmpty()) {
@@ -169,6 +141,23 @@ fun FilterBottomSheet(
                         )
                     }
                 }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            JuneFloatingActionBar {
+                if (selectedFilters.isNotEmpty()) {
+                    JuneFloatingAction(
+                        onClick = onClearAll,
+                        label = "${selectedFilters.size}",
+                        icon = { Icon(painterResource(R.drawable.close_24px), contentDescription = null) },
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                JuneFloatingAction(
+                    onClick = onDismiss,
+                    label = "Done",
+                    icon = { Icon(painterResource(R.drawable.check_24px), contentDescription = null) }
+                )
             }
         }
     }

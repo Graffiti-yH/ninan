@@ -104,7 +104,6 @@ fun JuneMediaLightbox(
                     modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.width(4.dp))
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
                         colors = IconButtonDefaults.filledIconButtonColors(

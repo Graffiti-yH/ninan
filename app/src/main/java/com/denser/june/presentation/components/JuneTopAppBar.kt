@@ -30,7 +30,7 @@ fun JuneTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
 ) {
-    val globalModifier = modifier.padding(horizontal = 12.dp)
+    val globalModifier = modifier.padding(horizontal = 8.dp)
 
     when (type) {
         JuneAppBarType.Small -> {

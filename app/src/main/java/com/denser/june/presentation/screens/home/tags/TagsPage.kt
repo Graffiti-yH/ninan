@@ -127,7 +127,6 @@ fun TagsPage() {
 
                                         DropdownMenu(
                                             modifier = Modifier
-                                                .defaultMinSize(minWidth = 200.dp)
                                                 .padding(horizontal = 8.dp),
                                             expanded = showMenu,
                                             onDismissRequest = { showMenu = false },
@@ -137,7 +136,7 @@ fun TagsPage() {
                                         ) {
                                             DropdownMenuItem(
                                                 modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                                text = { Text("Rename Tag") },
+                                                text = { Text("Rename") },
                                                 onClick = {
                                                     showMenu = false
                                                     showRenameDialog = true
@@ -151,7 +150,7 @@ fun TagsPage() {
                                             )
                                             DropdownMenuItem(
                                                 modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                                text = { Text("Delete Tag") },
+                                                text = { Text("Delete") },
                                                 onClick = {
                                                     showMenu = false
                                                     showDeleteDialog = true

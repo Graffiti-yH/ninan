@@ -256,7 +256,6 @@ fun JournalScreen() {
                                 contentDescription = "Toggle Bookmark"
                             )
                         }
-                        Spacer(modifier = Modifier.width(4.dp))
                     }
                     if (state.isEditMode) {
                         Button(
@@ -267,7 +266,6 @@ fun JournalScreen() {
                         ) {
                             Text("Save")
                         }
-                        Spacer(modifier = Modifier.width(4.dp))
                     }
                     Box {
                         IconButton(
@@ -642,8 +640,9 @@ fun JournalScreen() {
             tags = state.tags,
             suggestions = state.tagSuggestions,
             isEditMode = state.isEditMode,
-            onAddTag = { viewModel.onAction(EditorAction.AddTag(it)) },
-            onRemoveTag = { viewModel.onAction(EditorAction.RemoveTag(it)) },
+            onSaveTags = { newTags ->
+                viewModel.onAction(EditorAction.UpdateTags(newTags))
+            },
             onSearchTags = { viewModel.onAction(EditorAction.SearchTags(it)) },
             onDismiss = { showTagsDialog = false }
         )
