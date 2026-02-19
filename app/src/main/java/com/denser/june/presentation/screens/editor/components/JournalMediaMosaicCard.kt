@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 fun JournalMosaicCard(
     modifier: Modifier = Modifier,
     mediaList: List<String>,
-    enablePlayback: Boolean = true,
+    enablePlayback: Boolean = false, // TODO: Resolve concurrent playback crash
     operations: MediaOperations,
     roundedCornerShape: RoundedCornerShape = RoundedCornerShape(24.dp)
 ) {
