@@ -22,7 +22,8 @@ interface JournalRepo {
         isBookmarked: Boolean? = null,
         isDraft: Boolean? = null,
         hasLocation: Boolean? = null,
-        hasSong: Boolean? = null
+        hasSong: Boolean? = null,
+        hasMedia: Boolean? = null
     ): Flow<List<Journal>>
 
     fun getUniqueTags(): Flow<List<String>>

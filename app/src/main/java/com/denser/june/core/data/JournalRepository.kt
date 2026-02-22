@@ -81,8 +81,9 @@ class JournalRepository(
         isBookmarked: Boolean?,
         isDraft: Boolean?,
         hasLocation: Boolean?,
-        hasSong: Boolean?
-    ): Flow<List<Journal>> = localDao.getJournals(query, isBookmarked, isDraft, hasLocation, hasSong)
+        hasSong: Boolean?,
+        hasMedia: Boolean?
+    ): Flow<List<Journal>> = localDao.getJournals(query, isBookmarked, isDraft, hasLocation, hasSong, hasMedia)
         .map { entities -> entities.map { it.toJournal() } }
 
     override fun getUniqueTags(): Flow<List<String>> = localDao.getAllUniqueTags()

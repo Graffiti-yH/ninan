@@ -14,24 +14,24 @@ class JournalsVM(
     private val _selectedTab = MutableStateFlow(JournalListTab.Journals)
     val selectedTab = _selectedTab.asStateFlow()
 
-    val journals: StateFlow<List<Journal>> = journalRepo.getJournals()
+    val journals: StateFlow<List<Journal>?> = journalRepo.getJournals()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+            initialValue = null
         )
 
     val nonDraftJournals = journals.map { list ->
-        list.filter { !it.isDraft }.sortedByDescending { it.dateTime }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        list?.filter { !it.isDraft }?.sortedByDescending { it.dateTime }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     val bookmarkedJournals = journals.map { list ->
-        list.filter { it.isBookmarked }.sortedByDescending { it.dateTime }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        list?.filter { it.isBookmarked }?.sortedByDescending { it.dateTime }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     val draftJournals = journals.map { list ->
-        list.filter { it.isDraft }.sortedByDescending { it.dateTime }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        list?.filter { it.isDraft }?.sortedByDescending { it.dateTime }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     fun onTabSelected(tab: JournalListTab) {
         _selectedTab.value = tab

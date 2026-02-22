@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.R
-import com.denser.june.presentation.screens.home.components.EmptyPage
+import com.denser.june.presentation.components.JunePlaceholderPage
 import com.denser.june.presentation.screens.home.components.JournalCard
 import com.denser.june.presentation.screens.home.components.RecentJournalCard
 import com.denser.june.presentation.utils.UiUtils
@@ -36,7 +36,6 @@ enum class JournalListTab(
 @Composable
 fun JournalsPage() {
     val viewModel: JournalsVM = koinViewModel()
-    val journals by viewModel.journals.collectAsStateWithLifecycle()
     val nonDrafts by viewModel.nonDraftJournals.collectAsStateWithLifecycle()
     val bookmarkedJournals by viewModel.bookmarkedJournals.collectAsStateWithLifecycle()
     val draftJournals by viewModel.draftJournals.collectAsStateWithLifecycle()
@@ -44,8 +43,8 @@ fun JournalsPage() {
     val selectedTab by viewModel.selectedTab.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
-    val recentJournal = remember(nonDrafts) { nonDrafts.firstOrNull() }
-    val moreJournals = remember(nonDrafts) { nonDrafts.drop(1) }
+    val recentJournal = remember(nonDrafts) { nonDrafts?.firstOrNull() }
+    val moreJournals = remember(nonDrafts) { nonDrafts?.drop(1) ?: emptyList() }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -72,8 +71,8 @@ fun JournalsPage() {
                         colors = ToggleButtonDefaults.toggleButtonColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            checkedContainerColor = MaterialTheme.colorScheme.primary,
-                            checkedContentColor = MaterialTheme.colorScheme.onPrimary,
+                            checkedContainerColor = MaterialTheme.colorScheme.onSecondary,
+                            checkedContentColor = MaterialTheme.colorScheme.secondary,
                         )
                     ) {
                         Row(
@@ -107,62 +106,74 @@ fun JournalsPage() {
             ) {
                 when (selectedTab) {
                     JournalListTab.Journals -> {
-                        if (nonDrafts.isEmpty()) {
+                        if (nonDrafts == null) {
                             item {
-                                Box(modifier = Modifier.fillParentMaxHeight(0.8f)) {
-                                    EmptyPage(
-                                        icon = R.drawable.auto_stories_off_24px,
-                                        title = "No journals yet",
-                                        subtitle = "Start capturing your journey today. Create your first entry to start your collection."
+                                JunePlaceholderPage(
+                                    modifier = Modifier.fillParentMaxHeight(0.8f),
+                                    isLoading = true
+                                )
+                            }
+                        } else if (nonDrafts?.isEmpty() == true) {
+                            item {
+                                JunePlaceholderPage(
+                                    modifier = Modifier.fillParentMaxHeight(0.8f),
+                                    icon = R.drawable.auto_stories_off_24px,
+                                    title = "No journals yet",
+                                    subtitle = "Start capturing your journey today. Create your first entry to start your collection."
+                                )
+                            }
+                        } else {
+                            if (recentJournal != null) {
+                                item(key = "header_recent") {
+                                    SectionHeader(
+                                        title = "Recent",
+                                        modifier = Modifier.animateItem()
+                                    )
+                                }
+                                item(key = "recent_${recentJournal.id}") {
+                                    RecentJournalCard(
+                                        journal = recentJournal,
+                                        modifier = Modifier.animateItem()
+                                    )
+                                }
+                            }
+                            if (moreJournals.isNotEmpty()) {
+                                item(key = "header_more") {
+                                    SectionHeader(
+                                        title = "More entries",
+                                        modifier = Modifier
+                                            .padding(top = 8.dp)
+                                            .animateItem()
+                                    )
+                                }
+                                items(moreJournals, key = { "more_${it.id}" }) { journal ->
+                                    JournalCard(
+                                        journal = journal,
+                                        modifier = Modifier.animateItem()
                                     )
                                 }
                             }
                         }
-                        if (recentJournal != null) {
-                            item(key = "header_recent") {
-                                SectionHeader(
-                                    title = "Recent",
-                                    modifier = Modifier.animateItem()
-                                )
-                            }
-                            item(key = "recent_${recentJournal.id}") {
-                                RecentJournalCard(
-                                    journal = recentJournal,
-                                    modifier = Modifier.animateItem()
-                                )
-                            }
-                        }
-                        if (moreJournals.isNotEmpty()) {
-                            item(key = "header_more") {
-                                SectionHeader(
-                                    title = "More entries",
-                                    modifier = Modifier
-                                        .padding(top = 8.dp)
-                                        .animateItem()
-                                )
-                            }
-                            items(moreJournals, key = { "more_${it.id}" }) { journal ->
-                                JournalCard(
-                                    journal = journal,
-                                    modifier = Modifier.animateItem()
-                                )
-                            }
-                        }
                     }
-
                     JournalListTab.Bookmarks -> {
-                        if (bookmarkedJournals.isEmpty()) {
+                        if (bookmarkedJournals == null) {
                             item {
-                                Box(modifier = Modifier.fillParentMaxHeight(0.8f)) {
-                                    EmptyPage(
-                                        icon = R.drawable.bookmarks_24px,
-                                        title = "No bookmarks",
-                                        subtitle = "Keep favorite moments in reach. Any entry you mark will appear here to revisit."
-                                    )
-                                }
+                                JunePlaceholderPage(
+                                    modifier = Modifier.fillParentMaxHeight(0.8f),
+                                    isLoading = true
+                                )
+                            }
+                        } else if (bookmarkedJournals?.isEmpty() == true) {
+                            item {
+                                JunePlaceholderPage(
+                                    modifier = Modifier.fillParentMaxHeight(0.8f),
+                                    icon = R.drawable.bookmarks_24px,
+                                    title = "No bookmarks",
+                                    subtitle = "Keep favorite moments in reach. Any entry you mark will appear here to revisit."
+                                )
                             }
                         } else {
-                            items(bookmarkedJournals, key = { "bm_${it.id}" }) { journal ->
+                            items(bookmarkedJournals!!, key = { "bm_${it.id}" }) { journal ->
                                 JournalCard(
                                     journal = journal,
                                     modifier = Modifier.animateItem()
@@ -170,20 +181,25 @@ fun JournalsPage() {
                             }
                         }
                     }
-
                     JournalListTab.Drafts -> {
-                        if (draftJournals.isEmpty()) {
+                        if (draftJournals == null) {
                             item {
-                                Box(modifier = Modifier.fillParentMaxHeight(0.8f)) {
-                                    EmptyPage(
-                                        icon = R.drawable.edit_note_24px,
-                                        title = "No drafts",
-                                        subtitle = "Your unfinished thoughts stay here. Any entry you start will be saved to finish later."
-                                    )
-                                }
+                                JunePlaceholderPage(
+                                    modifier = Modifier.fillParentMaxHeight(0.8f),
+                                    isLoading = true
+                                )
+                            }
+                        } else if (draftJournals?.isEmpty() == true) {
+                            item {
+                                JunePlaceholderPage(
+                                    modifier = Modifier.fillParentMaxHeight(0.8f),
+                                    icon = R.drawable.edit_note_24px,
+                                    title = "No drafts",
+                                    subtitle = "Your unfinished thoughts stay here. Any entry you start will be saved to finish later."
+                                )
                             }
                         } else {
-                            items(draftJournals, key = { "draft_${it.id}" }) { journal ->
+                            items(draftJournals!!, key = { "draft_${it.id}" }) { journal ->
                                 JournalCard(
                                     journal = journal,
                                     modifier = Modifier.animateItem()

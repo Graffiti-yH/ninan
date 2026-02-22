@@ -24,18 +24,18 @@ class TagsVM(
     private val _selectedFilters = MutableStateFlow<Set<String>>(emptySet())
     val selectedFilters = _selectedFilters.asStateFlow()
 
-    val allUniqueTags = repository.getUniqueTags()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val allUniqueTags: StateFlow<List<String>?> = repository.getUniqueTags()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val primaryTags: StateFlow<List<String>> =
+    val primaryTags: StateFlow<List<String>?> =
         combine(allUniqueTags, _selectedCategory) { tags, category ->
-            TagUtils.filterTagsByCategory(tags, category).sorted()
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+            tags?.let { TagUtils.filterTagsByCategory(it, category).sorted() }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     init {
         viewModelScope.launch {
             primaryTags.collectLatest { tags ->
-                if (_selectedPrimaryTag.value !in tags) {
+                if (tags != null && _selectedPrimaryTag.value !in tags) {
                     _selectedPrimaryTag.value = tags.firstOrNull()
                 }
             }
@@ -45,23 +45,24 @@ class TagsVM(
     val tagCounts: StateFlow<Map<String, Int>> = repository.getTagCounts()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
-    val journals: StateFlow<List<Journal>> = combine(
+    val journals: StateFlow<List<Journal>?> = combine(
         _selectedPrimaryTag, _selectedFilters
     ) { primaryTag, filters ->
-        if (primaryTag == null) return@combine emptyList<String>()
+        if (primaryTag == null) return@combine null
         val queryTags = mutableListOf(primaryTag)
         queryTags.addAll(filters)
         queryTags
     }.flatMapLatest { tags ->
-        if (tags.isEmpty()) flowOf(emptyList())
+        if (tags == null) flowOf(null)
+        else if (tags.isEmpty()) flowOf(emptyList())
         else repository.getJournalsByMultipleTags(tags)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     val availableFilters: StateFlow<List<String>> = journals.map { currentJournals ->
-        currentJournals.flatMap { it.tags }
-            .distinct()
-            .filter { it != _selectedPrimaryTag.value }
-            .sorted()
+        currentJournals?.flatMap { it.tags }
+            ?.distinct()
+            ?.filter { it != _selectedPrimaryTag.value }
+            ?.sorted() ?: emptyList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun selectCategory(category: TagCategory) {
@@ -93,7 +94,7 @@ class TagsVM(
 
     fun deleteCurrentTag() {
         val currentTag = _selectedPrimaryTag.value ?: return
-        val currentList = primaryTags.value
+        val currentList = primaryTags.value ?: return
 
         val nextTag = if (currentList.size > 1) {
             val currentIndex = currentList.indexOf(currentTag)

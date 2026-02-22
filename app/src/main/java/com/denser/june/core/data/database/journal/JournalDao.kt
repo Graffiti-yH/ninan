@@ -71,6 +71,8 @@ interface JournalDao {
         AND (:isBookmarked IS NULL OR isBookmarked = :isBookmarked)
         AND (:isDraft IS NULL OR isDraft = :isDraft)
         
+        AND (:hasMedia IS NULL OR (:hasMedia = 1 AND images IS NOT NULL) OR (:hasMedia = 0 AND images IS NULL))
+        
         AND (:hasLocation IS NULL OR (:hasLocation = 1 AND location IS NOT NULL) OR (:hasLocation = 0 AND location IS NULL))
         
         AND (:hasSong IS NULL OR (:hasSong = 1 AND songDetails IS NOT NULL) OR (:hasSong = 0 AND songDetails IS NULL))
@@ -82,7 +84,8 @@ interface JournalDao {
         isBookmarked: Boolean? = null,
         isDraft: Boolean? = null,
         hasLocation: Boolean? = null,
-        hasSong: Boolean? = null
+        hasSong: Boolean? = null,
+        hasMedia: Boolean? = null
     ): Flow<List<JournalEntity>>
 
     @Transaction

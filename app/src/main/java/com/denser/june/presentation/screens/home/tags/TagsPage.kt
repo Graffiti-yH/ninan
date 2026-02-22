@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.R
 import com.denser.june.core.domain.enums.TagCategory
-import com.denser.june.presentation.screens.home.components.EmptyPage
+import com.denser.june.presentation.components.JunePlaceholderPage
 import com.denser.june.presentation.screens.home.components.JournalCard
 import com.denser.june.presentation.screens.home.tags.components.DeleteTagDialog
 import com.denser.june.presentation.screens.home.tags.components.FilterBottomSheet
@@ -30,17 +30,19 @@ import com.denser.june.presentation.utils.TagUtils
 import com.denser.june.presentation.utils.UiUtils
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TagsPage() {
     val viewModel: TagsVM = koinViewModel()
 
     val allTags by viewModel.allUniqueTags.collectAsStateWithLifecycle()
     val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
+
     val primaryTags by viewModel.primaryTags.collectAsStateWithLifecycle()
+    val journals by viewModel.journals.collectAsStateWithLifecycle()
+
     val selectedPrimaryTag by viewModel.selectedPrimaryTag.collectAsStateWithLifecycle()
     val tagCounts by viewModel.tagCounts.collectAsStateWithLifecycle()
-    val journals by viewModel.journals.collectAsStateWithLifecycle()
     val availableFilters by viewModel.availableFilters.collectAsStateWithLifecycle()
     val selectedFilters by viewModel.selectedFilters.collectAsStateWithLifecycle()
 
@@ -60,13 +62,14 @@ fun TagsPage() {
             PrimaryTabRow(
                 selectedTabIndex = selectedCategory.ordinal,
                 containerColor = MaterialTheme.colorScheme.surface,
-                divider = { HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainerHigh) }
+                divider = {}
             ) {
                 TagCategory.entries.forEach { category ->
                     val spec = TagUtils.getCategoryUiSpec(category)
                     val isSelected = selectedCategory == category
 
                     Tab(
+                        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
                         selected = isSelected,
                         onClick = { viewModel.selectCategory(category) },
                         icon = {
@@ -87,14 +90,20 @@ fun TagsPage() {
                     )
                 }
             }
-            if (primaryTags.isNotEmpty()) {
+
+            if (primaryTags == null) {
+                JunePlaceholderPage(
+                    modifier = Modifier.weight(1f),
+                    isLoading = true
+                )
+            } else if (primaryTags!!.isNotEmpty()) {
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(primaryTags, key = { it }) { fullTag ->
+                    items(primaryTags!!, key = { it }) { fullTag ->
                         val isSelected = selectedPrimaryTag == fullTag
                         val count = tagCounts[fullTag] ?: 0
 
@@ -201,34 +210,44 @@ fun TagsPage() {
                         )
                     }
                 }
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 100.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (journals == null) {
+                        item {
+                            JunePlaceholderPage(
+                                modifier = Modifier.fillParentMaxHeight(0.8f),
+                                isLoading = true
+                            )
+                        }
+                    } else if (journals!!.isEmpty()) {
+                        item {
+                            JunePlaceholderPage(
+                                modifier = Modifier.fillParentMaxHeight(0.8f),
+                                icon = R.drawable.auto_stories_off_24px,
+                                title = "No entries",
+                                subtitle = "No journals match the current filters."
+                            )
+                        }
+                    } else {
+                        items(journals!!, key = { it.id }) { journal ->
+                            JournalCard(journal = journal, modifier = Modifier.animateItem())
+                        }
+                    }
+                }
             } else {
-                EmptyPage(
+                JunePlaceholderPage(
+                    modifier = Modifier.weight(1f),
                     icon = currentCategorySpec.iconRes,
                     title = "No ${selectedCategory.label.lowercase()} yet",
                     subtitle = "Tag a journal entry with a ${selectedCategory.singularLabel.lowercase()} to get started."
                 )
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 100.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(journals, key = { it.id }) { journal ->
-                    JournalCard(journal = journal, modifier = Modifier.animateItem())
-                }
-                if (journals.isEmpty() && primaryTags.isNotEmpty()) {
-                    item {
-                        EmptyPage(
-                            icon = R.drawable.auto_stories_off_24px,
-                            title = "No entries",
-                            subtitle = "No journals match the current filters."
-                        )
-                    }
-                }
             }
         }
 
@@ -257,12 +276,12 @@ fun TagsPage() {
             )
         }
 
-        if (selectedPrimaryTag != null) {
+        if (selectedPrimaryTag != null && allTags != null) {
             if (showRenameDialog) {
                 RenameTagDialog(
                     currentTagName = selectedPrimaryTag!!,
                     category = selectedCategory,
-                    existingTags = allTags,
+                    existingTags = allTags!!,
                     onDismiss = { showRenameDialog = false },
                     onRename = { newName ->
                         viewModel.renameCurrentTag(newName)
