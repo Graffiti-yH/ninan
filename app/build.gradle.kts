@@ -18,9 +18,9 @@ val appNamespace = "com.denser.june"
 val apkNamePrefix = "june"
 
 val versionMajor = 0
-val versionMinor = 4
-val versionPatch = 1
-val appVersionCode = 5
+val versionMinor = 5
+val versionPatch = 0
+val appVersionCode = 6
 val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
