@@ -54,7 +54,7 @@ fun ItemGalleryScreen(
     var showSongSheet by remember { mutableStateOf(false) }
     var showLocationDialog by remember { mutableStateOf(false) }
 
-    val mediaOperations = remember(state.isEditMode, state.images) {
+    val mediaOperations = remember(state.images) {
         MediaOperations(
             onRemoveMedia = { viewModel.onAction(EditorAction.RemoveImage(it)) },
             onMoveToFront = { viewModel.onAction(EditorAction.MoveImageToFront(it)) },
@@ -72,7 +72,6 @@ fun ItemGalleryScreen(
             onSongSheetToggle = { showSongSheet = true },
             onRemoveLocation = { viewModel.onAction(EditorAction.RemoveLocation) },
             onLocationDialogToggle = { showLocationDialog = true },
-            isEditMode = state.isEditMode,
         )
     }
 
@@ -93,20 +92,8 @@ fun ItemGalleryScreen(
                             contentDescription = "Back",
                         )
                     }
-                },
-                actions = {
-                    if (state.isEditMode) {
-                        Button(
-                            onClick = { viewModel.onAction(EditorAction.SetEditMode(false)) }
-                        ) { Text("Done") }
-                    } else {
-                        OutlinedButton(
-                            onClick = { viewModel.onAction(EditorAction.SetEditMode(true)) }
-                        ) { Text("Edit") }
-                    }
-                },
-
-                )
+                }
+            )
         }
     ) { padding ->
         LazyVerticalGrid(
@@ -124,8 +111,7 @@ fun ItemGalleryScreen(
                         details = state.songDetails!!,
                         isFetching = state.isFetchingSong,
                         onRemove = mediaOperations.onRemoveSong,
-                        onEdit = { mediaOperations.onSongSheetToggle(true) },
-                        isEditMode = state.isEditMode
+                        onEdit = { mediaOperations.onSongSheetToggle(true) }
                     )
                 }
             }
@@ -134,8 +120,7 @@ fun ItemGalleryScreen(
                     JournalMapItem(
                         location = state.location!!,
                         onMapClick = { mediaOperations.onLocationDialogToggle(true) },
-                        onRemove = mediaOperations.onRemoveLocation,
-                        isEditMode = state.isEditMode
+                        onRemove = mediaOperations.onRemoveLocation
                     )
                 }
             }
@@ -169,7 +154,6 @@ fun ItemGalleryScreen(
     if (showLocationDialog) {
         AddLocationDialog(
             existingLocation = state.location,
-            isEditMode = state.isEditMode,
             onLocationSelected = { loc ->
                 viewModel.onAction(EditorAction.SetLocation(loc))
             },

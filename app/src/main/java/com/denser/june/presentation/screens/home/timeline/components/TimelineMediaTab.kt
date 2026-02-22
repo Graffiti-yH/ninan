@@ -78,8 +78,9 @@ fun TimelineMediaTab(
                                         path = mediaPath,
                                         modifier = Modifier
                                             .aspectRatio(1f),
-                                        enablePlayback = false,
                                         isLargeItem = true,
+                                        enablePlayback = false,
+                                        enableContextMenu = false,
                                         operations = MediaOperations(
                                             onMediaClick = {
                                                 val globalIndex = allMedia.indexOf(mediaPath)
@@ -90,8 +91,7 @@ fun TimelineMediaTab(
                                                     ),
                                                     isSingleTop = true,
                                                 )
-                                            },
-                                            isEditMode = false
+                                            }
                                         ),
                                     )
                                 }

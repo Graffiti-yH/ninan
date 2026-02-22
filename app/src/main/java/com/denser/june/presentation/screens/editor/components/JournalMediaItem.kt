@@ -53,6 +53,10 @@ import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
 import com.denser.june.R
 import com.denser.june.core.utils.toHoursMinutesSeconds
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
 import com.denser.june.presentation.utils.rememberManagedExoPlayer
 import kotlinx.coroutines.delay
 import java.io.File
@@ -64,11 +68,13 @@ fun JournalMediaItem(
     operations: MediaOperations,
     isLargeItem: Boolean,
     enablePlayback: Boolean = true,
+    enableContextMenu: Boolean = true,
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
 
     var showMenu by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var pressOffset by remember { mutableStateOf(DpOffset.Zero) }
 
     val isVideo = remember(path) { path.endsWith("mp4", ignoreCase = true) }
@@ -92,11 +98,11 @@ fun JournalMediaItem(
             .indication(interactionSource, LocalIndication.current)
             .then(
                 if (shouldCaptureTouch) {
-                    Modifier.pointerInput(operations.isEditMode, operations.onMediaClick) {
+                    Modifier.pointerInput(operations.onMediaClick, enableContextMenu) {
                         detectTapGestures(
                             onTap = { operations.onMediaClick?.invoke(path) },
                             onLongPress = { offset ->
-                                if (operations.isEditMode) {
+                                if (enableContextMenu) {
                                     showMenu = true
                                     pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
                                 }
@@ -168,7 +174,7 @@ fun JournalMediaItem(
             )
         }
 
-        if (operations.isEditMode && showMenu) {
+        if (showMenu && enableContextMenu) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -190,9 +196,8 @@ fun JournalMediaItem(
                         modifier = Modifier.clip(RoundedCornerShape(16.dp)),
                         text = { Text("Delete") },
                         onClick = {
-                            isPlaying = false
-                            operations.onRemoveMedia(path)
                             showMenu = false
+                            showDeleteDialog = true
                         },
                         leadingIcon = { Icon(painterResource(R.drawable.delete_24px), null) }
                     )
@@ -209,6 +214,41 @@ fun JournalMediaItem(
                     }
                 }
             }
+        }
+
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                icon = {
+                    Icon(
+                        painterResource(R.drawable.delete_24px),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                },
+                title = { Text("Delete Media?") },
+                text = { Text("Are you sure you want to remove this media from your journal?") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            isPlaying = false
+                            operations.onRemoveMedia(path)
+                            showDeleteDialog = false
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.onError
+                        )
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    OutlinedButton(onClick = { showDeleteDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }

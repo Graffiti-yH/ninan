@@ -63,7 +63,6 @@ import java.util.Locale
 @Composable
 fun AddLocationDialog(
     existingLocation: JournalLocation? = null,
-    isEditMode: Boolean = true,
     onLocationSelected: (JournalLocation) -> Unit = {},
     onDismiss: () -> Unit
 ) {
@@ -123,16 +122,14 @@ fun AddLocationDialog(
     }
 
     LaunchedEffect(cameraState.position.target) {
-        if (isEditMode) {
-            isAddressLoading = true
-            delay(800)
-            val target = cameraState.position.target
-            if (target.latitude != 0.0 || target.longitude != 0.0) {
-                val latLng = LatLng(target.latitude, target.longitude)
-                currentLocation = MapTilerUtils.updateLocationFromCenter(context, latLng)
-            }
-            isAddressLoading = false
+        isAddressLoading = true
+        delay(800)
+        val target = cameraState.position.target
+        if (target.latitude != 0.0 || target.longitude != 0.0) {
+            val latLng = LatLng(target.latitude, target.longitude)
+            currentLocation = MapTilerUtils.updateLocationFromCenter(context, latLng)
         }
+        isAddressLoading = false
     }
 
     fun animateToLocation(latLng: LatLng, zoom: Double = 15.0) {
@@ -206,7 +203,7 @@ fun AddLocationDialog(
     }
 
     LaunchedEffect(Unit) {
-        if (existingLocation == null && isEditMode) {
+        if (existingLocation == null) {
             onMyLocationClick()
         }
     }
@@ -248,37 +245,22 @@ fun AddLocationDialog(
                     .statusBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                if (isEditMode) {
-                    MapSearchBar(
-                        query = searchQuery,
-                        onQueryChange = { searchQuery = it },
-                        onSearch = {
-                            focusManager.clearFocus()
-                            scope.launch {
-                                isSearching = true
-                                MapTilerUtils.searchLocation(context, searchQuery)?.let { result ->
-                                    animateToLocation(LatLng(result.latitude, result.longitude))
-                                }
-                                isSearching = false
+                MapSearchBar(
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    onSearch = {
+                        focusManager.clearFocus()
+                        scope.launch {
+                            isSearching = true
+                            MapTilerUtils.searchLocation(context, searchQuery)?.let { result ->
+                                animateToLocation(LatLng(result.latitude, result.longitude))
                             }
-                        },
-                        isSearching = isSearching,
-                        onBack = onDismiss
-                    )
-                } else {
-                    FilledIconButton(
-                        onClick = onDismiss,
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        ),
-                        modifier = Modifier
-                            .size(44.dp)
-                            .align(Alignment.TopStart)
-                    ) {
-                        Icon(painterResource(R.drawable.close_24px), "Close")
-                    }
-                }
+                            isSearching = false
+                        }
+                    },
+                    isSearching = isSearching,
+                    onBack = onDismiss
+                )
             }
             Box(modifier = Modifier.align(Alignment.Center)) {
                 MapLocationPin(
@@ -298,7 +280,7 @@ fun AddLocationDialog(
                     isDarkMode = isMapDarkMode,
                     onToggleDarkMode = { isMapDarkMode = !isMapDarkMode },
                     isFetchingLocation = isFetchingLocation,
-                    onMyLocationClick = if (isEditMode) onMyLocationClick else null,
+                    onMyLocationClick = onMyLocationClick,
                     onZoomIn = {
                         scope.launch {
                             val currentPos = cameraState.position
@@ -325,7 +307,6 @@ fun AddLocationDialog(
                 MapBottomBar(
                     location = currentLocation,
                     isLoading = isAddressLoading,
-                    isEditMode = isEditMode,
                     isAtTarget = isAtSelectedLocation,
                     onLocationIconClick = {
                         existingLocation?.let {
@@ -347,7 +328,6 @@ fun AddLocationDialog(
 fun MapBottomBar(
     location: JournalLocation,
     isLoading: Boolean,
-    isEditMode: Boolean,
     isAtTarget: Boolean,
     onLocationIconClick: (() -> Unit)? = null,
     onConfirm: () -> Unit
@@ -371,7 +351,7 @@ fun MapBottomBar(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (isLoading && isEditMode) "Locating..." else (location.name
+                        text = if (isLoading) "Locating..." else (location.name
                             ?: "Unknown Place"),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
@@ -397,17 +377,16 @@ fun MapBottomBar(
                     color = if (isAtTarget) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer,
                     modifier = Modifier.size(48.dp),
                     onClick = { onLocationIconClick?.invoke() },
-                    enabled = !isEditMode && onLocationIconClick != null
+                    enabled = onLocationIconClick != null
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        if (isLoading && isEditMode) {
+                        if (isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
                                 strokeWidth = 2.dp
                             )
                         } else {
                             val icon = when {
-                                isEditMode -> R.drawable.add_location_24px
                                 isAtTarget -> R.drawable.location_on_24px_fill
                                 else -> R.drawable.explore_24px
                             }
@@ -458,29 +437,27 @@ fun MapBottomBar(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = if (isEditMode) "GPS • ±5m" else "Saved Location",
+                        text = "GPS • ±5m",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
 
-            if (isEditMode) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Button(
-                    onClick = onConfirm,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    enabled = !isLoading
-                ) {
-                    Text(
-                        "Confirm Location",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+            Spacer(modifier = Modifier.height(4.dp))
+            Button(
+                onClick = onConfirm,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(20.dp),
+                enabled = !isLoading
+            ) {
+                Text(
+                    "Confirm Location",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     }

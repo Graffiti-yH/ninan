@@ -51,7 +51,6 @@ data class MediaOperations(
     val onSongSheetToggle: (Boolean) -> Unit = {},
     val onRemoveLocation: () -> Unit = {},
     val onLocationDialogToggle: (Boolean) -> Unit = {},
-    val isEditMode: Boolean,
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -144,7 +143,6 @@ fun JournalItemsPreview(
                                 isFetching = false,
                                 onRemove = mediaOperations.onRemoveSong,
                                 onEdit = { mediaOperations.onSongSheetToggle(true) },
-                                isEditMode = mediaOperations.isEditMode
                             )
                         }
                     }
@@ -154,7 +152,6 @@ fun JournalItemsPreview(
                                 location = slide.location,
                                 onMapClick = { mediaOperations.onLocationDialogToggle(true) },
                                 onRemove = mediaOperations.onRemoveLocation,
-                                isEditMode = mediaOperations.isEditMode
                             )
                         }
                     }
@@ -216,7 +213,7 @@ fun JournalItemsPreview(
                         ToggleButton(
                             checked = config.isSelected,
                             onCheckedChange = { config.onClick() },
-                            enabled = config.exists || mediaOperations.isEditMode,
+                            enabled = config.exists,
                             shapes = shape,
                             colors = ToggleButtonDefaults.toggleButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,

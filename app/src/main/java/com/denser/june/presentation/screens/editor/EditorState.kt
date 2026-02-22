@@ -22,6 +22,5 @@ data class EditorState(
     val isLoading: Boolean = false,
     val isDirty: Boolean = false,
     val isDraft: Boolean = true,
-    val isEditMode: Boolean = true,
     val isFetchingSong: Boolean = false
 )

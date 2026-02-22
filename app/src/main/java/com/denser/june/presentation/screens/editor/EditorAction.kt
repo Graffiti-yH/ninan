@@ -22,7 +22,6 @@ sealed interface EditorAction {
     data class SetLocation(val location: JournalLocation) : EditorAction
     data object RemoveLocation : EditorAction
 
-    data class SetEditMode(val isEdit: Boolean) : EditorAction
     data object ToggleBookmark : EditorAction
     data object ToggleArchive : EditorAction
 

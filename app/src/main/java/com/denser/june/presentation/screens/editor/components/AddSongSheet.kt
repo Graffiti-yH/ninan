@@ -194,8 +194,7 @@ fun SongPreviewCard(
             details = songDetails,
             isFetching = isFetching,
             onRemove = onRemoveSong,
-            onEdit = { },
-            isEditMode = false
+            onEdit = { }
         )
         if (!isFetching && songDetails != null) {
             Box(

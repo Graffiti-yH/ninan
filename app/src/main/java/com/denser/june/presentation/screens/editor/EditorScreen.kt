@@ -51,7 +51,7 @@ import com.denser.june.presentation.utils.TagUtils
 import com.denser.june.presentation.utils.UiUtils
 import java.time.LocalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalScreen() {
     val viewModel: EditorVM = koinViewModel()
@@ -125,7 +125,7 @@ fun JournalScreen() {
     }
 
     val onBack = {
-        if (state.isEditMode && !state.isDraft && state.isDirty) {
+        if (!state.isDraft && state.isDirty) {
             showExitDialog = true
         } else {
             viewModel.onAction(EditorAction.NavigateBack)
@@ -140,7 +140,7 @@ fun JournalScreen() {
 
     BackHandler { onBack() }
 
-    val mediaOperations = remember(state.isEditMode, state.images) {
+    val mediaOperations = remember(state.images) {
         MediaOperations(
             onItemSheetToggle = { showAddItemSheet = it },
             onRemoveMedia = { viewModel.onAction(EditorAction.RemoveImage(it)) },
@@ -159,7 +159,6 @@ fun JournalScreen() {
             onSongSheetToggle = { showSongSheet = true },
             onRemoveLocation = { viewModel.onAction(EditorAction.RemoveLocation) },
             onLocationDialogToggle = { showLocationDialog = true },
-            isEditMode = state.isEditMode,
         )
     }
 
@@ -184,88 +183,68 @@ fun JournalScreen() {
                                 contentDescription = "Close",
                             )
                         }
-                        if (state.isEditMode || state.emoji != null) {
-                            FilledIconButton(
-                                onClick = {
-                                    if (state.isEditMode) {
-                                        showEmojiPicker = true
-                                    }
-                                },
-                                colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                        alpha = 0.75F
-                                    )
-                                ),
-                            ) {
-                                if (state.emoji != null) {
-                                    Text(
-                                        text = state.emoji!!,
-                                        fontSize = 22.sp
-                                    )
-                                } else {
-                                    Icon(
-                                        painter = painterResource(if (showEmojiPicker) R.drawable.sentiment_very_satisfied_24px_fill else R.drawable.sentiment_very_satisfied_24px),
-                                        contentDescription = "Add Emoji"
-                                    )
-                                }
+                        FilledIconButton(
+                            onClick = { showEmojiPicker = true },
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.75F
+                                )
+                            ),
+                        ) {
+                            if (state.emoji != null) {
+                                Text(
+                                    text = state.emoji!!,
+                                    fontSize = 22.sp
+                                )
+                            } else {
+                                Icon(
+                                    painter = painterResource(if (showEmojiPicker) R.drawable.sentiment_very_satisfied_24px_fill else R.drawable.sentiment_very_satisfied_24px),
+                                    contentDescription = "Add Emoji"
+                                )
                             }
                         }
-                        if (state.isEditMode) {
-                            FilledIconButton(
-                                onClick = { showAddItemSheet = true },
-                                colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                        alpha = 0.75F
-                                    )
-                                ),
-                            ) {
-                                Icon(
-                                    painter = painterResource(if (showAddItemSheet) R.drawable.add_circle_24px_fill else R.drawable.add_circle_24px),
-                                    contentDescription = "Add Attachment"
+                        FilledIconButton(
+                            onClick = { showAddItemSheet = true },
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.75F
                                 )
-                            }
-                            FilledIconButton(
-                                onClick = { showTagsDialog = true },
-                                colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                        alpha = 0.75F
-                                    )
-                                ),
-                            ) {
-                                Icon(
-                                    painter = painterResource(if (showTagsDialog) R.drawable.sell_24px_fill else R.drawable.sell_24px),
-                                    contentDescription = "Add Tags"
+                            ),
+                        ) {
+                            Icon(
+                                painter = painterResource(if (showAddItemSheet) R.drawable.add_circle_24px_fill else R.drawable.add_circle_24px),
+                                contentDescription = "Add Attachment"
+                            )
+                        }
+                        FilledIconButton(
+                            onClick = { showTagsDialog = true },
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.75F
                                 )
-                            }
+                            ),
+                        ) {
+                            Icon(
+                                painter = painterResource(if (showTagsDialog) R.drawable.sell_24px_fill else R.drawable.sell_24px),
+                                contentDescription = "Add Tags"
+                            )
                         }
                     }
                 },
                 actions = {
-                    if (!state.isEditMode) {
-                        IconButton(
-                            onClick = { viewModel.onAction(EditorAction.ToggleBookmark) },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f)
-                            ),
-                        ) {
-                            Icon(
-                                painter = painterResource(if (state.isBookmarked) R.drawable.bookmark_added_24px_fill else R.drawable.bookmark_24px),
-                                contentDescription = "Toggle Bookmark"
-                            )
-                        }
-                    }
-                    if (state.isEditMode) {
-                        Button(
-                            onClick = {
-                                viewModel.onAction(EditorAction.SaveJournal)
-                            },
-                            enabled = !state.isLoading,
-                        ) {
-                            Text("Save")
-                        }
+                    IconButton(
+                        onClick = { viewModel.onAction(EditorAction.ToggleBookmark) },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f)
+                        ),
+                    ) {
+                        Icon(
+                            painter = painterResource(if (state.isBookmarked) R.drawable.bookmark_added_24px_fill else R.drawable.bookmark_24px),
+                            contentDescription = "Toggle Bookmark"
+                        )
                     }
                     Box {
                         IconButton(
@@ -308,22 +287,23 @@ fun JournalScreen() {
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = !state.isEditMode,
-                enter = scaleIn() + fadeIn(),
-                exit = scaleOut() + fadeOut()
-            ) {
-                MediumFloatingActionButton(
+            if (state.isDirty) {
+                ExtendedFloatingActionButton(
+                    text = { Text("Save") },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.save_24px),
+                            contentDescription = "Save"
+                        )
+                    },
                     onClick = {
-                        viewModel.onAction(EditorAction.SetEditMode(!state.isEditMode))
-                        contentFocusRequester.requestFocus()
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.edit_24px_fill),
-                        contentDescription = "Edit"
-                    )
-                }
+                        if (!state.isLoading) {
+                            viewModel.onAction(EditorAction.SaveJournal)
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primaryContainer
+                )
             }
         },
         containerColor = MaterialTheme.colorScheme.surface
@@ -335,7 +315,6 @@ fun JournalScreen() {
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                    enabled = state.isEditMode,
                     onClick = { contentFocusRequester.requestFocus() }
                 )
         ) {
@@ -364,8 +343,6 @@ fun JournalScreen() {
                 TextField(
                     value = state.title,
                     onValueChange = { viewModel.onAction(EditorAction.ChangeTitle(it)) },
-                    readOnly = !state.isEditMode,
-                    enabled = state.isEditMode,
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(
@@ -384,17 +361,11 @@ fun JournalScreen() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .then(
-                            if (state.isEditMode) {
-                                Modifier.clickable {
-                                    keyboardController?.hide()
-                                    focusManager.clearFocus()
-                                    showDatePicker = true
-                                }
-                            } else {
-                                Modifier
-                            }
-                        )
+                        .clickable {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            showDatePicker = true
+                        }
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -456,20 +427,16 @@ fun JournalScreen() {
                 TextField(
                     value = state.content,
                     onValueChange = { viewModel.onAction(EditorAction.ChangeContent(it)) },
-                    readOnly = !state.isEditMode,
-                    enabled = state.isEditMode,
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(contentFocusRequester),
-                    placeholder = if (state.isEditMode) {
-                        {
-                            Text(
-                                "What's on your mind?",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                            )
-                        }
-                    } else null,
+                    placeholder = {
+                        Text(
+                            "What's on your mind?",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
+                    },
                     colors = UiUtils.getTransparentTextFieldColors()
                 )
             }
@@ -597,8 +564,7 @@ fun JournalScreen() {
             onLocationSelected = { loc ->
                 viewModel.onAction(EditorAction.SetLocation(loc))
             },
-            onDismiss = { showLocationDialog = false },
-            isEditMode = state.isEditMode
+            onDismiss = { showLocationDialog = false }
         )
     }
 
@@ -639,7 +605,6 @@ fun JournalScreen() {
         JournalTagsDialog(
             tags = state.tags,
             suggestions = state.tagSuggestions,
-            isEditMode = state.isEditMode,
             onSaveTags = { newTags ->
                 viewModel.onAction(EditorAction.UpdateTags(newTags))
             },

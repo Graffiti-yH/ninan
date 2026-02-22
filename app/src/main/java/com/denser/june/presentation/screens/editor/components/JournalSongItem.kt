@@ -28,7 +28,6 @@ fun JournalSongItem(
     isFetching: Boolean,
     onRemove: () -> Unit,
     onEdit: () -> Unit,
-    isEditMode: Boolean
 ) {
     val playerState = rememberSongPlayerState(previewUrl = details?.previewUrl)
 
@@ -49,23 +48,21 @@ fun JournalSongItem(
                         .clip(RoundedCornerShape(32.dp))
                         .indication(interactionSource, LocalIndication.current)
                         .then(
-                            if (isEditMode) {
-                                Modifier.pointerInput(Unit) {
-                                    detectTapGestures(
-                                        onTap = { onEdit() },
-                                        onLongPress = { offset ->
-                                            showMenu = true
-                                            pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
-                                        },
-                                        onPress = { offset ->
-                                            val press = PressInteraction.Press(offset)
-                                            interactionSource.emit(press)
-                                            tryAwaitRelease()
-                                            interactionSource.emit(PressInteraction.Release(press))
-                                        },
-                                    )
-                                }
-                            } else Modifier
+                            Modifier.pointerInput(Unit) {
+                                detectTapGestures(
+                                    onTap = { onEdit() },
+                                    onLongPress = { offset ->
+                                        showMenu = true
+                                        pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
+                                    },
+                                    onPress = { offset ->
+                                        val press = PressInteraction.Press(offset)
+                                        interactionSource.emit(press)
+                                        tryAwaitRelease()
+                                        interactionSource.emit(PressInteraction.Release(press))
+                                    },
+                                )
+                            }
                         )
                 ) {
                     JuneSongPlayerCard(
@@ -78,13 +75,13 @@ fun JournalSongItem(
                         onSeekFinished = playerState.onSeekFinished,
                     )
 
-                    if (isEditMode && showMenu) {
+                    if (showMenu) {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize() 
-                                .wrapContentSize(align = Alignment.TopStart) 
-                                .offset(x = pressOffset.x, y = pressOffset.y) 
-                                .size(1.dp) 
+                                .fillMaxSize()
+                                .wrapContentSize(align = Alignment.TopStart)
+                                .offset(x = pressOffset.x, y = pressOffset.y)
+                                .size(1.dp)
                         ) {
                             DropdownMenu(
                                 modifier = Modifier

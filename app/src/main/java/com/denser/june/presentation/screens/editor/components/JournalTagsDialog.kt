@@ -38,7 +38,6 @@ import com.denser.june.presentation.utils.UiUtils
 fun JournalTagsDialog(
     tags: List<String>,
     suggestions: List<String>,
-    isEditMode: Boolean,
     onSaveTags: (List<String>) -> Unit,
     onSearchTags: (String) -> Unit,
     onDismiss: () -> Unit
@@ -56,7 +55,7 @@ fun JournalTagsDialog(
     }
 
     fun handleDismiss() {
-        if (hasChanges && isEditMode) {
+        if (hasChanges) {
             showExitDialog = true
         } else {
             onDismiss()
@@ -110,7 +109,7 @@ fun JournalTagsDialog(
                     type = JuneAppBarType.CenterAligned,
                     title = {
                         Text(
-                            text = if (isEditMode) "Manage Tags" else "Tags",
+                            text = "Manage Tags",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -146,55 +145,50 @@ fun JournalTagsDialog(
             floatingActionButtonPosition = FabPosition.Center,
             floatingActionButton = {
                 JuneFloatingActionBar {
-                    if (isEditMode) {
-                        JuneFloatingAction(
-                            onClick = { if (hasChanges) localTags = tags },
-                            label = "Reset",
-                            icon = { Icon(painterResource(R.drawable.replay_24px), null) },
-                            enabled = hasChanges,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    }
+                    JuneFloatingAction(
+                        onClick = { if (hasChanges) localTags = tags },
+                        label = "Reset",
+                        icon = { Icon(painterResource(R.drawable.replay_24px), null) },
+                        enabled = hasChanges,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
                     JuneFloatingAction(
                         onClick = {
-                            if (hasChanges && isEditMode) {
+                            if (hasChanges) {
                                 onSaveTags(localTags)
                             }
                             onDismiss()
                         },
-                        label = if (isEditMode) "Done" else "Close",
+                        label = "Done",
                         icon = {
-                            val iconRes = if (isEditMode) R.drawable.check_24px else R.drawable.close_24px
-                            Icon(painterResource(iconRes), null)
+                            Icon(painterResource(R.drawable.check_24px), null)
                         }
                     )
                 }
             },
             bottomBar = {
-                if (isEditMode) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        TagInputArea(
-                            tagInput = tagInput,
-                            onInputChange = {
-                                tagInput = it
-                                onSearchTags(it)
-                            },
-                            suggestions = suggestions,
-                            onAddTag = { newTag ->
-                                val trimmed = newTag.trim()
-                                if (trimmed.isNotBlank() && !localTags.contains(trimmed)) {
-                                    localTags = localTags + trimmed
-                                }
-                                tagInput = ""
-                                onSearchTags("")
-                            },
-                            onInsertPrefix = ::onInsertPrefix
-                        )
-                    }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TagInputArea(
+                        tagInput = tagInput,
+                        onInputChange = {
+                            tagInput = it
+                            onSearchTags(it)
+                        },
+                        suggestions = suggestions,
+                        onAddTag = { newTag ->
+                            val trimmed = newTag.trim()
+                            if (trimmed.isNotBlank() && !localTags.contains(trimmed)) {
+                                localTags = localTags + trimmed
+                            }
+                            tagInput = ""
+                            onSearchTags("")
+                        },
+                        onInsertPrefix = ::onInsertPrefix
+                    )
                 }
             }
         ) { paddingValues ->
@@ -215,7 +209,6 @@ fun JournalTagsDialog(
                         prefix = category.prefix,
                         iconRes = spec.iconRes,
                         tags = categoryTags,
-                        isEditMode = isEditMode,
                         onRemove = { tagToRemove ->
                             localTags = localTags - tagToRemove
                         },
@@ -236,7 +229,6 @@ fun TagSectionCard(
     prefix: String?,
     iconRes: Int,
     tags: List<String>,
-    isEditMode: Boolean,
     onRemove: (String) -> Unit,
     emptyMessage: String,
     tintColor: Color
@@ -296,31 +288,21 @@ fun TagSectionCard(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     tags.forEach { tag ->
-                        if (isEditMode) {
-                            InputChip(
-                                selected = true,
-                                onClick = { onRemove(tag) },
-                                label = { Text(tag) },
-                                trailingIcon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.close_24px),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                },
-                                shape = RoundedCornerShape(12.dp),
-                                colors = TagUtils.getTagInputChipColors(tag),
-                                border = null
-                            )
-                        } else {
-                            SuggestionChip(
-                                onClick = {},
-                                label = { Text(tag) },
-                                shape = RoundedCornerShape(12.dp),
-                                colors = TagUtils.getTagSuggestionChipColors(tag),
-                                border = null
-                            )
-                        }
+                        InputChip(
+                            selected = true,
+                            onClick = { onRemove(tag) },
+                            label = { Text(tag) },
+                            trailingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24px),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = TagUtils.getTagInputChipColors(tag),
+                            border = null
+                        )
                     }
                 }
             }

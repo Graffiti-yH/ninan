@@ -100,7 +100,6 @@ class EditorVM(
             is EditorAction.SetLocation -> updateState { it.copy(location = action.location) }
             is EditorAction.RemoveLocation -> updateState { it.copy(location = null) }
 
-            is EditorAction.SetEditMode -> updateState { it.copy(isEditMode = action.isEdit) }
             is EditorAction.ToggleBookmark -> toggleBookmark()
             is EditorAction.ToggleArchive -> toggleArchive()
             is EditorAction.SaveJournal -> saveJournal()
@@ -190,7 +189,6 @@ class EditorVM(
                         isBookmarked = journal.isBookmarked,
                         isArchived = journal.isArchived,
                         isDraft = journal.isDraft,
-                        isEditMode = false,
                         isLoading = false,
                         isDirty = false
                     )
@@ -278,7 +276,7 @@ class EditorVM(
                 _state.update { it.copy(journalId = newId) }
             }
 
-            _state.update { it.copy(isDirty = false, isDraft = false, isEditMode = false) }
+            _state.update { it.copy(isDirty = false, isDraft = false) }
             navigator.navigateBack()
         }
     }

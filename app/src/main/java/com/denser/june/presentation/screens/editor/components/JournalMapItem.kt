@@ -41,8 +41,7 @@ import org.maplibre.spatialk.geojson.Position
 fun JournalMapItem(
     location: JournalLocation,
     onMapClick: () -> Unit,
-    onRemove: () -> Unit,
-    isEditMode: Boolean
+    onRemove: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var pressOffset by remember { mutableStateOf(DpOffset.Zero) }
@@ -140,14 +139,12 @@ fun JournalMapItem(
                     .fillMaxSize()
                     .clip(RoundedCornerShape(32.dp))
                     .indication(interactionSource, LocalIndication.current)
-                    .pointerInput(isEditMode) {
+                    .pointerInput(Unit) {
                         detectTapGestures(
                             onTap = { onMapClick() },
                             onLongPress = { offset ->
-                                if (isEditMode) {
-                                    showMenu = true
-                                    pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
-                                }
+                                showMenu = true
+                                pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
                             },
                             onPress = { offset ->
                                 val press = PressInteraction.Press(offset)
@@ -161,7 +158,7 @@ fun JournalMapItem(
             Box(modifier = Modifier.align(Alignment.Center)) {
                 MapLocationPin()
             }
-            if (isEditMode && showMenu) {
+            if (showMenu) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -170,7 +167,9 @@ fun JournalMapItem(
                         .size(1.dp)
                 ) {
                     DropdownMenu(
-                        modifier = Modifier.defaultMinSize(minWidth = 200.dp).padding(horizontal = 8.dp),
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 200.dp)
+                            .padding(horizontal = 8.dp),
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
                         shape = RoundedCornerShape(24.dp),
