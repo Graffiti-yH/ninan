@@ -23,4 +23,13 @@ data class EditorState(
     val isDirty: Boolean = false,
     val isDraft: Boolean = true,
     val isFetchingSong: Boolean = false
-)
+) {
+    val hasContent: Boolean
+        get() = title.isNotBlank() ||
+                content.isNotBlank() ||
+                emoji != null ||
+                images.isNotEmpty() ||
+                songDetails != null ||
+                location != null ||
+                tags.isNotEmpty()
+}

@@ -42,7 +42,9 @@ class EditorVM(
                 _state.update { currentState ->
                     currentState.copy(
                         dateTime = editorRoute.initialDate ?: currentState.dateTime,
-                        tags = editorRoute.initialTags ?: currentState.tags
+                        tags = editorRoute.initialTags ?: currentState.tags,
+                        isDraft = true,
+                        isDirty = true
                     )
                 }
             }
@@ -74,7 +76,6 @@ class EditorVM(
             is EditorAction.AddImages -> updateState { it.copy(images = it.images + action.uris) }
 
             is EditorAction.RemoveImage -> {
-                FileUtils.deleteMedia(action.uri)
                 updateState { it.copy(images = it.images - action.uri) }
             }
             is EditorAction.MoveImageToFront -> {
@@ -238,6 +239,8 @@ class EditorVM(
                 existingJournal = savedDraft
                 _state.update { it.copy(journalId = newId, isDirty = false, isDraft = true) }
             } else {
+                val imagesToDelete = existingJournal?.images.orEmpty().toSet() - currentState.images.toSet()
+                imagesToDelete.forEach { FileUtils.deleteMedia(it) }
                 journalRepo.updateJournal(journalToSave)
                 existingJournal = journalToSave
                 _state.update { it.copy(isDirty = false) }

@@ -6,7 +6,6 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -64,6 +63,12 @@ fun JournalScreen() {
     val focusManager = LocalFocusManager.current
     val contentFocusRequester = remember { FocusRequester() }
     val interactionSource = remember { MutableInteractionSource() }
+
+    val showSaveButton = if (state.isDraft) {
+        state.hasContent
+    } else {
+        state.isDirty
+    }
 
     var showExitDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
@@ -287,7 +292,7 @@ fun JournalScreen() {
             )
         },
         floatingActionButton = {
-            if (state.isDirty) {
+            if (showSaveButton) {
                 ExtendedFloatingActionButton(
                     text = { Text("Save") },
                     icon = {
@@ -483,7 +488,7 @@ fun JournalScreen() {
                 )
             },
             title = { Text("Save Entry?") },
-            text = { Text("Save this journal to revisit these thoughts anytime") },
+            text = { Text("Would you like to save your progress before leaving?") },
             confirmButton = {
                 Button(onClick = {
                     showExitDialog = false
@@ -494,7 +499,7 @@ fun JournalScreen() {
                 OutlinedButton(onClick = {
                     showExitDialog = false
                     viewModel.onAction(EditorAction.NavigateBack)
-                }) { Text("No Thanks") }
+                }) { Text("Discard") }
             }
         )
     }
