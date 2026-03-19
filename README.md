@@ -42,6 +42,7 @@ June is designed to be more than just text—it's a multimedia capsule of your l
 - **Smart Organization:** Intelligently categorize your entries using three distinct tag groups: **Spaces**, **People**, and **Topics**.
 - **Soundtrack Support:** Paste a link from any major streaming platform (Spotify, Apple Music, etc.), and June automatically fetches the cover art and song details.
 - **Mood Tracking:** Tag entries with emojis to log your emotional journey and personal growth over time.
+- **Rich Text Editing:** Style your entries with full support for bold, italics, underline, highlight and more.
 
 ### Relive Your History
 
