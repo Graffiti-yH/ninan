@@ -8,7 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.utils.FileUtils
 import com.denser.june.presentation.screens.editor.components.AddItemSheet
 import com.denser.june.presentation.screens.editor.components.AddLocationDialog

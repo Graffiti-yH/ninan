@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.components.JuneTopAppBar
 import org.koin.compose.koinInject

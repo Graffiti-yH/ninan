@@ -22,7 +22,7 @@ import com.denser.june.presentation.screens.home.tags.TagsPage
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.presentation.screens.home.tags.TagsVM
 import org.koin.compose.viewmodel.koinViewModel
 

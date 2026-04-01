@@ -1,7 +1,5 @@
 package com.denser.june.core.data
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -23,7 +21,7 @@ class AppPreferencesImpl(
 
     override suspend fun resetAppTheme() {
         dataStore.edit { preferences ->
-            preferences[seedColor] = Color.White.toArgb()
+            preferences[seedColor] = -1
             preferences[amoledPref] = false
             preferences[paletteStyle] = PaletteStyle.TonalSpot.name
             preferences[materialTheme] = false
@@ -57,7 +55,7 @@ class AppPreferencesImpl(
     }
 
     override fun getSeedColorFlow(): Flow<Int> = dataStore.data
-        .map { preferences -> preferences[seedColor] ?: Color.White.toArgb() }
+        .map { preferences -> preferences[seedColor] ?: -1 }
 
     override suspend fun updateSeedColor(newCardContent: Int) {
         dataStore.edit { settings ->

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.data_classes.JournalLocation
 import com.denser.june.core.domain.enums.ThemeMode
 import com.denser.june.presentation.components.MapControlColumn

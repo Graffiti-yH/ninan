@@ -30,7 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.data_classes.JournalLocation
 import com.denser.june.core.domain.data_classes.SongDetails
 import kotlinx.coroutines.launch

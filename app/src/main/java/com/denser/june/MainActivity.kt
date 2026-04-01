@@ -35,6 +35,7 @@ import com.denser.june.presentation.JuneApp
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import com.denser.june.core.R
 
 enum class LockState {
     LOADING,

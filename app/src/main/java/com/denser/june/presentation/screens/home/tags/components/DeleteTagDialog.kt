@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.presentation.utils.TagUtils
 
 @Composable

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.JournalRepo
 import com.denser.june.core.domain.data_classes.Journal
 import com.denser.june.core.domain.data_classes.SongDetails

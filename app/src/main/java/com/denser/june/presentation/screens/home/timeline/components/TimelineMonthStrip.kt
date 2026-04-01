@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.presentation.components.InfiniteMonthStrip
 import com.denser.june.presentation.components.YearHeader
 

@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.data_classes.SongDetails
 import com.denser.june.presentation.utils.rememberDynamicThemeColors
 import ir.mahozad.multiplatform.wavyslider.material3.WavySlider

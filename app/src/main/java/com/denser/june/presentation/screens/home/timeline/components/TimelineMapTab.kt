@@ -23,7 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.data_classes.Journal
 import com.denser.june.core.domain.enums.ThemeMode
 import com.denser.june.presentation.components.MapControlColumn
@@ -52,8 +52,9 @@ fun TimelineMapTab(
     remember { MapLibre.getInstance(context) }
 
     val validPoints = remember(journals) {
-        journals.filter {
-            it.location != null && it.location.latitude != 0.0 && it.location.longitude != 0.0
+        journals.filter { journal ->
+            val loc = journal.location
+            loc != null && loc.latitude != 0.0 && loc.longitude != 0.0
         }
     }
     var selectedIndex by remember { mutableIntStateOf(0) }
@@ -128,17 +129,19 @@ fun TimelineMapTab(
                             mapboxMap.clear()
 
                             validPoints.forEachIndexed { index, journal ->
-                                val loc = journal.location!!
-                                val markerOptions = MarkerOptions()
-                                    .position(LatLng(loc.latitude, loc.longitude))
-                                    .title(loc.name ?: "Location")
-                                    .icon(
-                                        getMarkerIcon(
-                                            R.drawable.location_on_24px_fill,
-                                            primaryColor
+                                val loc = journal.location
+                                if (loc != null) {
+                                    val markerOptions = MarkerOptions()
+                                        .position(LatLng(loc.latitude, loc.longitude))
+                                        .title(loc.name ?: "Location")
+                                        .icon(
+                                            getMarkerIcon(
+                                                R.drawable.location_on_24px_fill,
+                                                primaryColor
+                                            )
                                         )
-                                    )
-                                mapboxMap.addMarker(markerOptions)
+                                    mapboxMap.addMarker(markerOptions)
+                                }
                             }
                         }
                     }
@@ -146,17 +149,19 @@ fun TimelineMapTab(
             )
             LaunchedEffect(selectedIndex) {
                 if (validPoints.isNotEmpty()) {
-                    val target = validPoints[selectedIndex].location!!
-                    mapView.getMapAsync { map ->
-                        map.animateCamera(
-                            org.maplibre.android.camera.CameraUpdateFactory.newCameraPosition(
-                                CameraPosition.Builder()
-                                    .target(LatLng(target.latitude, target.longitude))
-                                    .zoom(16.0)
-                                    .build()
-                            ),
-                            800
-                        )
+                    val target = validPoints[selectedIndex].location
+                    if (target != null) {
+                        mapView.getMapAsync { map ->
+                            map.animateCamera(
+                                org.maplibre.android.camera.CameraUpdateFactory.newCameraPosition(
+                                    CameraPosition.Builder()
+                                        .target(LatLng(target.latitude, target.longitude))
+                                        .zoom(16.0)
+                                        .build()
+                                ),
+                                800
+                            )
+                        }
                     }
                 }
             }

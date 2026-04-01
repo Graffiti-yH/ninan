@@ -45,7 +45,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.utils.toHoursMinutesSeconds
 import com.denser.june.presentation.utils.rememberManagedExoPlayer
 import kotlinx.coroutines.delay

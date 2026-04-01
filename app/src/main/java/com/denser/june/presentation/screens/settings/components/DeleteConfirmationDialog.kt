@@ -28,7 +28,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.presentation.utils.UiUtils
 
 @Composable

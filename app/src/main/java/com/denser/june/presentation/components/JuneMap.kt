@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.denser.june.R
+import com.denser.june.core.R
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.denser.hyphen.model.MarkupStyle
 import com.denser.hyphen.state.HyphenTextState
-import com.denser.june.R
+import com.denser.june.core.R
 
 @Composable
 fun EditorToolbar(

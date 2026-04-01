@@ -28,7 +28,7 @@ import com.denser.june.presentation.screens.settings.SettingsAction
 import com.denser.june.presentation.screens.settings.SettingsState
 import org.koin.compose.koinInject
 
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.backup.RestoreFailedException
 import com.denser.june.presentation.screens.settings.SettingsVM
 import com.denser.june.presentation.screens.settings.section.SettingSection

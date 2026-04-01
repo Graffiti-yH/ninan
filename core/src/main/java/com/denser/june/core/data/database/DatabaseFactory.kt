@@ -3,7 +3,7 @@ package com.denser.june.core.data.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.denser.june.BuildConfig
+import com.denser.june.core.BuildConfig
 import com.denser.june.core.data.database.journal.JournalDatabase
 
 class DatabaseFactory(

@@ -20,7 +20,7 @@ import com.denser.june.core.domain.data_classes.SongDetails
 import com.denser.june.presentation.components.JuneSongPlayerCard
 import com.denser.june.presentation.utils.rememberSongPlayerState
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @Composable
 fun JournalSongItem(

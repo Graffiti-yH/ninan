@@ -1,6 +1,6 @@
 package com.denser.june.core.domain.enums
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 enum class ThemeMode(val stringRes: Int) {
     SYSTEM(R.string.system),

@@ -20,7 +20,7 @@ import com.denser.june.presentation.screens.settings.section.GeneralSection
 import org.koin.compose.koinInject
 
 
-import com.denser.june.R
+import com.denser.june.core.R
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

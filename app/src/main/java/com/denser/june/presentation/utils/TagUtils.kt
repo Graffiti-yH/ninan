@@ -3,7 +3,7 @@ package com.denser.june.presentation.utils
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.enums.TagCategory
 
 object TagUtils {

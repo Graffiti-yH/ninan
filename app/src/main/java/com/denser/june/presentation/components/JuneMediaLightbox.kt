@@ -29,7 +29,7 @@ import com.denser.june.presentation.navigation.AppNavigator
 import org.koin.compose.koinInject
 import java.io.File
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

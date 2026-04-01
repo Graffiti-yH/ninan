@@ -26,7 +26,7 @@ import com.denser.june.presentation.screens.home.journals.JournalsVM
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable

@@ -51,7 +51,7 @@ import androidx.media3.ui.PlayerView
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.VideoFrameDecoder
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.utils.toHoursMinutesSeconds
 import com.denser.june.presentation.utils.rememberManagedExoPlayer
 import kotlinx.coroutines.delay

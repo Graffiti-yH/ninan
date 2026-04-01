@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.toPath
-import com.denser.june.R
+import com.denser.june.core.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

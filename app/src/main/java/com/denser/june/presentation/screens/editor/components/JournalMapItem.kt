@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.domain.data_classes.JournalLocation
 import com.denser.june.core.domain.enums.ThemeMode
 import com.denser.june.presentation.components.MapLocationPin

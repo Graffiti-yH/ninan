@@ -33,7 +33,7 @@ import com.denser.june.presentation.utils.rememberDynamicThemeColors
 import com.denser.june.presentation.screens.home.timeline.TimelineVM
 import org.koin.compose.viewmodel.koinViewModel
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @Composable
 fun TimelineMusicTab(

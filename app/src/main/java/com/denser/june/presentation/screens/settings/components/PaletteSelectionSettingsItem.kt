@@ -30,7 +30,7 @@ import com.materialkolor.ktx.from
 import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.rememberDynamicColorScheme
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @Composable
 fun PaletteSelectionSettingsItem(

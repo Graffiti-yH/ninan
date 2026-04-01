@@ -44,7 +44,7 @@ import com.denser.hyphen.ui.HyphenStyleConfig
 import com.denser.hyphen.ui.ListItemStyle
 import com.denser.hyphen.ui.material3.HyphenTextEditor
 
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.utils.toFullTime
 import com.denser.june.core.utils.toLocalTime
 import com.denser.june.presentation.screens.editor.components.EditorToolbar

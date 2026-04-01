@@ -25,7 +25,7 @@ import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.navigation.Route
 import org.koin.compose.koinInject
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @Composable
 fun TimelineJournalTab(
@@ -136,10 +136,11 @@ fun TimelineJournalTile(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    if (journal.emoji != null) {
+                    val emoji = journal.emoji
+                    if (emoji != null) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = journal.emoji,
+                            text = emoji,
                             fontSize = 20.sp
                         )
                     }

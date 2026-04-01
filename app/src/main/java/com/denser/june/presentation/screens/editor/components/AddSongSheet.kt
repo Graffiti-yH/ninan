@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.denser.june.core.domain.data_classes.SongDetails
 import kotlinx.coroutines.launch
 
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.presentation.components.JuneFloatingAction
 import com.denser.june.presentation.components.JuneFloatingActionBar
 import com.denser.june.presentation.utils.UiUtils

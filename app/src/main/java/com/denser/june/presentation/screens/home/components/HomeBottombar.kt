@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.denser.june.presentation.screens.home.HomeTab
 import kotlinx.coroutines.launch
 
-import com.denser.june.R
+import com.denser.june.core.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable

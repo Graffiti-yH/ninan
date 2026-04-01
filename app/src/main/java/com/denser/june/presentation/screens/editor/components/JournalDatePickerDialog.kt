@@ -33,7 +33,7 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.launch
-import com.denser.june.R
+import com.denser.june.core.R
 import com.denser.june.core.utils.getDaysInMonthGrid
 import com.denser.june.core.utils.toLocalDate
 import com.denser.june.core.utils.toLocalTime
