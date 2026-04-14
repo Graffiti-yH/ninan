@@ -1,4 +1,6 @@
 package com.denser.june.core.data.sync
+ 
+import android.content.Context
 
 import android.util.Base64
 import com.denser.june.core.domain.model.Journal
@@ -24,6 +26,7 @@ import okio.sink
 import com.denser.june.core.domain.sync.RemoteFileMeta
 
 class WebDAVProvider(
+    private val context: Context,
     private val client: OkHttpClient,
     private val syncPrefs: SyncPreferences
 ) : CloudProvider {
@@ -33,7 +36,6 @@ class WebDAVProvider(
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
     private companion object {
-        const val USER_AGENT = "June/0.6.0 (Android)"
         const val XML_PROPFIND_BODY = """
             <?xml version="1.0" encoding="utf-8" ?>
             <d:propfind xmlns:d="DAV:">
@@ -58,7 +60,12 @@ class WebDAVProvider(
 
     private fun Request.Builder.webDavHeaders(auth: String, depth: String? = "0") = apply {
         header("Authorization", auth)
-        header("User-Agent", USER_AGENT)
+        val versionName = try {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        } catch (e: Exception) {
+            "Unknown"
+        }
+        header("User-Agent", "June/$versionName (Android)")
         header("X-Requested-With", "XMLHttpRequest")
         depth?.let { header("Depth", it) }
     }
@@ -76,7 +83,10 @@ class WebDAVProvider(
         try {
             client.newCall(request).execute().use { response ->
                 if (response.isSuccessful) {
-                    ensureJuneFoldersExist(authInfo)
+                    val folderResult = ensureJuneFoldersExist(authInfo)
+                    if (folderResult.isFailure) {
+                        return@withContext Result.failure(folderResult.exceptionOrNull() ?: Exception("Failed to setup folders"))
+                    }
                     _isConnected.value = true
                     Result.success(Unit)
                 } else {
@@ -88,21 +98,26 @@ class WebDAVProvider(
         }
     }
 
-    private fun ensureJuneFoldersExist(authInfo: WebDavAuth) {
+    private fun ensureJuneFoldersExist(authInfo: WebDavAuth): Result<Unit> {
         val juneFolder = authInfo.baseUrl.trimEnd('/') + "/June/"
         if (!checkRemoteResourceExists(juneFolder, authInfo.auth)) {
-            createRemoteFolder(juneFolder, authInfo.auth)
+            val result = createRemoteFolder(juneFolder, authInfo.auth)
+            if (result.isFailure) return result
         }
 
         val mediaFolder = juneFolder + "media/"
         if (!checkRemoteResourceExists(mediaFolder, authInfo.auth)) {
-            createRemoteFolder(mediaFolder, authInfo.auth)
+            val result = createRemoteFolder(mediaFolder, authInfo.auth)
+            if (result.isFailure) return result
         }
 
         val journalsFolder = juneFolder + "journals/"
         if (!checkRemoteResourceExists(journalsFolder, authInfo.auth)) {
-            createRemoteFolder(journalsFolder, authInfo.auth)
+            val result = createRemoteFolder(journalsFolder, authInfo.auth)
+            if (result.isFailure) return result
         }
+        
+        return Result.success(Unit)
     }
 
     private fun checkRemoteResourceExists(path: String, auth: String): Boolean {
@@ -112,17 +127,49 @@ class WebDAVProvider(
             .webDavHeaders(auth, depth = "0")
             .header("Accept", "application/xml")
             .build()
-        return client.newCall(request).execute().use { it.isSuccessful }
+
+        return try {
+            client.newCall(request).execute().use { response ->
+                val isXml = response.body?.contentType()?.toString()?.contains("xml", ignoreCase = true) == true
+                        || response.header("Content-Type")?.contains("xml", ignoreCase = true) == true
+                
+                response.isSuccessful && (response.code == 207 || (response.code == 200 && isXml))
+            }
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    private fun createRemoteFolder(path: String, auth: String) {
+
+    private fun createRemoteFolder(path: String, auth: String): Result<Unit> {
         val request = Request.Builder()
             .url(path)
             .method("MKCOL", null)
             .header("Content-Type", "application/xml; charset=utf-8")
             .webDavHeaders(auth, depth = null)
             .build()
-        client.newCall(request).execute().use { }
+            
+        return try {
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful || response.code == 405) {
+                    Result.success(Unit)
+                } else if (path.endsWith("/")) {
+                    val fallbackPath = path.trimEnd('/')
+                    val fallbackRequest = request.newBuilder().url(fallbackPath).build()
+                    client.newCall(fallbackRequest).execute().use { fbResponse ->
+                        if (fbResponse.isSuccessful || fbResponse.code == 405) {
+                            Result.success(Unit)
+                        } else {
+                            Result.failure(Exception("Failed to create folder $path: ${fbResponse.code}"))
+                        }
+                    }
+                } else {
+                    Result.failure(Exception("Failed to create folder $path: ${response.code}"))
+                }
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     private fun createAuthHeader(user: String, pass: String): String {

@@ -73,7 +73,7 @@ val coreModule = module {
     singleOf(::SongRepositoryImpl).bind<SongRepository>()
 
     single { SyncPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<SyncPreferences>()
-    single<CloudProvider>(named("WebDAV")) { WebDAVProvider(get(), get()) }
+    single<CloudProvider>(named("WebDAV")) { WebDAVProvider(get(), get(), get()) }
 
     single(named("ApplicationScope")) { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
 
@@ -85,6 +85,7 @@ val coreModule = module {
             get(),
             mapOf("WebDAV" to get<CloudProvider>(named("WebDAV"))),
             File(context.filesDir, "journal_media"),
+            context,
             get(named("ApplicationScope"))
         )
     }

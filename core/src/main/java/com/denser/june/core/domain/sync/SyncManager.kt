@@ -13,7 +13,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.debounce
+import com.denser.june.core.data.sync.SyncWorker
+import kotlinx.coroutines.FlowPreview
 import java.io.File
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -51,12 +55,13 @@ data class SyncAnalysis(
     val pendingMediaDownloadsList: List<String> = emptyList()
 )
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class SyncManager(
     private val journalRepo: JournalRepository,
     private val syncPrefs: SyncPreferences,
     private val providers: Map<String, CloudProvider>,
     private val mediaDir: File,
+    private val context: android.content.Context,
     private val applicationScope: CoroutineScope
 ) {
     companion object {
@@ -69,14 +74,15 @@ class SyncManager(
 
     init {
         applicationScope.launch {
-            syncPrefs.getSyncEnabled().flatMapLatest { _ ->
-                combine(
-                    journalRepo.observeHasUnsyncedJournals(SYNC_THRESHOLD_MS),
-                    journalRepo.observeHasTombstones()
-                ) { hasUnsynced: Boolean, hasTombstones: Boolean ->
-                    hasUnsynced || hasTombstones
+            syncPrefs.getSyncEnabled().flatMapLatest { isSyncEnabled ->
+                if (!isSyncEnabled) kotlinx.coroutines.flow.flowOf(false)
+                else {
+                    combine(
+                        journalRepo.observeHasUnsyncedJournals(SYNC_THRESHOLD_MS),
+                        journalRepo.observeHasTombstones()
+                    ) { hasUnsynced, hasTombstones -> hasUnsynced || hasTombstones }
                 }
-            }.collect { isDirty: Boolean ->
+            }.collect { isDirty ->
                 val current = _status.value
                 if (isDirty && (current is SyncStatus.Idle || current is SyncStatus.Success)) {
                     _status.value = SyncStatus.Dirty
@@ -84,6 +90,28 @@ class SyncManager(
                     _status.value = SyncStatus.Success
                 }
             }
+        }
+
+        applicationScope.launch {
+            combine(
+                syncPrefs.getSyncEnabled(),
+                syncPrefs.isAutomaticSyncEnabled()
+            ) { enabled, auto -> enabled && auto }
+                .flatMapLatest { autoSyncReady ->
+                    if (!autoSyncReady) kotlinx.coroutines.flow.flowOf(false)
+                    else {
+                        combine(
+                            journalRepo.observeHasUnsyncedJournals(SYNC_THRESHOLD_MS),
+                            journalRepo.observeHasTombstones()
+                        ) { hasUnsynced, hasTombstones -> hasUnsynced || hasTombstones }
+                            .debounce(10000L)
+                    }
+                }.collect { shouldSync ->
+                    if (shouldSync) {
+                        val onlyWifi = syncPrefs.getSyncOnlyOnWifi().first()
+                        SyncWorker.enqueue(context, onlyWifi)
+                    }
+                }
         }
     }
 
@@ -104,8 +132,8 @@ class SyncManager(
             val provider = getActiveProvider()
             provider.connect().getOrThrow()
 
-            val remoteJournals = provider.listJournals().getOrNull() ?: emptyList<RemoteFileMeta>()
-            val remoteMedia = provider.listMedia().getOrNull() ?: emptyList<String>().toSet()
+            val remoteJournals = provider.listJournals().getOrThrow()
+            val remoteMedia = provider.listMedia().getOrThrow().toSet()
 
             val allLocalJournals = journalRepo.getAllJournalsIncludeDeletedSync()
             val lastSyncTime = syncPrefs.getLastSyncTime().first()
@@ -221,7 +249,7 @@ class SyncManager(
             val provider = getActiveProvider()
             provider.connect().getOrThrow()
 
-            val remoteMetaList = provider.listJournals().getOrNull() ?: emptyList<RemoteFileMeta>()
+            val remoteMetaList = provider.listJournals().getOrThrow()
             val hasUnsynced = journalRepo.hasUnsyncedJournals(SYNC_THRESHOLD_MS)
             val hasTombstones = journalRepo.hasTombstones()
 
@@ -238,8 +266,8 @@ class SyncManager(
 
             val allLocalJournals = journalRepo.getAllJournalsIncludeDeletedSync()
             val localJournalsMap = allLocalJournals.associateBy { it.id }
-            val remoteMedia = if (isFullRevalidation) provider.listMedia().getOrNull()?.toSet()
-                ?: emptySet<String>() else emptySet<String>()
+            val remoteMedia = if (isFullRevalidation) provider.listMedia().getOrThrow().toSet()
+                else emptySet<String>()
 
             val tombstones = journalRepo.getAllTombstones()
             val toDownload = mutableListOf<Pair<String, Long>>()

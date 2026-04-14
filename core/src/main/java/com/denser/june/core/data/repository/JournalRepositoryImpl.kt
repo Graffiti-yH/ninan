@@ -68,30 +68,25 @@ class JournalRepositoryImpl(
         
         journalDao.insertJournal(journalToInsert.asEntity())
         updateJournalTags(journalToInsert)
-        triggerSync()
         return journalToInsert.id
     }
 
     override suspend fun softDeleteJournal(id: String) {
         journalDao.softDeleteJournal(id, System.currentTimeMillis())
-        triggerSync()
     }
 
     override suspend fun restoreJournal(id: String) {
         val journal = journalDao.getJournalById(id) ?: return
         journalDao.updateJournal(journal.copy(deletedAt = null, updatedAt = System.currentTimeMillis()))
-        triggerSync()
     }
 
     override suspend fun hardDeleteJournal(id: String) {
         journalDao.insertTombstone(DeletedJournalTombstone(id))
         journalDao.hardDeleteJournal(id)
-        triggerSync()
     }
 
     override suspend fun deleteAllJournals() {
         journalDao.softDeleteAllJournals(System.currentTimeMillis())
-        triggerSync()
     }
 
     override suspend fun emptyBin() {
@@ -99,19 +94,16 @@ class JournalRepositoryImpl(
         if (deletedIds.isNotEmpty()) {
             journalDao.insertTombstones(deletedIds.map { DeletedJournalTombstone(it) })
             journalDao.emptyBin()
-            triggerSync()
         }
     }
 
     override suspend fun restoreAllJournals() {
         journalDao.restoreAllJournals(System.currentTimeMillis())
-        triggerSync()
     }
 
     override suspend fun updateJournal(journal: Journal) {
         journalDao.updateJournal(journal.asEntity())
         updateJournalTags(journal)
-        triggerSync()
     }
 
     private suspend fun updateJournalTags(journal: Journal) {
@@ -134,12 +126,6 @@ class JournalRepositoryImpl(
         journalDao.deleteOrphanedTags()
     }
 
-    private suspend fun triggerSync() {
-        if (syncPrefs.getSyncEnabled().first() && syncPrefs.isAutomaticSyncEnabled().first()) {
-            val onlyWifi = syncPrefs.getSyncOnlyOnWifi().first()
-            SyncWorker.enqueue(context, onlyWifi)
-        }
-    }
 
     override fun getTagSuggestions(query: String): Flow<List<String>> {
         return journalDao.getTagSuggestions(query)
@@ -158,13 +144,11 @@ class JournalRepositoryImpl(
     override suspend fun renameTag(oldName: String, newName: String) {
         journalDao.updateTagName(oldName, newName)
         journalDao.bumpJournalTimestampsByTag(newName, System.currentTimeMillis())
-        triggerSync()
     }
 
     override suspend fun deleteTag(tagName: String) {
         journalDao.bumpJournalTimestampsByTag(tagName, System.currentTimeMillis())
         journalDao.deleteTag(tagName)
-        triggerSync()
     }
 
     override suspend fun toggleBookmark(id: String) {
@@ -173,7 +157,6 @@ class JournalRepositoryImpl(
             isBookmarked = !journal.isBookmarked,
             updatedAt = System.currentTimeMillis()
         ))
-        triggerSync()
     }
 
     override fun getDeletedJournals(): Flow<List<Journal>> {
