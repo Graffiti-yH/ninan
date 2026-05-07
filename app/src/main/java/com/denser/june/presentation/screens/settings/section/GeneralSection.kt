@@ -19,6 +19,7 @@ import org.koin.compose.koinInject
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -32,7 +33,7 @@ fun GeneralSection(
     SettingSection(title = "General") {
         SettingsItem(
             title = "Start of the week",
-            subtitle = state.startOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+            subtitle = state.startOfWeek.getDisplayName(TextStyle.FULL, LocalLocale.current.platformLocale),
             leadingContent = {
                 Icon(
                     painter = painterResource(R.drawable.event_note_24px),
@@ -70,7 +71,7 @@ fun GeneralSection(
                         )
                     ) {
                         Text(
-                            text = day.getDisplayName(TextStyle.NARROW, Locale.getDefault()),
+                            text = day.getDisplayName(TextStyle.NARROW, LocalLocale.current.platformLocale),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
@@ -130,7 +131,7 @@ fun GeneralSection(
             subtitle = "Always enable time when creating journals",
             leadingContent = {
                 Icon(
-                    painter = painterResource(R.drawable.schedule_24px),
+                    painter = painterResource(R.drawable.more_time_24px),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.secondary
                 )

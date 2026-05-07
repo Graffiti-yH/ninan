@@ -1,7 +1,6 @@
 package com.denser.june.core.domain.preferences
 
 import com.denser.june.core.domain.model.enums.ThemeMode
-import com.denser.june.core.domain.model.enums.Fonts
 import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.flow.Flow
 
@@ -22,7 +21,4 @@ interface ThemePreferences {
 
     fun getMaterialYouFlow(): Flow<Boolean>
     suspend fun updateMaterialTheme(pref: Boolean)
-
-    fun getFontFlow(): Flow<Fonts>
-    suspend fun updateFont(font: Fonts)
 }

@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.kotlinx.serialization.json)
 
     // Essential

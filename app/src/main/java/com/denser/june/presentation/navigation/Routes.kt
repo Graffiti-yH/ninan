@@ -1,5 +1,6 @@
 package com.denser.june.presentation.navigation
 
+import com.denser.june.core.domain.model.enums.FontType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -58,4 +59,7 @@ sealed interface Route {
 
     @Serializable
     data object PinSetup : Route
+
+    @Serializable
+    data class Fonts(val type: FontType = FontType.APP) : Route
 }

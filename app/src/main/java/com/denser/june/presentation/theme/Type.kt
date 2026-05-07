@@ -1,22 +1,82 @@
 package com.denser.june.presentation.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
-import com.denser.june.core.R
+import com.denser.june.core.domain.model.enums.Fonts
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun getAppFontFamily(fontName: String): FontFamily {
+    return remember(fontName) {
+        val bundled = Fonts.entries.find { it.fullName == fontName }
+        if (bundled != null) {
+            FontFamily(
+                Font(
+                    resId = bundled.font,
+                    weight = FontWeight.Normal,
+                    variationSettings = FontVariation.Settings(FontVariation.weight(400))
+                ),
+                Font(
+                    resId = bundled.font,
+                    weight = FontWeight.Medium,
+                    variationSettings = FontVariation.Settings(FontVariation.weight(500))
+                ),
+                Font(
+                    resId = bundled.font,
+                    weight = FontWeight.SemiBold,
+                    variationSettings = FontVariation.Settings(FontVariation.weight(600))
+                ),
+                Font(
+                    resId = bundled.font,
+                    weight = FontWeight.Bold,
+                    variationSettings = FontVariation.Settings(FontVariation.weight(700))
+                )
+            )
+        } else {
+            val googleFont = GoogleFont(fontName.trim())
+            FontFamily(
+                Font(
+                    googleFont = googleFont,
+                    fontProvider = provider,
+                    weight = FontWeight.Normal
+                ),
+                Font(
+                    googleFont = googleFont,
+                    fontProvider = provider,
+                    weight = FontWeight.Bold
+                ),
+                Font(
+                    googleFont = googleFont,
+                    fontProvider = provider,
+                    weight = FontWeight.Medium
+                ),
+                Font(
+                    googleFont = googleFont,
+                    fontProvider = provider,
+                    weight = FontWeight.SemiBold
+                )
+            )
+        }
+    }
+}
 
 @Composable
 fun provideTypography(
     scale: Float = 1f,
-    font: Int = R.font.poppins_regular,
+    font: String = "Google Sans Flex",
 ): Typography {
 
-    val displayFont = FontFamily(Font(font))
-    val bodyFont = FontFamily(Font(font))
+    val displayFont = getAppFontFamily(font)
+    val bodyFont = getAppFontFamily(font)
 
     return Typography(
         displayLarge = TextStyle(

@@ -1,19 +1,13 @@
 package com.denser.june.core.domain.model.enums
 
 import com.denser.june.core.R
+import com.denser.june.core.domain.model.enums.FontCategory
 
 enum class Fonts(
     val fullName: String,
-    val font: Int
+    val font: Int,
+    val category: FontCategory = FontCategory.SANS_SERIF
 ) {
-    POPPINS("Poppins", R.font.poppins_regular),
-    DM_SANS("DM Sans", R.font.dm_sans),
-    FIGTREE("Figtree", R.font.figtree),
-    INTER("Inter", R.font.inter),
-    MANROPE("Manrope", R.font.manrope),
-    MONTSERRAT("Montserrat", R.font.montserrat),
-    OPEN_SANS("Open Sans", R.font.open_sans),
-    OUTFIT("Outfit", R.font.outfit),
-    QUICKSAND("Quicksand", R.font.quicksand),
-    JOSH("Jost", R.font.jost)
+    GOOGLE_SANS_FLEX("Google Sans Flex", R.font.google_sans_flex, FontCategory.SANS_SERIF),
+    ROBOTO_FLEX("Roboto Flex", R.font.roboto_flex, FontCategory.SANS_SERIF)
 }

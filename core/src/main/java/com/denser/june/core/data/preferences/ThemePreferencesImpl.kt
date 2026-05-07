@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.denser.june.core.domain.preferences.ThemePreferences
 import com.denser.june.core.domain.model.enums.ThemeMode
-import com.denser.june.core.domain.model.enums.Fonts
 import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -23,7 +22,6 @@ class ThemePreferencesImpl(
             preferences[amoledPref] = false
             preferences[paletteStyle] = PaletteStyle.TonalSpot.name
             preferences[materialTheme] = false
-            preferences[selectedFont] = Fonts.FIGTREE.name
         }
     }
 
@@ -33,7 +31,6 @@ class ThemePreferencesImpl(
         private val amoledPref = booleanPreferencesKey("with_amoled")
         private val paletteStyle = stringPreferencesKey("palette_style")
         private val materialTheme = booleanPreferencesKey("material_theme")
-        private val selectedFont = stringPreferencesKey("font")
     }
 
     override fun getThemeMode(): Flow<ThemeMode> = dataStore.data
@@ -83,18 +80,6 @@ class ThemePreferencesImpl(
     override suspend fun updateMaterialTheme(pref: Boolean) {
         dataStore.edit { settings ->
             settings[materialTheme] = pref
-        }
-    }
-
-    override fun getFontFlow(): Flow<Fonts> = dataStore.data
-        .map { prefs ->
-            val font = prefs[selectedFont] ?: Fonts.FIGTREE.name
-            Fonts.valueOf(font)
-        }
-
-    override suspend fun updateFont(font: Fonts) {
-        dataStore.edit { settings ->
-            settings[selectedFont] = font.name
         }
     }
 }

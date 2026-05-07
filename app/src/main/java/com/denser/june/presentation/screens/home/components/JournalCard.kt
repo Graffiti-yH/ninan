@@ -101,7 +101,6 @@ fun JournalCard(
                 Text(
                     text = journal.title.ifBlank { journal.content.ifBlank { "Add title" } },
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface
@@ -188,13 +187,11 @@ fun RecentJournalCard(
                         Text(
                             text = journal.dateTime.toDayOfMonth(),
                             style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = journal.dateTime.toShortMonth(),
                             style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
                         )
                     }
@@ -203,7 +200,6 @@ fun RecentJournalCard(
                         modifier = Modifier.weight(1f),
                         text = journal.title.ifBlank { journal.content.ifBlank { "Untitled" } },
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSurface

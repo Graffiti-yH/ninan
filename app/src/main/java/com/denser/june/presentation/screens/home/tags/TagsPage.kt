@@ -136,7 +136,7 @@ fun TagsPage() {
                                 Text(
                                     text = fullTag,
                                     style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
                                 )
                             },
                             trailingIcon = {

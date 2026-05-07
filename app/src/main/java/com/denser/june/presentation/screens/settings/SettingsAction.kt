@@ -1,9 +1,9 @@
 package com.denser.june.presentation.screens.settings
 
 import com.denser.june.core.domain.model.enums.ThemeMode
-import com.denser.june.core.domain.model.enums.Fonts
 import com.denser.june.core.domain.model.enums.TimeFormat
 import com.denser.june.core.domain.model.enums.LockType
+import com.denser.june.core.domain.model.enums.FontType
 import java.time.DayOfWeek
 import com.materialkolor.PaletteStyle
 
@@ -13,7 +13,10 @@ sealed interface SettingsAction {
     data class OnAmoledSwitch(val amoled: Boolean): SettingsAction
     data class OnPaletteChange(val style: PaletteStyle): SettingsAction
     data class OnMaterialThemeToggle(val pref: Boolean): SettingsAction
-    data class OnFontChange(val fonts: Fonts): SettingsAction
+    data class OnPendingFontChange(val fontName: String): SettingsAction
+    data class SetFontType(val type: FontType): SettingsAction
+    data class OnFontSelect(val fontName: String): SettingsAction
+    data object OnResetFonts: SettingsAction
     data object OnDeleteJournals: SettingsAction
     data object ResetBackup: SettingsAction
     data class OnRestoreJournals(val path: String): SettingsAction

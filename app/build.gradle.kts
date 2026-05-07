@@ -187,7 +187,6 @@ dependencies {
     implementation(libs.colorpicker.compose)     
     implementation(libs.wavy.slider)             
     implementation(libs.composeIcons.fontAwesome)
-    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.core.splashscreen) 
     implementation(libs.aboutLibraries)          
     implementation(libs.aboutLibraries.compose.m3)
@@ -206,6 +205,7 @@ dependencies {
     implementation(libs.androidx.palette)
     implementation(libs.androidx.emoji2.emojipicker)
     implementation(libs.androidx.biometric)
+    implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.hyphen)
 }
 aboutLibraries {

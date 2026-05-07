@@ -19,6 +19,7 @@ import com.denser.june.presentation.screens.settings.section.AboutSection
 import com.denser.june.presentation.screens.settings.section.AppearanceSection
 import org.koin.compose.koinInject
 import com.denser.june.core.R
+import com.denser.june.presentation.navigation.Route
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +82,8 @@ fun SettingsScreen(
             item(key = "appearance_section") {
                 AppearanceSection(
                     state = state,
-                    onAction = onAction
+                    onAction = onAction,
+                    onNavigateToFontSelection = { navigator.navigateTo(Route.Fonts(it)) }
                 )
             }
             item(key = "about_section") {

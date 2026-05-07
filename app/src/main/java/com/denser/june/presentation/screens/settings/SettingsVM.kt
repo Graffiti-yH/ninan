@@ -6,15 +6,16 @@ import com.denser.june.core.domain.repository.JournalRepository
 import com.denser.june.core.domain.preferences.JournalPreferences
 import com.denser.june.core.domain.preferences.PrivacyPreferences
 import com.denser.june.core.domain.preferences.ThemePreferences
+import com.denser.june.core.domain.preferences.FontPreferences
 import com.denser.june.core.domain.backup.ExportRepo
 import com.denser.june.core.domain.backup.ExportState
 import com.denser.june.core.domain.backup.RestoreRepo
 import com.denser.june.core.domain.backup.RestoreResult
 import com.denser.june.core.domain.backup.RestoreState
 import com.denser.june.core.domain.model.enums.ThemeMode
-import com.denser.june.core.domain.model.enums.Fonts
 import com.denser.june.core.domain.model.enums.TimeFormat
 import com.denser.june.core.domain.model.enums.LockType
+import com.denser.june.core.domain.model.enums.FontType
 import java.time.DayOfWeek
 import com.materialkolor.PaletteStyle
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,7 @@ class SettingsVM(
     private val themePrefs: ThemePreferences,
     private val privacyPrefs: PrivacyPreferences,
     private val journalPrefs: JournalPreferences,
+    private val fontPrefs: FontPreferences,
     private val exportRepo: ExportRepo,
     private val restoreRepo: RestoreRepo
 ) : ViewModel() {
@@ -45,26 +47,28 @@ class SettingsVM(
             themePrefs.getAmoledPrefFlow(),
             themePrefs.getPaletteStyle(),
             themePrefs.getMaterialYouFlow(),
-            themePrefs.getFontFlow(),
             privacyPrefs.getAppLockFlow(),
             privacyPrefs.getLockTypeFlow(),
             privacyPrefs.getPinHashFlow(),
             privacyPrefs.getScreenPrivacyFlow(),
             journalPrefs.isAutoTimeEnabled(),
             journalPrefs.startOfWeek(),
-            journalPrefs.timeFormat()
+            journalPrefs.timeFormat(),
+            fontPrefs.getAppFont(),
+            privacyPrefs.getIsInternetAllowedFlow()
         )
     ) { array ->
         val local = array[0] as SettingsState
 
         local.copy(
-            isAppLockEnabled = array[7] as Boolean,
-            lockType = array[8] as LockType,
-            pinHash = array[9] as String?,
-            isScreenPrivacyEnabled = array[10] as Boolean,
-            isAutoTimeEnabled = array[11] as Boolean,
-            startOfWeek = array[12] as DayOfWeek,
-            timeFormat = array[13] as TimeFormat,
+            isAppLockEnabled = array[6] as Boolean,
+            lockType = array[7] as LockType,
+            pinHash = array[8] as String?,
+            isScreenPrivacyEnabled = array[9] as Boolean,
+            isAutoTimeEnabled = array[10] as Boolean,
+            startOfWeek = array[11] as DayOfWeek,
+            timeFormat = array[12] as TimeFormat,
+            isInternetAllowed = array[14] as Boolean,
 
             appTheme = local.appTheme.copy(
                 seedColor = array[1] as Int,
@@ -72,7 +76,7 @@ class SettingsVM(
                 withAmoled = array[3] as Boolean,
                 style = array[4] as PaletteStyle,
                 materialTheme = array[5] as Boolean,
-                font = array[6] as Fonts,
+                appFont = array[13] as String,
             )
         )
     }.stateIn(
@@ -122,7 +126,18 @@ class SettingsVM(
                 is SettingsAction.OnAmoledSwitch -> themePrefs.updateAmoledPref(action.amoled)
                 is SettingsAction.OnThemeSwitch -> themePrefs.updateThemeMode(action.themeMode)
                 is SettingsAction.OnPaletteChange -> themePrefs.updatePaletteStyle(action.style)
-                is SettingsAction.OnFontChange -> themePrefs.updateFont(action.fonts)
+                is SettingsAction.OnPendingFontChange -> _localState.update { it.copy(pendingFontName = action.fontName) }
+                is SettingsAction.SetFontType -> _localState.update { it.copy(selectedFontType = action.type, pendingFontName = null) }
+                is SettingsAction.OnFontSelect -> {
+                    when (_localState.value.selectedFontType) {
+                        FontType.APP -> fontPrefs.updateAppFont(action.fontName)
+                    }
+                }
+                SettingsAction.OnResetFonts -> {
+                    when (_localState.value.selectedFontType) {
+                        FontType.APP -> fontPrefs.updateAppFont("Google Sans Flex")
+                    }
+                }
                 is SettingsAction.OnMaterialThemeToggle -> themePrefs.updateMaterialTheme(action.pref)
                 is SettingsAction.OnAppLockToggle -> privacyPrefs.updateAppLock(action.enabled)
                 is SettingsAction.UpdateLockType -> privacyPrefs.updateLockType(action.type)

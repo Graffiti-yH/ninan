@@ -12,13 +12,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.components.JuneMediaLightbox
 import com.denser.june.presentation.screens.editor.EditorVM
 import com.denser.june.presentation.screens.editor.JournalScreen
 import com.denser.june.presentation.screens.editor.screens.ItemGalleryScreen
 import com.denser.june.presentation.screens.home.HomeScreen
 import com.denser.june.presentation.screens.search.SearchScreen
+import com.denser.june.presentation.screens.settings.FontSelectionScreen
 import com.denser.june.presentation.screens.settings.SettingsScreen
+import com.denser.june.presentation.screens.settings.SettingsVM
 import com.denser.june.presentation.screens.settings.screens.AboutLibrariesScreen
 import com.denser.june.presentation.screens.settings.screens.BackupScreen
 import com.denser.june.presentation.screens.settings.screens.LockMethodScreen
@@ -27,6 +30,7 @@ import com.denser.june.presentation.screens.settings.screens.PinSetupScreen
 import com.denser.june.presentation.screens.settings.screens.reminder.ReminderScreen
 import com.denser.june.presentation.screens.settings.screens.sync.SyncScreen
 import com.denser.june.presentation.screens.settings.screens.trash.BinScreen
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -135,6 +139,11 @@ fun JuneNavHost(
 
         composable<Route.ReminderSettings> {
             ReminderScreen()
+        }
+
+        composable<Route.Fonts> { backStackEntry ->
+            val args = backStackEntry.toRoute<Route.Fonts>()
+            FontSelectionScreen(type = args.type)
         }
     }
 }

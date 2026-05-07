@@ -237,7 +237,7 @@ fun SearchFilterChip(
                     }
                     withStyle(
                         style = SpanStyle(
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.Medium
                         )
                     ) {
                         append(label)

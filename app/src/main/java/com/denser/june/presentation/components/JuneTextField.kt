@@ -45,7 +45,6 @@ fun JuneTextField(
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
             modifier = Modifier.padding(start = 4.dp)
         )

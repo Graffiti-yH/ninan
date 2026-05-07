@@ -18,15 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
 import com.denser.june.core.domain.model.enums.ThemeMode
+import com.denser.june.core.domain.model.enums.FontType
 import com.denser.june.presentation.screens.settings.SettingsAction
 import com.denser.june.presentation.screens.settings.SettingsState
 import com.denser.june.presentation.screens.settings.components.ColorPickerSheet
-import com.denser.june.presentation.screens.settings.components.ColorPickerSheet
-import com.denser.june.presentation.screens.settings.components.FontPickerDialog
 import com.denser.june.presentation.screens.settings.components.PaletteSelectionSettingsItem
 import com.denser.june.presentation.theme.LocalAppTheme
 
@@ -34,10 +32,10 @@ import com.denser.june.presentation.theme.LocalAppTheme
 @Composable
 fun AppearanceSection(
     state: SettingsState,
-    onAction: (SettingsAction) -> Unit
+    onAction: (SettingsAction) -> Unit,
+    onNavigateToFontSelection: (FontType) -> Unit
 ) {
     var showColorPickerSheet by remember { mutableStateOf(false) }
-    var showFontPickerDialog by remember { mutableStateOf(false) }
     val currentTheme = LocalAppTheme.current.themeMode
     val systemDark = isSystemInDarkTheme()
     val isDarkMode = remember(currentTheme, systemDark) {
@@ -52,58 +50,68 @@ fun AppearanceSection(
     ) {
         SettingsItem(
             title = stringResource(R.string.app_theme),
-            subtitle = stringResource(state.appTheme.themeMode.stringRes),
             leadingContent = {
                 Icon(
                     painter = painterResource(R.drawable.routine_24px),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.secondary
                 )
-            },
-            trailingContent = {
-                val themeModes = ThemeMode.entries
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween, Alignment.End)
-                ) {
-                    themeModes.forEachIndexed { index, mode ->
-                        val isSelected = state.appTheme.themeMode == mode
-                        val shape = when (index) {
-                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                            themeModes.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                        }
+            }
+        ) {
+            val themeModes = ThemeMode.entries
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(
+                    ButtonGroupDefaults.ConnectedSpaceBetween,
+                    Alignment.End
+                )
+            ) {
+                themeModes.forEachIndexed { index, mode ->
+                    val isSelected = state.appTheme.themeMode == mode
+                    val shape = when (index) {
+                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        themeModes.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                    }
 
-                        val iconRes = when (mode) {
-                            ThemeMode.SYSTEM -> R.drawable.devices_24px
-                            ThemeMode.LIGHT -> R.drawable.light_mode_24px
-                            ThemeMode.DARK -> R.drawable.dark_mode_24px
-                        }
+                    val iconRes = when (mode) {
+                        ThemeMode.SYSTEM -> R.drawable.devices_24px
+                        ThemeMode.LIGHT -> R.drawable.light_mode_24px
+                        ThemeMode.DARK -> R.drawable.dark_mode_24px
+                    }
 
-                        ToggleButton(
-                            checked = isSelected,
-                            onCheckedChange = { onAction(SettingsAction.OnThemeSwitch(mode)) },
-                            shapes = shape,
-                            colors = ToggleButtonDefaults.toggleButtonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                            )
-                        ) {
-                            Icon(
-                                painter = painterResource(iconRes),
-                                contentDescription = stringResource(mode.stringRes),
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                    ToggleButton(
+                        checked = isSelected,
+                        onCheckedChange = { onAction(SettingsAction.OnThemeSwitch(mode)) },
+                        shapes = shape,
+                        colors = ToggleButtonDefaults.toggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
+                                alpha = 0.3f
+                            ),
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(iconRes),
+                            contentDescription = stringResource(mode.stringRes),
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = stringResource(mode.stringRes),
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        )
                     }
                 }
             }
-        )
+        }
         SettingsItem(
-            title = stringResource(R.string.font),
-            subtitle = state.appTheme.font.fullName,
+            title = "App Font",
+            subtitle = state.appTheme.appFont,
             leadingContent = {
                 Icon(
                     painter = painterResource(R.drawable.format_size_24px),
@@ -111,7 +119,7 @@ fun AppearanceSection(
                     tint = MaterialTheme.colorScheme.secondary
                 )
             },
-            onClick = { showFontPickerDialog = true }
+            onClick = { onNavigateToFontSelection(FontType.APP) }
         )
         SettingsItem(
             title = stringResource(R.string.amoled),
@@ -198,13 +206,6 @@ fun AppearanceSection(
             initialColor = Color(state.appTheme.seedColor),
             onSelect = { onAction(SettingsAction.OnSeedColorChange(it.toArgb())) },
             onDismiss = { showColorPickerSheet = false }
-        )
-    }
-    if (showFontPickerDialog) {
-        FontPickerDialog(
-            state = state,
-            onAction = onAction,
-            onDismiss = { showFontPickerDialog = false }
         )
     }
 }

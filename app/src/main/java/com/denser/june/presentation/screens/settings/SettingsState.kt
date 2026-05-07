@@ -7,6 +7,7 @@ import com.denser.june.core.domain.backup.RestoreState
 import com.denser.june.core.domain.model.AppTheme
 import com.denser.june.core.domain.model.enums.LockType
 import com.denser.june.core.domain.model.enums.TimeFormat
+import com.denser.june.core.domain.model.enums.FontType
 import java.time.DayOfWeek
 
 @Stable
@@ -22,5 +23,8 @@ data class SettingsState(
     val isScreenPrivacyEnabled: Boolean = false,
     val isAutoTimeEnabled: Boolean = false,
     val startOfWeek: DayOfWeek = DayOfWeek.SUNDAY,
-    val timeFormat: TimeFormat = TimeFormat.TWELVE_HOUR
+    val timeFormat: TimeFormat = TimeFormat.TWELVE_HOUR,
+    val selectedFontType: FontType = FontType.APP,
+    val pendingFontName: String? = null,
+    val isInternetAllowed: Boolean = true
 )

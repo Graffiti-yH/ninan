@@ -120,7 +120,6 @@ fun MediaDateHeader(dateString: String) {
         Text(
             text = dateString,
             style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.tertiary
         )
     }

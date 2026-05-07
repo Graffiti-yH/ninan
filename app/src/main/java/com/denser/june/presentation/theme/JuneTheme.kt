@@ -54,7 +54,7 @@ fun JuneTheme(
         isAmoled = appTheme.withAmoled,
         style = appTheme.style,
         typography = provideTypography(
-            font = appTheme.font.font,
+            font = appTheme.appFont,
             scale = fontScale
         ),
         content = content

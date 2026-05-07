@@ -452,7 +452,7 @@ fun ListenChip(
             Text(
                 text = "Listen",
                 style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Medium
             )
         }
     }

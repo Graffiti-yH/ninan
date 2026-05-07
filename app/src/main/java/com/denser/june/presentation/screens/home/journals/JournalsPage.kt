@@ -33,8 +33,8 @@ enum class JournalListTab(
     val filledIconRes: Int,
     val widthWeight: Float
 ) {
-    Journals("Journals", R.drawable.list_alt_24px, R.drawable.list_alt_24px_fill, 0.9f),
-    Bookmarks("Bookmarks", R.drawable.bookmark_24px, R.drawable.bookmark_24px_fill, 1.2f),
+    Journals("Journals", R.drawable.list_alt_24px, R.drawable.list_alt_24px_fill, 1f),
+    Bookmarks("Bookmarks", R.drawable.bookmark_24px, R.drawable.bookmark_24px_fill, 1.1f),
     Drafts("Drafts", R.drawable.edit_note_24px, R.drawable.edit_note_24px_fill, 0.9f)
 }
 
@@ -174,7 +174,7 @@ fun JournalsPage(
                                 style = MaterialTheme.typography.labelMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
                             )
                         }
                     }
@@ -308,8 +308,7 @@ fun SectionHeader(
 ) {
     Text(
         text = title,
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
         modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
     )

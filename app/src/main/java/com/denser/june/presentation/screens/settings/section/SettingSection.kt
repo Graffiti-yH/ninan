@@ -38,7 +38,6 @@ fun SettingSection(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
             }

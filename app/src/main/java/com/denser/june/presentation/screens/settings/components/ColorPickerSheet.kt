@@ -200,7 +200,7 @@ fun ColorPickerSheet(
                                     Spacer(Modifier.height(8.dp))
                                     Text(
                                         text = hexCode,
-                                        style = MaterialTheme.typography.bodyLargeEmphasized,
+                                        style = MaterialTheme.typography.bodyLarge,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
