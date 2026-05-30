@@ -5,6 +5,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import kotlinx.coroutines.delay
 import androidx.core.net.toUri
+import com.denser.june.presentation.theme.LocalInternetAllowed
 
 data class SongPlayerState(
     val exoPlayer: ExoPlayer?,
@@ -21,9 +22,9 @@ data class SongPlayerState(
 
 @Composable
 fun rememberSongPlayerState(
-    previewUrl: String?,
-    isInternetAllowed: Boolean = true
+    previewUrl: String?
 ): SongPlayerState {
+    val isInternetAllowed = LocalInternetAllowed.current
     val uri = remember(previewUrl, isInternetAllowed) {
         if (isInternetAllowed) previewUrl?.toUri() else null
     }

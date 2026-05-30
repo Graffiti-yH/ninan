@@ -28,6 +28,7 @@ import com.denser.june.presentation.screens.settings.screens.sync.sections.SyncS
 import com.denser.june.presentation.screens.settings.screens.sync.sections.WebDavConfigSection
 import com.denser.june.presentation.components.InternetRestrictedBanner
 import com.denser.june.presentation.screens.settings.screens.sync.components.SyncDetailsDialog
+import com.denser.june.presentation.theme.LocalInternetAllowed
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import com.denser.june.core.R
@@ -44,6 +45,7 @@ fun SyncScreen() {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val lazyListState = rememberLazyListState()
+    val isInternetAllowed = LocalInternetAllowed.current
 
     val rotationAngle by animateFloatAsState(
         targetValue = if (state.showAdvancedOptions) 180f else 0f,
@@ -90,7 +92,7 @@ fun SyncScreen() {
                         Switch(
                             checked = state.isEnabled,
                             onCheckedChange = { syncVM.toggleSync(it) },
-                            enabled = state.isInternetAllowed,
+                            enabled = isInternetAllowed,
                             modifier = Modifier
                                 .padding(end = 8.dp)
                                 .scale(0.85f),
@@ -116,7 +118,7 @@ fun SyncScreen() {
             verticalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(bottom = 24.dp)
         ) {
-            if (!state.isInternetAllowed) {
+            if (!isInternetAllowed) {
                 item {
                     InternetRestrictedBanner(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -153,10 +155,10 @@ fun SyncScreen() {
                                 Switch(
                                     checked = state.isEnabled,
                                     onCheckedChange = { syncVM.toggleSync(it) },
-                                    enabled = state.isInternetAllowed
+                                    enabled = isInternetAllowed
                                 )
                             },
-                            onClick = { if (state.isInternetAllowed) syncVM.toggleSync(true) }
+                            onClick = { if (isInternetAllowed) syncVM.toggleSync(true) }
                         )
                     }
                 }
@@ -166,7 +168,7 @@ fun SyncScreen() {
                 SyncStatusCard(
                     status = state.status,
                     lastSyncTime = state.lastSyncTime,
-                    isVisible = state.isEnabled && state.isInternetAllowed,
+                    isVisible = state.isEnabled && isInternetAllowed,
                     is24Hour = state.timeFormat == TimeFormat.TWENTY_FOUR_HOUR,
                     horizontalPadding = 16.dp,
                     cornerRadius = 24.dp,
@@ -185,7 +187,7 @@ fun SyncScreen() {
 
             item {
                 SyncGeneralSettings(
-                    isVisible = state.isEnabled && state.isInternetAllowed,
+                    isVisible = state.isEnabled && isInternetAllowed,
                     isAutoSyncOn = state.isAutoSyncOn,
                     syncOnlyOnWifi = state.syncOnlyOnWifi,
                     onToggleAutoSync = { syncVM.toggleAutoSync(it) },
@@ -195,7 +197,7 @@ fun SyncScreen() {
 
             item {
                 WebDavConfigSection(
-                    isVisible = state.isEnabled && state.isInternetAllowed,
+                    isVisible = state.isEnabled && isInternetAllowed,
                     webDavUrl = state.webDavUrl,
                     webDavUser = state.webDavUser,
                     webDavPass = state.webDavPass,
@@ -210,13 +212,13 @@ fun SyncScreen() {
                     onPassChange = { syncVM.updatePass(it) },
                     onToggleLock = { syncVM.toggleConfigLock() },
                     onTestConnection = { syncVM.testConnection() },
-                    onManualSync = { if (state.isInternetAllowed) syncVM.manualSync() }
+                    onManualSync = { if (isInternetAllowed) syncVM.manualSync() }
                 )
             }
 
             item {
                 SyncAdvancedSection(
-                    isVisible = state.isEnabled && state.isInternetAllowed,
+                    isVisible = state.isEnabled && isInternetAllowed,
                     showAdvancedOptions = state.showAdvancedOptions,
                     isAnalyzing = state.isAnalyzing,
                     status = state.status,

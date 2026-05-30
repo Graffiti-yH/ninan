@@ -3,7 +3,6 @@ package com.denser.june.presentation.screens.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
@@ -14,6 +13,7 @@ import com.denser.june.core.domain.model.enums.FontType
 import com.denser.june.presentation.components.*
 import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.screens.settings.components.FontSelector
+import com.denser.june.presentation.theme.LocalInternetAllowed
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -26,6 +26,7 @@ fun FontSelectionScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navigator = koinInject<AppNavigator>()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val isInternetAllowed = LocalInternetAllowed.current
 
     LaunchedEffect(type) {
         viewModel.onAction(SettingsAction.SetFontType(type))
@@ -71,7 +72,7 @@ fun FontSelectionScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (!state.isInternetAllowed) {
+            if (!isInternetAllowed) {
                 InternetRestrictedBanner(
                     description = "Online fonts require internet access.",
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)

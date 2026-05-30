@@ -17,20 +17,19 @@ import org.json.JSONObject
 import org.maplibre.android.geometry.LatLng
 import java.io.IOException
 import java.util.Locale
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object MapTilerUtils {
+object MapTilerUtils : KoinComponent {
     private const val API_KEY = BuildConfig.MAPTILER_API_KEY
 
-    const val STYLE_LIGHT = "https://api.maptiler.com/maps/streets-v2/style.json?key=$API_KEY"
-    const val STYLE_DARK = "https://api.maptiler.com/maps/streets-v2-dark/style.json?key=$API_KEY"
+    const val STYLE_LIGHT = "https://api.maptiler.com/maps/streets-v4/style.json?key=$API_KEY"
+    const val STYLE_DARK = "https://api.maptiler.com/maps/streets-v4-dark/style.json?key=$API_KEY"
 
-    var isInternetAllowed = true
-
-    private val client = OkHttpClient()
+    private val client: OkHttpClient by inject()
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     suspend fun fetchCurrentLocation(context: Context): JournalLocation? {
-        if (!isInternetAllowed) return null
         return try {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             val cancellationTokenSource = CancellationTokenSource()
@@ -50,7 +49,6 @@ object MapTilerUtils {
     }
 
     private suspend fun performGetRequest(context: Context, url: String): String? {
-        if (!isInternetAllowed) return null
         return withContext(Dispatchers.IO) {
             try {
                 val request = Request.Builder()

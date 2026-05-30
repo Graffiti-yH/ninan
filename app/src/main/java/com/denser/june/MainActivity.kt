@@ -101,12 +101,6 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            privacyPreferences.getIsInternetAllowedFlow().collect { allowed ->
-                MapTilerUtils.isInternetAllowed = allowed
-            }
-        }
-
         setContent {
             val systemDark = isSystemInDarkTheme()
             val systemColorScheme = if (systemDark) darkColorScheme() else lightColorScheme()

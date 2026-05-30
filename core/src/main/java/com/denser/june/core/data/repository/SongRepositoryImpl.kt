@@ -10,14 +10,10 @@ import kotlinx.coroutines.flow.first
 
 class SongRepositoryImpl(
     private val apiService: SonglinkApiService,
-    private val spotifyScraper: SpotifyScraper,
-    private val privacyPreferences: PrivacyPreferences
+    private val spotifyScraper: SpotifyScraper
 ) : SongRepository {
 
     override suspend fun fetchSongDetails(url: String): Result<SongDetails> {
-        if (!privacyPreferences.getIsInternetAllowedFlow().first()) {
-            return Result.failure(Exception("Internet access restricted"))
-        }
         return try {
             val response = apiService.getSongLinks(url)
             var details = mapSonglinkResponseToSongDetails(response)

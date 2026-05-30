@@ -39,6 +39,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import android.content.Context
+import com.denser.june.core.data.remote.InternetInterceptor
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -62,7 +63,11 @@ val coreModule = module {
     single { FontPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<FontPreferences>()
     single { JournalPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<JournalPreferences>()
 
-    single { OkHttpClient() }
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor(InternetInterceptor(get()))
+            .build()
+    }
     single {
         val json = Json {
             ignoreUnknownKeys = true
@@ -95,8 +100,7 @@ val coreModule = module {
             mapOf("WebDAV" to get<CloudProvider>(named("WebDAV"))),
             File(context.filesDir, "journal_media"),
             context,
-            get(named("ApplicationScope")),
-            get()
+            get(named("ApplicationScope"))
         )
     }
 }

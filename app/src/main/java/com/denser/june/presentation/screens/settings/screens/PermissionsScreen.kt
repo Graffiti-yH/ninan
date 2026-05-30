@@ -148,7 +148,7 @@ fun PermissionsScreen() {
             SettingSection {
                 SettingsItem(
                     title = "Internet Access",
-                    subtitle = "Used to fetch song metadata, load map data and perform cloud sync.",
+                    subtitle = "Used for maps, cloud sync, song metadata, and online fonts.",
                     leadingContent = {
                         Icon(
                             painter = painterResource(R.drawable.wifi_24px),

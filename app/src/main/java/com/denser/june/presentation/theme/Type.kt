@@ -16,27 +16,29 @@ import com.denser.june.core.domain.model.enums.Fonts
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun getAppFontFamily(fontName: String): FontFamily {
-    return remember(fontName) {
+    val isInternetAllowed = LocalInternetAllowed.current
+    return remember(fontName, isInternetAllowed) {
         val bundled = Fonts.entries.find { it.fullName == fontName }
-        if (bundled != null) {
+        if (bundled != null || !isInternetAllowed) {
+            val activeFont = bundled ?: Fonts.GOOGLE_SANS_FLEX
             FontFamily(
                 Font(
-                    resId = bundled.font,
+                    resId = activeFont.font,
                     weight = FontWeight.Normal,
                     variationSettings = FontVariation.Settings(FontVariation.weight(400))
                 ),
                 Font(
-                    resId = bundled.font,
+                    resId = activeFont.font,
                     weight = FontWeight.Medium,
                     variationSettings = FontVariation.Settings(FontVariation.weight(500))
                 ),
                 Font(
-                    resId = bundled.font,
+                    resId = activeFont.font,
                     weight = FontWeight.SemiBold,
                     variationSettings = FontVariation.Settings(FontVariation.weight(600))
                 ),
                 Font(
-                    resId = bundled.font,
+                    resId = activeFont.font,
                     weight = FontWeight.Bold,
                     variationSettings = FontVariation.Settings(FontVariation.weight(700))
                 )

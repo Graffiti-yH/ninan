@@ -18,6 +18,10 @@ val LocalAppTheme = staticCompositionLocalOf<AppTheme> {
     error("No AppTheme provided")
 }
 
+val LocalInternetAllowed = staticCompositionLocalOf<Boolean> {
+    true
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun JuneTheme(

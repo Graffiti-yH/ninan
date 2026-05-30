@@ -35,8 +35,7 @@ import com.denser.june.presentation.screens.home.timeline.TimelineVM
 import org.koin.compose.viewmodel.koinViewModel
 
 import com.denser.june.core.R
-import com.denser.june.core.domain.preferences.PrivacyPreferences
-import org.koin.compose.koinInject
+import com.denser.june.presentation.theme.LocalInternetAllowed
 
 @Composable
 fun TimelineMusicTab(
@@ -44,9 +43,7 @@ fun TimelineMusicTab(
     bottomPadding: Dp,
     viewModel: TimelineVM = koinViewModel()
 ) {
-    val privacyPreferences = koinInject<PrivacyPreferences>()
-    val isInternetAllowed by privacyPreferences.getIsInternetAllowedFlow()
-        .collectAsStateWithLifecycle(initialValue = false)
+    val isInternetAllowed = LocalInternetAllowed.current
     val musicJournals = remember(journals) {
         journals.filter { it.songDetails != null }
     }
@@ -99,7 +96,6 @@ fun TimelineMusicTab(
                         journal = journal,
                         song = song,
                         isActive = activeSong?.previewUrl == song.previewUrl,
-                        isInternetAllowed = isInternetAllowed,
                         onClick = { viewModel.onSongSelected(song, journal.id) }
                     )
                 }
@@ -115,7 +111,6 @@ fun TimelineMusicTab(
                 isPlaying = isPlaying,
                 isLoading = isLoading,
                 progress = progress,
-                isInternetAllowed = isInternetAllowed,
                 onPlayPause = { viewModel.togglePlayPause() }
             )
         }
@@ -128,10 +123,10 @@ fun DockedMiniPlayer(
     isPlaying: Boolean,
     isLoading: Boolean,
     progress: Float,
-    isInternetAllowed: Boolean,
     onPlayPause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isInternetAllowed = LocalInternetAllowed.current
     val themeColors = rememberDynamicThemeColors(if (isInternetAllowed) song.thumbnailUrl else null)
 
     Surface(
@@ -160,7 +155,6 @@ fun DockedMiniPlayer(
                 ) {
                     RestrictedAsyncImage(
                         imageUrl = song.thumbnailUrl,
-                        isInternetAllowed = isInternetAllowed,
                         iconSize = 20.dp,
                         iconTint = themeColors.onSurfaceVariant.copy(alpha = 0.5f),
                         modifier = Modifier.fillMaxSize()
@@ -216,9 +210,9 @@ fun MusicListTile(
     journal: Journal,
     song: SongDetails,
     isActive: Boolean = false,
-    isInternetAllowed: Boolean = true,
     onClick: () -> Unit
 ) {
+    val isInternetAllowed = LocalInternetAllowed.current
     var showMenu by remember { mutableStateOf(false) }
 
     val availableLinks = remember(song.links) {
@@ -261,7 +255,6 @@ fun MusicListTile(
             ) {
                 RestrictedAsyncImage(
                     imageUrl = song.thumbnailUrl,
-                    isInternetAllowed = isInternetAllowed,
                     iconSize = 20.dp,
                     iconTint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     modifier = Modifier.fillMaxSize()

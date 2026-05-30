@@ -29,11 +29,10 @@ import com.denser.june.core.domain.model.enums.ThemeMode
 import com.denser.june.presentation.components.MapControlColumn
 import com.denser.june.presentation.components.MapAttributions
 import com.denser.june.presentation.components.InternetRestrictedIndicator
-import com.denser.june.core.domain.preferences.PrivacyPreferences
+import com.denser.june.presentation.theme.LocalInternetAllowed
 import com.denser.june.presentation.utils.MapTilerUtils
 import com.denser.june.presentation.screens.home.timeline.TimelineVM
 import com.denser.june.presentation.theme.LocalAppTheme
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.maplibre.android.MapLibre
 import org.maplibre.android.annotations.IconFactory
@@ -48,9 +47,7 @@ fun TimelineMapTab(
     bottomPadding: Dp,
     viewModel: TimelineVM = koinViewModel()
 ) {
-    val privacyPreferences = koinInject<PrivacyPreferences>()
-    val isInternetAllowed by privacyPreferences.getIsInternetAllowedFlow()
-        .collectAsStateWithLifecycle(initialValue = false)
+    val isInternetAllowed = LocalInternetAllowed.current
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current

@@ -15,6 +15,7 @@ import com.denser.june.presentation.navigation.JuneNavHost
 import com.denser.june.presentation.navigation.NavigationIntent
 import com.denser.june.presentation.theme.JuneTheme
 import com.denser.june.presentation.theme.LocalAppTheme
+import com.denser.june.presentation.theme.LocalInternetAllowed
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -45,7 +46,10 @@ fun JuneApp() {
         }
     }
 
-    CompositionLocalProvider(LocalAppTheme provides appState.appTheme) {
+    CompositionLocalProvider(
+        LocalAppTheme provides appState.appTheme,
+        LocalInternetAllowed provides appState.isInternetAllowed
+    ) {
         JuneTheme(appTheme = appState.appTheme) {
             Surface(modifier = Modifier.fillMaxSize()) {
                 JuneNavHost(

@@ -18,10 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import com.denser.june.core.domain.preferences.PrivacyPreferences
 import com.denser.june.presentation.components.InternetRestrictedIndicator
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.compose.koinInject
+import com.denser.june.presentation.theme.LocalInternetAllowed
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
@@ -48,9 +46,7 @@ fun JournalMapItem(
     onRemove: () -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth().aspectRatio(1.7f)
 ) {
-    val privacyPreferences = koinInject<PrivacyPreferences>()
-    val isInternetAllowed by privacyPreferences.getIsInternetAllowedFlow()
-        .collectAsStateWithLifecycle(initialValue = false)
+    val isInternetAllowed = LocalInternetAllowed.current
 
     var showMenu by remember { mutableStateOf(false) }
     var pressOffset by remember { mutableStateOf(DpOffset.Zero) }

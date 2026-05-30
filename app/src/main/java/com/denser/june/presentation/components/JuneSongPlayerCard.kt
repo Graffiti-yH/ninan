@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -65,6 +64,7 @@ import com.denser.june.core.domain.model.SongDetails
 import com.denser.june.presentation.utils.rememberDynamicThemeColors
 import ir.mahozad.multiplatform.wavyslider.material3.WavySlider
 import kotlinx.coroutines.launch
+import com.denser.june.presentation.theme.LocalInternetAllowed
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -78,10 +78,10 @@ fun JuneSongPlayerCard(
     onSeek: (Float) -> Unit,
     onSeekFinished: () -> Unit,
     onToggleRepeat: () -> Unit,
-    isInternetAllowed: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val isInternetAllowed = LocalInternetAllowed.current
     val themeColors = rememberDynamicThemeColors(if (isInternetAllowed) details.thumbnailUrl else null)
 
     var rippleTrigger by remember { mutableIntStateOf(0) }
@@ -134,7 +134,6 @@ fun JuneSongPlayerCard(
 
                 RestrictedAsyncImage(
                     imageUrl = details.thumbnailUrl,
-                    isInternetAllowed = isInternetAllowed,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
@@ -171,7 +170,6 @@ fun JuneSongPlayerCard(
                         ) {
                             RestrictedAsyncImage(
                                 imageUrl = details.thumbnailUrl,
-                                isInternetAllowed = isInternetAllowed,
                                 contentDescription = "Album Art",
                                 iconSize = 32.dp,
                                 iconTint = themeColors.onSurfaceVariant.copy(alpha = 0.5f),
@@ -479,7 +477,6 @@ fun getPlatformIcon(platform: String): Int {
 @Composable
 fun RestrictedAsyncImage(
     imageUrl: String?,
-    isInternetAllowed: Boolean,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
@@ -487,6 +484,7 @@ fun RestrictedAsyncImage(
     iconSize: Dp = 24.dp,
     iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
 ) {
+    val isInternetAllowed = LocalInternetAllowed.current
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center

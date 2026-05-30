@@ -19,9 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.denser.june.core.domain.model.SongDetails
 import com.denser.june.presentation.components.JuneSongPlayerCard
 import com.denser.june.presentation.utils.rememberSongPlayerState
-
-import com.denser.june.core.domain.preferences.PrivacyPreferences
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.denser.june.presentation.theme.LocalInternetAllowed
 import org.koin.compose.koinInject
 import com.denser.june.core.R
 
@@ -33,13 +31,10 @@ fun JournalSongItem(
     onEdit: () -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth().aspectRatio(1.7f)
 ) {
-    val privacyPreferences = koinInject<PrivacyPreferences>()
-    val isInternetAllowed by privacyPreferences.getIsInternetAllowedFlow()
-        .collectAsStateWithLifecycle(initialValue = false)
+    val isInternetAllowed = LocalInternetAllowed.current
 
     val playerState = rememberSongPlayerState(
-        previewUrl = details?.previewUrl,
-        isInternetAllowed = isInternetAllowed
+        previewUrl = details?.previewUrl
     )
 
     var showMenu by remember { mutableStateOf(false) }
@@ -84,7 +79,6 @@ fun JournalSongItem(
                     onSeek = playerState.onSeek,
                     onSeekFinished = playerState.onSeekFinished,
                     onToggleRepeat = playerState.onToggleRepeat,
-                    isInternetAllowed = isInternetAllowed,
                     modifier = Modifier.fillMaxSize()
                 )
 
