@@ -198,7 +198,7 @@ fun SettingsScreen() {
                                 )
                                 CategorySettingsItem(
                                     title = "About",
-                                    subtitle = "Version, licenses, open source",
+                                    subtitle = "Version, licenses, libraries",
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.info_24px),
