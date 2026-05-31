@@ -131,10 +131,10 @@ E8:21:01:FC:C2:20:98:61:AF:DF:81:1C:03:12:F6:2A:A5:BA:8B:E3:10:E1:D2:74:C6:91:CE
 ```
 
 ### Artifact Attestations
-All official APK releases built using our GitHub workflow include cryptographically signed **Artifact Attestations** (Build Provenance).
+Official APK releases are cryptographically signed to prove they were built unmodified directly from our source code.
 
-* **Easy Verification (Browser):** Visit our [Releases](https://github.com/DenserMeerkat/June/releases) page. You will see a **"Verified"** or **"Attested"** badge next to the assets of each release. Click this badge to instantly view the build provenance, including the exact GitHub Action run and commit that generated that APK.
-* **CLI Verification (For Developers):** You can verify a downloaded APK locally using the GitHub CLI:
+* **Via Browser:** Download APKs from [Releases](https://github.com/DenserMeerkat/June/releases) and verify the signed build logs on the [Attestations Dashboard](https://github.com/DenserMeerkat/June/attestations).
+* **Via GitHub CLI (Developers):**
   ```bash
   gh attestation verify name-of-apk.apk --repo DenserMeerkat/June
   ```
