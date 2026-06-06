@@ -12,22 +12,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
 import com.denser.june.core.domain.model.Journal
 import com.denser.june.core.domain.model.SongDetails
-import com.denser.june.core.utils.toDayOfMonth
-import com.denser.june.core.utils.toShortMonth
 import com.denser.june.presentation.components.ListenDropdownMenu
 import com.denser.june.presentation.components.RestrictedAsyncImage
 import com.denser.june.presentation.utils.rememberDynamicThemeColors
@@ -106,7 +101,7 @@ fun TimelineMusicTab(
             DockedMiniPlayer(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = bottomPadding),
+                    .padding(bottom = bottomPadding + 16.dp),
                 song = activeSong!!,
                 isPlaying = isPlaying,
                 isLoading = isLoading,

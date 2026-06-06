@@ -76,7 +76,7 @@ interface JournalDao {
         AND (:isBookmarked IS NULL OR isBookmarked = :isBookmarked)
         AND (:isDraft IS NULL OR isDraft = :isDraft)
         
-        AND (:hasMedia IS NULL OR (:hasMedia = 1 AND images IS NOT NULL) OR (:hasMedia = 0 AND images IS NULL))
+        AND (:hasMedia IS NULL OR (:hasMedia = 1 AND images != '[]') OR (:hasMedia = 0 AND images = '[]'))
         
         AND (:hasLocation IS NULL OR (:hasLocation = 1 AND location IS NOT NULL) OR (:hasLocation = 0 AND location IS NULL))
         
