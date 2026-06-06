@@ -22,14 +22,12 @@
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/home1.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/editor1.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/editor3.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/editor4.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/timeline1.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/timeline4.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/settings1.png" width="23%" style="border-radius:12px; margin: 1px;">
-  <img src="assets/screenshots/sync1.png" width="23%" style="border-radius:12px; margin: 1px;">
+  <img src="assets/screenshots/editor.png" width="32%" style="border-radius:12px; margin: 1px;">
+  <img src="assets/screenshots/timeline-calendar.png" width="32%" style="border-radius:12px; margin: 1px;">
+  <img src="assets/screenshots/home.png" width="32%" style="border-radius:12px; margin: 1px;">
+  <img src="assets/screenshots/timeline-map.png" width="32%" style="border-radius:12px; margin: 1px;">
+  <img src="assets/screenshots/timeline-music.png" width="32%" style="border-radius:12px; margin: 1px;">
+  <img src="assets/screenshots/cloud-sync.png" width="32%" style="border-radius:12px; margin: 1px;">
 </p>
 
 ## Core Features
