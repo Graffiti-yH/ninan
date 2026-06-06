@@ -81,7 +81,8 @@ fun ReminderScreen() {
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
+                .fillMaxSize()
+                .padding(top = padding.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
         ) {
             Box(
@@ -197,6 +198,7 @@ fun ReminderScreen() {
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(32.dp + padding.calculateBottomPadding()))
         }
     }
 

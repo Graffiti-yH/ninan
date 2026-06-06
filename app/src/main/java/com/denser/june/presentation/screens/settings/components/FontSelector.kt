@@ -28,6 +28,7 @@ fun FontSelector(
     modifier: Modifier = Modifier,
     selectedFontName: String,
     onFontSelect: (String) -> Unit,
+    bottomPadding: androidx.compose.ui.unit.Dp = 0.dp
 ) {
     var selectedCategory by remember { mutableStateOf<FontCategory?>(null) }
 
@@ -99,7 +100,12 @@ fun FontSelector(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                top = 8.dp,
+                end = 16.dp,
+                bottom = 8.dp + bottomPadding
+            ),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             if (selectedCategory == null) {

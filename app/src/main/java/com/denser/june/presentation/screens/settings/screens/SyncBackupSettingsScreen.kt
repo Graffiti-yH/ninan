@@ -49,7 +49,8 @@ fun SyncBackupSettingsScreen() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding()),
+            contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
         ) {
             item {
                 SettingSection {

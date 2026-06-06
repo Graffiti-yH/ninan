@@ -199,11 +199,11 @@ fun MapSettingsScreen() {
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize()
+                .padding(top = padding.calculateTopPadding())
                 .imePadding()
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = 24.dp),
+                .padding(bottom = 24.dp + padding.calculateBottomPadding()),
         ) {
             if (!isInternetAllowed) {
                 InternetRestrictedBanner(

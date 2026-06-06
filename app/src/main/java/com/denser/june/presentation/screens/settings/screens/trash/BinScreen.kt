@@ -142,18 +142,24 @@ fun BinScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
         ) {
             if (deletedJournals.isEmpty()) {
                 JunePlaceholderPage(
                     icon = R.drawable.delete_24px,
                     title = "Bin is empty",
-                    subtitle = "Journals you delete will appear here for 30 days before being permanently removed."
+                    subtitle = "Journals you delete will appear here for 30 days before being permanently removed.",
+                    modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())
                 )
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        top = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp + innerPadding.calculateBottomPadding()
+                    ),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item {

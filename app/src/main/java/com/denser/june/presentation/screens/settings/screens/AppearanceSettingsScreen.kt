@@ -75,7 +75,8 @@ fun AppearanceSettingsScreen() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(top = innerPadding.calculateTopPadding()),
+                contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
             ) {
                 val themeGroup = listOfNotNull(
                     appearanceTiles["APP_THEME"],

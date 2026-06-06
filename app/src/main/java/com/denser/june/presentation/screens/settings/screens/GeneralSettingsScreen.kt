@@ -65,7 +65,8 @@ fun GeneralSettingsScreen() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(top = innerPadding.calculateTopPadding()),
+                contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
             ) {
                 val timeGroup = listOfNotNull(
                     generalTiles["START_OF_WEEK"],

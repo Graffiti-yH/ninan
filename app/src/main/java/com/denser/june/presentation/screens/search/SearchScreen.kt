@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -171,7 +173,11 @@ fun SearchScreen() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(
+                    top = padding.calculateTopPadding(),
+                    start = padding.calculateStartPadding(androidx.compose.ui.platform.LocalLayoutDirection.current),
+                    end = padding.calculateEndPadding(androidx.compose.ui.platform.LocalLayoutDirection.current)
+                )
                 .consumeWindowInsets(padding)
                 .imePadding()
         ) {
@@ -180,24 +186,32 @@ fun SearchScreen() {
                     JunePlaceholderPage(
                         icon = R.drawable.search_24px,
                         title = "Search your journal",
-                        subtitle = "Type a keyword or select a filter above to find specific entries."
+                        subtitle = "Type a keyword or select a filter above to find specific entries.",
+                        modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
                     )
                 }
                 searchState.isLoading -> {
                     JunePlaceholderPage(
-                        isLoading = true
+                        isLoading = true,
+                        modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
                     )
                 }
                 searchState.journals.isEmpty() -> {
                     JunePlaceholderPage(
                         icon = R.drawable.search_off_24px,
                         title = "No matches found",
-                        subtitle = "We couldn't find any journals matching your current search or filters."
+                        subtitle = "We couldn't find any journals matching your current search or filters.",
+                        modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
                     )
                 }
                 else -> {
                     LazyColumn(
-                        contentPadding = PaddingValues(16.dp),
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            top = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp + padding.calculateBottomPadding()
+                        ),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(items = searchState.journals, key = { it.id }) { journal ->

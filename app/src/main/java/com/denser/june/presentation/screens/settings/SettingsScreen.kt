@@ -94,7 +94,7 @@ fun SettingsScreen() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(top = innerPadding.calculateTopPadding())
             ) {
                 OutlinedTextField(
                     value = searchQuery,
@@ -131,6 +131,7 @@ fun SettingsScreen() {
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding()),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (searchQuery.isEmpty()) {

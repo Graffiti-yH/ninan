@@ -248,7 +248,6 @@ fun EditorScreen() {
                         currentTags = state.tags,
                         onTagSelect = onTagSelect,
                         modifier = Modifier
-                            .navigationBarsPadding()
                             .imePadding()
                     )
                 } else {
@@ -265,7 +264,7 @@ fun EditorScreen() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
@@ -461,7 +460,7 @@ fun EditorScreen() {
                         .padding(horizontal = 4.dp)
                         .defaultMinSize(minHeight = 84.dp)
                 )
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(24.dp + innerPadding.calculateBottomPadding()))
             }
         }
     }

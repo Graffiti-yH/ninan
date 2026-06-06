@@ -130,7 +130,8 @@ fun BackupScreen() {
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
         ) {
             Box(
@@ -231,6 +232,7 @@ fun BackupScreen() {
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(32.dp + innerPadding.calculateBottomPadding()))
         }
     }
 

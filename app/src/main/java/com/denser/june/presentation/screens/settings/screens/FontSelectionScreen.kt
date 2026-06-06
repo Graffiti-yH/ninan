@@ -72,7 +72,7 @@ fun FontSelectionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(top = padding.calculateTopPadding())
         ) {
             if (!isInternetAllowed) {
                 InternetRestrictedBanner(
@@ -83,7 +83,8 @@ fun FontSelectionScreen(
             FontSelector(
                 selectedFontName = currentFontName,
                 onFontSelect = { viewModel.onAction(SettingsAction.OnFontSelect(it)) },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                bottomPadding = padding.calculateBottomPadding()
             )
         }
     }

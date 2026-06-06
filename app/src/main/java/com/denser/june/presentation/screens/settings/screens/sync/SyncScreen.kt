@@ -113,10 +113,10 @@ fun SyncScreen() {
             state = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .imePadding(),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(bottom = 24.dp)
+            contentPadding = PaddingValues(bottom = 24.dp + innerPadding.calculateBottomPadding())
         ) {
             if (!isInternetAllowed) {
                 item {
