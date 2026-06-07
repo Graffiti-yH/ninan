@@ -1,5 +1,17 @@
 [
   {
+    "version": "v1.0.0-beta01",
+    "changes": [
+      "Multi-Map Provider Support with BYOK model, default Carto provider.",
+      "June no longer ships with Maptiler key by default.",
+      "Improved map editing and viewing experience across the app.",
+      "Improved Settings screen layout with tile grouping.",
+      "Edge-to-edge display and UI polish for a smoother experience.",
+      "Added Changelog and Update checker.",
+      "Prepared the app for Play Store release."
+    ]
+  },
+  {
     "version": "v0.9.0",
     "changes": [
       "Added dynamic font customization with Google Fonts.",
