@@ -206,6 +206,9 @@ interface JournalDao {
     @Query("UPDATE journals SET cloudId = :cloudId, syncedAt = :syncedAt WHERE id = :id")
     suspend fun updateSyncStatus(id: String, cloudId: String, syncedAt: Long)
 
+    @Query("UPDATE journals SET cloudId = NULL, syncedAt = NULL")
+    suspend fun resetAllSyncStatuses()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTombstone(tombstone: DeletedJournalTombstone)
 

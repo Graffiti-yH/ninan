@@ -147,11 +147,13 @@ class SyncManager(
             val lastSyncTime = syncPrefs.getLastSyncTime().first()
             val tombstones = journalRepo.getAllTombstones()
 
-            val localMediaFiles = mediaDir.listFiles()?.map { it.name }?.toSet() ?: emptySet()
-            val allLocalMediaNames =
-                allLocalJournals.flatMap { it.images }.map { File(it).name }.distinct()
+            val referencedMediaNames = allLocalJournals.flatMap { it.images }
+                .map { File(it).name }
+                .distinct()
+            val localMediaFiles = referencedMediaNames.toSet()
 
-            val mediaToUpload = allLocalMediaNames.filter { name ->
+
+            val mediaToUpload = localMediaFiles.filter { name ->
                 val localExists = File(mediaDir, name).exists()
                 localExists && remoteMedia.none { it.equals(name, ignoreCase = true) }
             }
@@ -189,10 +191,11 @@ class SyncManager(
                 }
             }
 
+            val isRemoteEmpty = remoteJournals.isEmpty()
             allLocalJournals.forEach { local ->
                 val remote = remoteStates[local.id]
                 if (remote == null) {
-                    if (local.syncedAt != null) {
+                    if (local.syncedAt != null && !isRemoteEmpty) {
                         remoteDeletions.add(local.title.ifBlank { "Untitled" })
                     } else {
                         realPendingUploads.add(local.title.ifBlank { "Untitled" })
@@ -238,8 +241,22 @@ class SyncManager(
         }
     }
 
+    fun getAvailableProviders(): List<String> {
+        val list = providers.keys.toList()
+        return if (list.contains("GoogleDrive")) {
+            listOf("GoogleDrive", "WebDAV").filter { list.contains(it) }
+        } else {
+            list
+        }
+    }
+
+    fun isProviderConnected(type: String): kotlinx.coroutines.flow.Flow<Boolean> {
+        return providers[type]?.isConnected() ?: kotlinx.coroutines.flow.flowOf(false)
+    }
+
     private suspend fun getActiveProvider(): CloudProvider {
-        val selected = syncPrefs.getSelectedProvider().first() ?: "WebDAV"
+        val default = if (getAvailableProviders().contains("GoogleDrive")) "GoogleDrive" else "WebDAV"
+        val selected = syncPrefs.getSelectedProvider().first() ?: default
         return providers[selected] ?: providers["WebDAV"]!!
     }
 
@@ -304,10 +321,11 @@ class SyncManager(
                 }
             }
 
+            val isRemoteEmpty = remoteStates.isEmpty()
             allLocalJournals.forEach { local ->
                 val remote = remoteStates[local.id]
                 if (remote == null) {
-                    if (local.syncedAt != null) {
+                    if (local.syncedAt != null && !isRemoteEmpty) {
                         journalRepo.hardDeleteJournal(local.id)
                     } else {
                         toUpload.add(local)
@@ -403,17 +421,22 @@ class SyncManager(
 
         return provider.downloadJournal(filename).onSuccess { journal ->
             val local = journalRepo.getJournalById(id)
-            val finalJournal =
-                if (local != null && (local.updatedAt ?: 0L) > (local.syncedAt ?: 0L)) {
-                    journal.copy(
-                        id = java.util.UUID.randomUUID().toString(),
-                        title = "Conflict: ${journal.title.ifBlank { "Untitled" }}",
-                        syncedAt = null,
-                        cloudId = null
-                    )
+
+            val finalJournal = if (local != null && (local.updatedAt ?: 0L) > (local.syncedAt ?: 0L)) {
+                if (local.isContentEqualTo(journal)) {
+                    local.copy(syncedAt = remoteTime)
                 } else {
-                    journal
+                    val localTime = local.updatedAt ?: 0L
+                    val remoteTimeField = journal.updatedAt ?: remoteTime
+                    if (localTime > remoteTimeField) {
+                        local.copy(syncedAt = remoteTime)
+                    } else {
+                        journal
+                    }
                 }
+            } else {
+                journal
+            }
 
             if (local != null) {
                 journalRepo.updateSyncStatus(local.id, id, remoteTime)
@@ -424,7 +447,8 @@ class SyncManager(
             }
             finalJournal.images.forEach { imgName ->
                 val targetFile = File(mediaDir, imgName)
-                if (!targetFile.exists()) {
+                val needsDownload = !targetFile.exists() || targetFile.length() == 0L
+                if (needsDownload) {
                     provider.downloadMedia(imgName, targetFile)
                 }
             }

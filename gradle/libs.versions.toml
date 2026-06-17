@@ -35,6 +35,10 @@ aboutLibraries = "14.2.1"
 mapLibrecompose = "0.13.0"
 osmdroid = "6.1.20"
 gmsLocation = "21.3.0"
+gmsAuth = "21.2.0"
+googleApiDrive = "v3-rev20240123-2.0.0"
+googleApiClientAndroid = "2.2.0"
+googleHttpClientGson = "1.44.1"
 coroutinesPlayServices = "1.11.0"
 coil = "2.7.0"
 media3 = "1.10.1"
@@ -96,6 +100,10 @@ aboutLibraries-compose-m3 = { group = "com.mikepenz", name = "aboutlibraries-com
 maplibre-compose = { group = "org.maplibre.compose", name = "maplibre-compose", version.ref = "mapLibrecompose" }
 osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
 gms-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "gmsLocation" }
+gms-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "gmsAuth" }
+google-api-services-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "googleApiDrive" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version.ref = "googleApiClientAndroid" }
+google-http-client-gson = { group = "com.google.http-client", name = "google-http-client-gson", version.ref = "googleHttpClientGson" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }

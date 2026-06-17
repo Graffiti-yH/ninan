@@ -221,6 +221,18 @@ dependencies {
     "playImplementation"(libs.gms.location)
     "playImplementation"(libs.kotlinx.coroutines.play.services)
     "playImplementation"(libs.play.app.update)
+    "playImplementation"(libs.gms.auth)
+    "playImplementation"(libs.google.api.services.drive) {
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    }
+    "playImplementation"(libs.google.api.client.android) {
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    }
+    "playImplementation"(libs.google.http.client.gson) {
+        exclude(group = "org.json", module = "json")
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    }
+
 }
 aboutLibraries {
     export.excludeFields.add("generated")

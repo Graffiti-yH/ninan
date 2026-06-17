@@ -12,11 +12,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import com.denser.june.core.domain.sync.serialize
+import com.denser.june.core.domain.sync.deserializeJournal
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -33,7 +34,6 @@ class WebDAVProvider(
 
     override val name: String = "WebDAV"
     private val _isConnected = MutableStateFlow(false)
-    private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
     private companion object {
         const val XML_PROPFIND_BODY = """
@@ -189,7 +189,7 @@ class WebDAVProvider(
 
         val journalFileName = "${journal.id}.json"
         val journalUrl = "${authInfo.baseUrl.trimEnd('/')}/June/journals/$journalFileName"
-        val content = json.encodeToString(Journal.serializer(), journal)
+        val content = journal.serialize()
 
         val request = Request.Builder()
             .url(journalUrl)
@@ -220,7 +220,7 @@ class WebDAVProvider(
             client.newCall(request).execute().use { response ->
                 if (response.isSuccessful) {
                     val body = response.body?.string() ?: return@use Result.failure(Exception("Empty body"))
-                    Result.success(json.decodeFromString(Journal.serializer(), body))
+                    Result.success(body.deserializeJournal())
                 } else {
                     Result.failure(Exception("Download failed: ${response.code}"))
                 }
@@ -280,7 +280,7 @@ class WebDAVProvider(
     override suspend fun updateManifest(manifest: SyncManifest): Result<Unit> = withContext(Dispatchers.IO) {
         val authInfo = getAuth() ?: return@withContext Result.failure(Exception("Missing WebDAV credentials"))
 
-        val content = json.encodeToString(SyncManifest.serializer(), manifest)
+        val content = manifest.serialize()
         val request = Request.Builder()
             .url("${authInfo.baseUrl.trimEnd('/')}/June/manifest.json")
             .put(content.toRequestBody("application/json".toMediaType()))

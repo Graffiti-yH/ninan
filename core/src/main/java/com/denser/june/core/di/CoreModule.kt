@@ -93,11 +93,17 @@ val coreModule = module {
 
     single {
         val context = get<Context>()
+        val providers = mutableMapOf<String, CloudProvider>()
+        providers["WebDAV"] = get<CloudProvider>(named("WebDAV"))
+        
+        getOrNull<CloudProvider>(named("GoogleDrive"))?.let {
+            providers["GoogleDrive"] = it
+        }
         
         SyncManager(
             get(),
             get(),
-            mapOf("WebDAV" to get<CloudProvider>(named("WebDAV"))),
+            providers,
             File(context.filesDir, "journal_media"),
             context,
             get(named("ApplicationScope"))

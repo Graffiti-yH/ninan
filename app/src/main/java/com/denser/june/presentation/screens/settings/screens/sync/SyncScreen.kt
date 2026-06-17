@@ -26,15 +26,20 @@ import com.denser.june.presentation.screens.settings.screens.sync.sections.SyncA
 import com.denser.june.presentation.screens.settings.screens.sync.sections.SyncGeneralSettings
 import com.denser.june.presentation.screens.settings.screens.sync.sections.SyncStatusCard
 import com.denser.june.presentation.screens.settings.screens.sync.sections.WebDavConfigSection
+import com.denser.june.presentation.screens.settings.screens.sync.sections.GoogleDriveConfigSection
 import com.denser.june.presentation.components.InternetRestrictedBanner
 import com.denser.june.presentation.screens.settings.screens.sync.components.SyncDetailsDialog
 import com.denser.june.presentation.theme.LocalInternetAllowed
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import com.denser.june.core.R
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
@@ -195,25 +200,127 @@ fun SyncScreen() {
                 )
             }
 
-            item {
-                WebDavConfigSection(
-                    isVisible = state.isEnabled && isInternetAllowed,
-                    webDavUrl = state.webDavUrl,
-                    webDavUser = state.webDavUser,
-                    webDavPass = state.webDavPass,
-                    isConfigLocked = state.isConfigLocked,
-                    isTestingConnection = state.isTestingConnection,
-                    status = state.status,
-                    urlError = state.webDavUrlError,
-                    userError = state.webDavUserError,
-                    passError = state.webDavPassError,
-                    onUrlChange = { syncVM.updateUrl(it) },
-                    onUserChange = { syncVM.updateUser(it) },
-                    onPassChange = { syncVM.updatePass(it) },
-                    onToggleLock = { syncVM.toggleConfigLock() },
-                    onTestConnection = { syncVM.testConnection() },
-                    onManualSync = { if (isInternetAllowed) syncVM.manualSync() }
-                )
+            if (state.isEnabled && isInternetAllowed && state.availableProviders.size > 1) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        state.availableProviders.forEach { provider ->
+                            val isSelected = state.selectedProvider == provider
+                            val providerDisplayName = if (provider == "GoogleDrive") "Google Drive" else provider
+                            val iconRes = if (provider == "GoogleDrive") R.drawable.drive_export_24px else R.drawable.cloud_24px
+
+                            Surface(
+                                onClick = { syncVM.selectProvider(provider) },
+                                shape = RoundedCornerShape(24.dp),
+                                color = if (isSelected) {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                },
+                                contentColor = if (isSelected) {
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                },
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                                )
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        painter = painterResource(iconRes),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = providerDisplayName,
+                                        style = MaterialTheme.typography.labelMedium.copy(
+                                            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
+                                        )
+                                    )
+                                    if (isSelected) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Icon(
+                                            painter = painterResource(R.drawable.check_circle_24px_fill),
+                                            contentDescription = "Active",
+                                            modifier = Modifier.size(16.dp),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (state.isEnabled && isInternetAllowed) {
+                item {
+                    AnimatedContent(
+                        targetState = state.selectedProvider,
+                        transitionSpec = {
+                            val providers = state.availableProviders
+                            val initialIndex = providers.indexOf(initialState)
+                            val targetIndex = providers.indexOf(targetState)
+                            
+                            if (targetIndex < initialIndex) {
+                                (slideInHorizontally { width -> -width } + fadeIn()) togetherWith
+                                    (slideOutHorizontally { width -> width } + fadeOut())
+                            } else {
+                                (slideInHorizontally { width -> width } + fadeIn()) togetherWith
+                                    (slideOutHorizontally { width -> -width } + fadeOut())
+                            }.using(
+                                SizeTransform(clip = false)
+                            )
+                        },
+                        label = "ConfigSectionTransition"
+                    ) { provider ->
+                        when (provider) {
+                            "GoogleDrive" -> {
+                                GoogleDriveConfigSection(
+                                    isVisible = true,
+                                    isConnected = state.isGoogleDriveConnected,
+                                    status = state.status,
+                                    isTestingConnection = state.isTestingConnection,
+                                    onTestConnection = { syncVM.testConnection() },
+                                    onManualSync = { if (isInternetAllowed) syncVM.manualSync() },
+                                    onRefresh = { syncVM.analyzeSync() }
+                                )
+                            }
+                            else -> {
+                                WebDavConfigSection(
+                                    isVisible = true,
+                                    webDavUrl = state.webDavUrl,
+                                    webDavUser = state.webDavUser,
+                                    webDavPass = state.webDavPass,
+                                    isConfigLocked = state.isConfigLocked,
+                                    isTestingConnection = state.isTestingConnection,
+                                    status = state.status,
+                                    urlError = state.webDavUrlError,
+                                    userError = state.webDavUserError,
+                                    passError = state.webDavPassError,
+                                    onUrlChange = { syncVM.updateUrl(it) },
+                                    onUserChange = { syncVM.updateUser(it) },
+                                    onPassChange = { syncVM.updatePass(it) },
+                                    onToggleLock = { syncVM.toggleConfigLock() },
+                                    onTestConnection = { syncVM.testConnection() },
+                                    onManualSync = { if (isInternetAllowed) syncVM.manualSync() }
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             item {

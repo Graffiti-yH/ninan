@@ -36,6 +36,7 @@ fun BinScreen() {
     val timeFormat by binVM.timeFormat.collectAsStateWithLifecycle()
     val is24Hour = timeFormat == TimeFormat.TWENTY_FOUR_HOUR
     val deletedJournals by binVM.deletedJournals.collectAsStateWithLifecycle()
+    val isSyncEnabled by binVM.isSyncEnabled.collectAsStateWithLifecycle()
     val navigator = koinInject<AppNavigator>()
 
     var showMenu by remember { mutableStateOf(false) }
@@ -198,7 +199,11 @@ fun BinScreen() {
                 onDismiss = { showEmptyBinDialog = false },
                 onConfirm = { binVM.emptyBin() },
                 title = "Empty Bin?",
-                description = "This will permanently delete all journals in the bin. This action cannot be undone.",
+                description = if (isSyncEnabled) {
+                    "This will permanently delete all journals in the bin from this device and your cloud storage. This action cannot be undone."
+                } else {
+                    "This will permanently delete all journals in the bin. This action cannot be undone."
+                },
                 confirmText = "Delete",
                 confirmButtonText = "Permanently Delete All",
                 isDestructive = true,
@@ -256,7 +261,11 @@ fun BinScreen() {
                     showPermanentDeleteConfirmation = false
                     journalToDeletePermanently = null
                 },
-                message = "Permanently delete this journal? This action cannot be undone.",
+                message = if (isSyncEnabled) {
+                    "Permanently delete this journal from this device and your cloud storage? This action cannot be undone."
+                } else {
+                    "Permanently delete this journal? This action cannot be undone."
+                },
                 confirmText = "Permanently Delete"
             )
         }

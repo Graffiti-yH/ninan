@@ -2,6 +2,7 @@ package com.denser.june.core.domain.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.io.File
 
 @Serializable
 @SerialName("Journal")
@@ -26,6 +27,20 @@ data class Journal(
     val cloudId: String? = null,
 ) {
     val isDeleted: Boolean get() = deletedAt != null
+
+    fun isContentEqualTo(other: Journal): Boolean {
+        return this.title == other.title &&
+               this.content == other.content &&
+               this.emoji == other.emoji &&
+               this.images.map { File(it).name } == other.images.map { File(it).name } &&
+               this.location == other.location &&
+               this.songDetails == other.songDetails &&
+               this.tags == other.tags &&
+               this.isBookmarked == other.isBookmarked &&
+               this.isArchived == other.isArchived &&
+               this.isDraft == other.isDraft &&
+               this.deletedAt == other.deletedAt
+    }
 }
 
 @Serializable

@@ -3,7 +3,22 @@ package com.denser.june.core.domain.sync
 import com.denser.june.core.domain.model.Journal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.io.File
+
+private val sharedJson = Json { ignoreUnknownKeys = true; coerceInputValues = true }
+
+fun Journal.serialize(): String {
+    return sharedJson.encodeToString(Journal.serializer(), this)
+}
+
+fun String.deserializeJournal(): Journal {
+    return sharedJson.decodeFromString(Journal.serializer(), this)
+}
+
+fun SyncManifest.serialize(): String {
+    return sharedJson.encodeToString(SyncManifest.serializer(), this)
+}
 
 @Serializable
 data class RemoteFileMeta(

@@ -34,6 +34,7 @@ interface JournalRepository {
     suspend fun getOldDeletedJournals(threshold: Long): List<Journal>
     
     suspend fun updateSyncStatus(id: String, cloudId: String, syncedAt: Long)
+    suspend fun resetAllSyncStatuses()
 
     suspend fun getAllTombstones(): List<String>
     suspend fun deleteTombstone(id: String)

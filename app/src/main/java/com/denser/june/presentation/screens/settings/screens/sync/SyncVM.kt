@@ -9,6 +9,7 @@ import com.denser.june.core.domain.sync.SyncStatus
 import com.denser.june.core.domain.sync.SyncAnalysis
 import com.denser.june.core.domain.preferences.JournalPreferences
 import com.denser.june.core.domain.model.enums.TimeFormat
+import com.denser.june.core.domain.repository.JournalRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -35,17 +36,26 @@ data class SyncSettingsState(
     val showAdvancedOptions: Boolean = false,
     val showAnalysisDetails: Boolean = false,
     val isInternetAllowed: Boolean = true,
-    val timeFormat: TimeFormat = TimeFormat.TWELVE_HOUR
+    val timeFormat: TimeFormat = TimeFormat.TWELVE_HOUR,
+    val selectedProvider: String = "WebDAV",
+    val availableProviders: List<String> = emptyList(),
+    val isGoogleDriveConnected: Boolean = false
 )
 
 class SyncVM(
     private val syncPrefs: SyncPreferences,
     private val privacyPreferences: PrivacyPreferences,
     private val syncManager: SyncManager,
-    private val journalPrefs: JournalPreferences
+    private val journalPrefs: JournalPreferences,
+    private val journalRepo: JournalRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SyncSettingsState())
+    private val _state = MutableStateFlow(
+        SyncSettingsState(
+            availableProviders = syncManager.getAvailableProviders(),
+            selectedProvider = if (syncManager.getAvailableProviders().contains("GoogleDrive")) "GoogleDrive" else "WebDAV"
+        )
+    )
     
     val state = _state.asStateFlow()
 
@@ -71,12 +81,15 @@ class SyncVM(
                 syncPrefs.getLastSyncTime(),
                 syncPrefs.getWebDavUrl(),
                 syncPrefs.getWebDavUsername(),
-                syncPrefs.getWebDavPassword()
+                syncPrefs.getWebDavPassword(),
+                syncPrefs.getSelectedProvider()
             ) { args: Array<Any?> -> args }
                 .collect { args ->
                     val url = args[4] as String? ?: ""
                     val user = args[5] as String? ?: ""
                     val pass = args[6] as String? ?: ""
+                    val defaultProvider = if (syncManager.getAvailableProviders().contains("GoogleDrive")) "GoogleDrive" else "WebDAV"
+                    val provider = args[7] as String? ?: defaultProvider
                     
                     _state.update {
                         it.copy(
@@ -87,6 +100,7 @@ class SyncVM(
                             webDavUrl = url,
                             webDavUser = user,
                             webDavPass = pass,
+                            selectedProvider = provider,
                             webDavUrlError = null,
                             webDavUserError = null,
                             webDavPassError = null,
@@ -99,6 +113,12 @@ class SyncVM(
                     }
                     isInitialLoad = false
                 }
+        }
+
+        viewModelScope.launch {
+            syncManager.isProviderConnected("GoogleDrive").collect { connected ->
+                _state.update { it.copy(isGoogleDriveConnected = connected) }
+            }
         }
 
         viewModelScope.launch {
@@ -121,6 +141,36 @@ class SyncVM(
         viewModelScope.launch {
             journalPrefs.timeFormat().collect { format ->
                 _state.update { it.copy(timeFormat = format) }
+            }
+        }
+    }
+
+    fun selectProvider(provider: String) {
+        viewModelScope.launch {
+            syncPrefs.setSelectedProvider(provider)
+            journalRepo.resetAllSyncStatuses()
+            syncPrefs.setLastSyncTime(0L)
+
+            _state.update {
+                it.copy(
+                    webDavUrlError = null,
+                    webDavUserError = null,
+                    webDavPassError = null,
+                    analysis = null
+                )
+            }
+            
+            if (_state.value.isEnabled) {
+                val stateVal = _state.value
+                if (provider == "GoogleDrive") {
+                    if (stateVal.isGoogleDriveConnected) {
+                        analyzeSync()
+                    }
+                } else {
+                    if (stateVal.webDavUrl.isNotBlank() && stateVal.webDavUser.isNotBlank()) {
+                        analyzeSync()
+                    }
+                }
             }
         }
     }
@@ -186,7 +236,9 @@ class SyncVM(
         viewModelScope.launch {
             try {
                 _state.update { it.copy(isTestingConnection = true) }
-                val result = syncManager.testProviderConnection("WebDAV")
+                val defaultProvider = if (syncManager.getAvailableProviders().contains("GoogleDrive")) "GoogleDrive" else "WebDAV"
+                val activeProvider = syncPrefs.getSelectedProvider().first() ?: defaultProvider
+                val result = syncManager.testProviderConnection(activeProvider)
                 _state.update { it.copy(isTestingConnection = false) }
 
                 if (result.isSuccess) {
@@ -203,6 +255,16 @@ class SyncVM(
 
     private fun validateInputs(): Boolean {
         val currentState = _state.value
+        if (currentState.selectedProvider == "GoogleDrive") {
+            if (!currentState.isGoogleDriveConnected) {
+                viewModelScope.launch {
+                    _effect.emit(SyncEffect.ShowToast("Please link your Google Account first"))
+                }
+                return false
+            }
+            return true
+        }
+
         var isValid = true
 
         val urlError = if (currentState.webDavUrl.isBlank()) "Server URL cannot be empty" else null

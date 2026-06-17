@@ -177,6 +177,10 @@ class JournalRepositoryImpl(
         journalDao.updateSyncStatus(id, cloudId, syncedAt)
     }
 
+    override suspend fun resetAllSyncStatuses() {
+        journalDao.resetAllSyncStatuses()
+    }
+
     override suspend fun getAllJournalsIncludeDeletedSync(): List<Journal> {
         return journalDao.getAllJournalsIncludeDeletedSync().asDomain()
     }

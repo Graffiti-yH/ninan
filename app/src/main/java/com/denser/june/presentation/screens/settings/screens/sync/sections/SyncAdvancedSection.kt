@@ -1,9 +1,20 @@
 package com.denser.june.presentation.screens.settings.screens.sync.sections
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -12,8 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
 import com.denser.june.core.domain.sync.SyncAnalysis
 import com.denser.june.core.domain.sync.SyncStatus
-import com.denser.june.presentation.screens.settings.screens.sync.components.SyncAnalysisSection
+import com.denser.june.presentation.screens.settings.components.SettingSection
 import com.denser.june.presentation.screens.settings.components.SettingsItem
+import com.denser.june.presentation.screens.settings.screens.sync.components.SyncAnalysisSection
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -34,99 +46,58 @@ fun SyncAdvancedSection(
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically()
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            Surface(
-                shape = RoundedCornerShape(24.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerLow,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+        SettingSection {
+            SettingsItem(
+                title = "Advanced",
+                subtitle = "Analysis & repair tools",
+                leadingContent = {
+                    Icon(painterResource(R.drawable.settings_24px), null)
+                },
+                trailingContent = {
+                    Icon(
+                        painterResource(R.drawable.keyboard_arrow_down_24px),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .rotate(rotationAngle),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
+                onClick = onToggleAdvanced
+            )
+            if (showAdvancedOptions && (analysis != null || isAnalyzing)) {
+                SyncAnalysisSection(
+                    analysis = analysis,
+                    isAnalyzing = isAnalyzing,
+                    onViewDetails = onViewDetails
+                )
+            }
+            if (showAdvancedOptions) {
+                val isBusy = isAnalyzing || status is SyncStatus.Syncing || status is SyncStatus.Preparing
                 SettingsItem(
-                    title = "Advanced",
-                    subtitle = "Analysis & repair tools",
-                    leadingContent = {
-                        Icon(painterResource(R.drawable.settings_24px), null)
-                    },
+                    title = "Analyze Sync",
+                    subtitle = "Analyze cloud sync health",
                     trailingContent = {
-                        Icon(
-                            painterResource(R.drawable.keyboard_arrow_down_24px),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .rotate(rotationAngle),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                    onClick = onToggleAdvanced
-                ) {
-                    AnimatedVisibility(
-                        visible = showAdvancedOptions,
-                        enter = fadeIn() + expandVertically(),
-                        exit = fadeOut() + shrinkVertically()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                                .fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            if (analysis != null || isAnalyzing) {
-                                SyncAnalysisSection(
-                                    analysis = analysis,
-                                    isAnalyzing = isAnalyzing,
-                                    onViewDetails = onViewDetails
-                                )
-                            }
-
-                            Button(
-                                onClick = onAnalyze,
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = !isAnalyzing && status !is SyncStatus.Syncing && status !is SyncStatus.Preparing,
-                                shape = RoundedCornerShape(14.dp)
-                            ) {
-                                if (isAnalyzing) {
-                                    CircularWavyProgressIndicator(
-                                        modifier = Modifier.size(20.dp),
-                                        color = MaterialTheme.colorScheme.onPrimary
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Analyzing...")
-                                } else {
-                                    Icon(
-                                        painterResource(R.drawable.track_changes_24px),
-                                        null,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Analyze Sync")
-                                }
-                            }
-
-                            OutlinedButton(
-                                onClick = onRepair,
-                                modifier = Modifier.fillMaxWidth(),
-                                enabled = !isAnalyzing && status !is SyncStatus.Syncing && status !is SyncStatus.Preparing,
-                                shape = RoundedCornerShape(14.dp)
-                            ) {
-                                if (status is SyncStatus.Preparing || (status is SyncStatus.Syncing && status.currentOperation == "Preparing...")) {
-                                    CircularWavyProgressIndicator(
-                                        modifier = Modifier.size(20.dp),
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Revalidating...")
-                                } else {
-                                    Icon(
-                                        painterResource(R.drawable.reset_wrench_24px),
-                                        null,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Repair Sync")
-                                }
-                            }
+                        FilledIconButton(onClick = onAnalyze, enabled = !isBusy) {
+                            Icon(
+                                painterResource(R.drawable.track_changes_24px),
+                                contentDescription = "Analyze"
+                            )
                         }
                     }
-                }
+                )
+                SettingsItem(
+                    title = "Repair Sync",
+                    subtitle = "Repair and revalidate sync state",
+                    trailingContent = {
+                        FilledIconButton(onClick = onRepair, enabled = !isBusy) {
+                            Icon(
+                                painterResource(R.drawable.reset_wrench_24px),
+                                contentDescription = "Repair"
+                            )
+                        }
+                    }
+                )
             }
         }
     }
