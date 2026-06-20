@@ -185,7 +185,11 @@ fun EditorScreen() {
                         }
 
                         FilledIconButton(
-                            onClick = { dialogState.showAddItemSheet = true },
+                            onClick = {
+                                keyboardController?.hide()
+                                focusManager.clearFocus(force = true)
+                                dialogState.showAddItemSheet = true
+                            },
                             colors = IconButtonDefaults.filledIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(

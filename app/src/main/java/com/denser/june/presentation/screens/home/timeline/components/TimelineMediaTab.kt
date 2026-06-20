@@ -55,7 +55,7 @@ fun TimelineMediaTab(
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = bottomPadding + 16.dp),
+                contentPadding = PaddingValues(bottom = bottomPadding),
             ) {
                 groupedMedia.forEach { (date, journalsInDate) ->
                     val dayImages = journalsInDate.flatMap { it.images }

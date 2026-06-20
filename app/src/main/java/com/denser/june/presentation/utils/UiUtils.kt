@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 
 object UiUtils {
 
-    val BOTTOM_BAR_PADDING = 80.dp
+    val BOTTOM_BAR_PADDING = 100.dp
 
     @Composable
     fun getTransparentTextFieldColors() = TextFieldDefaults.colors(

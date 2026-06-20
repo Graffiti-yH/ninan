@@ -61,11 +61,6 @@ fun TimelineJournalTile(
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null
 ) {
-    val wordCount = remember(journal.content) {
-        val trimmed = journal.content.trim()
-        if (trimmed.isEmpty()) 0
-        else trimmed.split("\\s+".toRegex()).size
-    }
     val mediaCount = remember(journal.images) { journal.images.size }
     val hasMusic = remember(journal.songDetails) { journal.songDetails != null }
     val hasLocation = remember(journal.location) { journal.location != null }

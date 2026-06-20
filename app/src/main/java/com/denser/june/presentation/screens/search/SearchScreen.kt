@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -65,6 +66,7 @@ fun SearchScreen() {
     val viewModel: SearchVM = koinViewModel()
     val navigator = koinInject<AppNavigator>()
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -109,7 +111,11 @@ fun SearchScreen() {
                     },
                     navigationIcon = {
                         FilledIconButton(
-                            onClick = { navigator.navigateBack() },
+                            onClick = {
+                                keyboardController?.hide()
+                                focusManager.clearFocus(force = true)
+                                navigator.navigateBack()
+                            },
                             colors = IconButtonDefaults.filledIconButtonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f)

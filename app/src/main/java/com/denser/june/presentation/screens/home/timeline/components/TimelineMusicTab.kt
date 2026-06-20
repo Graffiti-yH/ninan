@@ -80,7 +80,7 @@ fun TimelineMusicTab(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
-                    bottom = bottomPadding + 16.dp + 80.dp,
+                    bottom = bottomPadding + 92.dp,
                     top = 16.dp
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -101,7 +101,7 @@ fun TimelineMusicTab(
             DockedMiniPlayer(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = bottomPadding + 16.dp),
+                    .padding(bottom = bottomPadding),
                 song = activeSong!!,
                 isPlaying = isPlaying,
                 isLoading = isLoading,
