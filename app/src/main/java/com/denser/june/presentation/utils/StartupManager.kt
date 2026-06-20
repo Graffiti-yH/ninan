@@ -1,6 +1,7 @@
 package com.denser.june.presentation.utils
 
 import android.content.Context
+import com.denser.june.BuildConfig
 import com.denser.june.core.domain.preferences.PrivacyPreferences
 import com.denser.june.presentation.screens.settings.components.VersionEntry
 import kotlinx.coroutines.flow.Flow
@@ -19,16 +20,39 @@ class StartupManager(
         val latestEntry = try {
             val jsonString = context.assets.open("changelog.json").bufferedReader().use { it.readText() }
             val jsonArray = JSONArray(jsonString)
-            if (jsonArray.length() > 0) {
-                val obj = jsonArray.getJSONObject(0)
+            var foundEntry: VersionEntry? = null
+            for (i in 0 until jsonArray.length()) {
+                val obj = jsonArray.getJSONObject(i)
                 val version = obj.getString("version")
                 val changesArray = obj.getJSONArray("changes")
                 val changesList = mutableListOf<String>()
                 for (j in 0 until changesArray.length()) {
-                    changesList.add(changesArray.getString(j))
+                    val element = changesArray.get(j)
+                    if (element is String) {
+                        changesList.add(element)
+                    } else if (element is org.json.JSONObject) {
+                        val text = element.getString("text")
+                        val flavors = if (element.has("flavors") && !element.isNull("flavors")) {
+                            val arr = element.getJSONArray("flavors")
+                            val fList = mutableListOf<String>()
+                            for (k in 0 until arr.length()) {
+                                fList.add(arr.getString(k))
+                            }
+                            fList
+                        } else {
+                            null
+                        }
+                        if (flavors == null || flavors.contains(BuildConfig.FLAVOR)) {
+                            changesList.add(text)
+                        }
+                    }
                 }
-                VersionEntry(version, changesList)
-            } else null
+                if (changesList.isNotEmpty()) {
+                    foundEntry = VersionEntry(version, changesList)
+                    break
+                }
+            }
+            foundEntry
         } catch (e: Exception) {
             null
         }

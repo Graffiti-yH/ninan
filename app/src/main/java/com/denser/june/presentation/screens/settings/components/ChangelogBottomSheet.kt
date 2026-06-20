@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.json.JSONArray
 
+import com.denser.june.BuildConfig
+
 data class VersionEntry(
     val version: String,
     val changes: List<String>
@@ -38,9 +40,29 @@ fun ChangelogBottomSheet(
                 val changesArray = obj.getJSONArray("changes")
                 val changesList = mutableListOf<String>()
                 for (j in 0 until changesArray.length()) {
-                    changesList.add(changesArray.getString(j))
+                    val element = changesArray.get(j)
+                    if (element is String) {
+                        changesList.add(element)
+                    } else if (element is org.json.JSONObject) {
+                        val text = element.getString("text")
+                        val flavors = if (element.has("flavors") && !element.isNull("flavors")) {
+                            val arr = element.getJSONArray("flavors")
+                            val fList = mutableListOf<String>()
+                            for (k in 0 until arr.length()) {
+                                fList.add(arr.getString(k))
+                            }
+                            fList
+                        } else {
+                            null
+                        }
+                        if (flavors == null || flavors.contains(BuildConfig.FLAVOR)) {
+                            changesList.add(text)
+                        }
+                    }
                 }
-                list.add(VersionEntry(version, changesList))
+                if (changesList.isNotEmpty()) {
+                    list.add(VersionEntry(version, changesList))
+                }
             }
             list
         } catch (e: Exception) {
