@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,13 +23,29 @@ import com.denser.june.core.utils.Constants
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.runtime.mutableIntStateOf
 import com.denser.june.presentation.screens.settings.components.LocalSettingsTriggers
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AboutHeaderTile() {
     val uriHandler = LocalUriHandler.current
     val triggers = LocalSettingsTriggers.current
+
+    var shapeIndex by remember { mutableIntStateOf(0) }
+    val totalShapes = 8
+    val currentShape = when (shapeIndex) {
+        0 -> MaterialShapes.Square.toShape()
+        1 -> MaterialShapes.Cookie4Sided.toShape()
+        2 -> MaterialShapes.Clover4Leaf.toShape()
+        3 -> MaterialShapes.Sunny.toShape()
+        4 -> MaterialShapes.Clover8Leaf.toShape()
+        5 -> MaterialShapes.Circle.toShape()
+        6 -> MaterialShapes.Cookie7Sided.toShape()
+        7 -> MaterialShapes.VerySunny.toShape()
+        else -> MaterialShapes.Square.toShape()
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow,
         shape = RoundedCornerShape(24.dp),
@@ -34,7 +53,9 @@ fun AboutHeaderTile() {
             .clip(RoundedCornerShape(24.dp))
             .combinedClickable(
                 onLongClick = triggers.onAboutHeaderClick,
-                onClick = {}
+                onClick = {
+                    shapeIndex = (shapeIndex + 1) % totalShapes
+                }
             )
     ) {
         Row(
@@ -46,7 +67,7 @@ fun AboutHeaderTile() {
             Box(
                 modifier = Modifier
                     .size(64.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .clip(currentShape),
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_launcher_background),
@@ -72,7 +93,7 @@ fun AboutHeaderTile() {
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+                    text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

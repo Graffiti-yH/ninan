@@ -125,15 +125,18 @@ fun JuneSongPlayerCard(
         ).filter { it.second != null }
     }
 
+    val hasAlbumCover = isInternetAllowed && !details.thumbnailUrl.isNullOrBlank()
+    val surfaceColor = if (hasAlbumCover) themeColors.surface else MaterialTheme.colorScheme.surfaceContainerLowest
+
     Surface(
-        color = themeColors.surface,
+        color = surfaceColor,
         contentColor = themeColors.onSurface,
         shape = RoundedCornerShape(32.dp),
         modifier = modifier,
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
                 val heightVal = maxHeight
-                val albumSize = heightVal * 0.45f
+                val albumSize = heightVal * 0.42f
                 val rippleSize = heightVal * 0.2f
                 val iconSize = heightVal * 0.1f
 

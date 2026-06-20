@@ -318,7 +318,7 @@ fun AboutSettingsScreen() {
 
         JuneDialog(
             onDismissRequest = { showDiagnosticsDialog = false },
-            title = "App Diagnostics",
+            title = "Diagnostics",
             text = {
                 SelectionContainer {
                     Column(
@@ -348,6 +348,12 @@ fun AboutSettingsScreen() {
                         Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
                     }
                 ) {
+                    Icon(
+                        painter = painterResource(R.drawable.content_copy_24px),
+                        contentDescription = "Copy",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text("Copy")
                 }
             },

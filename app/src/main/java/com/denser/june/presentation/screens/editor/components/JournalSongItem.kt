@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.denser.june.core.domain.model.SongDetails
 import com.denser.june.presentation.components.JuneSongPlayerCard
 import com.denser.june.presentation.utils.rememberSongPlayerState
-import com.denser.june.presentation.theme.LocalInternetAllowed
-import org.koin.compose.koinInject
 import com.denser.june.core.R
 
 @Composable
@@ -31,8 +29,6 @@ fun JournalSongItem(
     onEdit: () -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth().aspectRatio(1.7f)
 ) {
-    val isInternetAllowed = LocalInternetAllowed.current
-
     val playerState = rememberSongPlayerState(
         previewUrl = details?.previewUrl
     )
