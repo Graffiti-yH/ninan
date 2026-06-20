@@ -1,6 +1,11 @@
 package com.denser.june.presentation.components
 
 import android.content.Intent
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.material3.IconButton
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.Spring
@@ -196,15 +201,26 @@ fun JuneSongPlayerCard(
                         }
 
                         Spacer(Modifier.width(12.dp))
-                        val spotifyUrl = details.links.spotify
+                        val activeProvider = details.previewUrlProvider ?: "Spotify"
+                        val activeUrl = when (activeProvider) {
+                            "Spotify" -> details.links.spotify
+                            "Deezer" -> details.links.deezer
+                            "Apple Music" -> details.links.appleMusic
+                            else -> details.links.spotify
+                        } ?: availableLinks.firstOrNull()?.second
+
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .size(iconSize)
                                 .clip(CircleShape)
-                                .clickable {
-                                    val intent = Intent(Intent.ACTION_VIEW, spotifyUrl?.toUri())
-                                    context.startActivity(intent)
+                                .clickable(enabled = activeUrl != null) {
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW, activeUrl?.toUri())
+                                        context.startActivity(intent)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
                                 }
                         ) {
                             Surface(
@@ -214,8 +230,8 @@ fun JuneSongPlayerCard(
                                 content = {}
                             )
                             Icon(
-                                painter = painterResource(R.drawable.spotify),
-                                contentDescription = "Open Spotify",
+                                painter = painterResource(getPlatformIcon(activeProvider)),
+                                contentDescription = "Open $activeProvider",
                                 modifier = Modifier.size(iconSize),
                                 tint = themeColors.primaryContainer
                             )
@@ -365,6 +381,28 @@ fun ListenDropdownMenu(
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp)
                             )
+                        },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+                                    onDismissRequest()
+                                    try {
+                                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                        val clip = ClipData.newPlainText("Song Link", url)
+                                        clipboard.setPrimaryClip(clip)
+                                        Toast.makeText(context, "Link copied!", Toast.LENGTH_SHORT).show()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                },
+                                modifier = Modifier.size(32.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.content_copy_24px),
+                                    contentDescription = "Copy Link",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
                         }
                     )
                 }
