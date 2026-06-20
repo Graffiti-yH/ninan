@@ -17,6 +17,9 @@ import com.denser.june.presentation.navigation.NavigationIntent
 import com.denser.june.presentation.theme.JuneTheme
 import com.denser.june.presentation.theme.LocalAppTheme
 import com.denser.june.presentation.theme.LocalInternetAllowed
+import com.denser.june.presentation.screens.settings.components.WhatsChangedBottomSheet
+import com.denser.june.presentation.utils.StartupManager
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -28,8 +31,13 @@ fun JuneApp(initialAppTheme: AppTheme) {
 
     val navigator = koinInject<AppNavigator>()
     val navController = rememberNavController()
+    
+    val startupManager = koinInject<StartupManager>()
+    val pendingWhatsChanged by startupManager.pendingWhatsChanged.collectAsStateWithLifecycle(initialValue = null)
+    val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
+        startupManager.checkStartupFlows()
         navigator.navigationActions.collect { intent ->
             when (intent) {
                 is NavigationIntent.NavigateBack -> {
@@ -55,6 +63,17 @@ fun JuneApp(initialAppTheme: AppTheme) {
             Surface(modifier = Modifier.fillMaxSize()) {
                 JuneNavHost(
                     navController = navController,
+                )
+            }
+
+            pendingWhatsChanged?.let { latestEntry ->
+                WhatsChangedBottomSheet(
+                    versionEntry = latestEntry,
+                    onDismissRequest = {
+                        coroutineScope.launch {
+                            startupManager.dismissWhatsChanged(latestEntry.version)
+                        }
+                    }
                 )
             }
         }

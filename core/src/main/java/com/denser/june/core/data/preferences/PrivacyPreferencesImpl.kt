@@ -20,6 +20,7 @@ class PrivacyPreferencesImpl(
         private val pinHash = stringPreferencesKey("pin_hash")
         private val screenPrivacy = booleanPreferencesKey("screen_privacy")
         private val isInternetAllowed = booleanPreferencesKey("is_internet_allowed")
+        private val lastChangelogShown = stringPreferencesKey("last_changelog_shown")
     }
 
     override fun getAppLockFlow(): Flow<Boolean> = dataStore.data
@@ -62,5 +63,12 @@ class PrivacyPreferencesImpl(
 
     override suspend fun updateIsInternetAllowed(allowed: Boolean) {
         dataStore.edit { it[isInternetAllowed] = allowed }
+    }
+
+    override fun getLastChangelogShownFlow(): Flow<String?> = dataStore.data
+        .map { preferences -> preferences[lastChangelogShown] }
+
+    override suspend fun updateLastChangelogShown(version: String) {
+        dataStore.edit { it[lastChangelogShown] = version }
     }
 }

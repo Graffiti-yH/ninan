@@ -18,4 +18,7 @@ interface PrivacyPreferences {
 
     fun getIsInternetAllowedFlow(): Flow<Boolean>
     suspend fun updateIsInternetAllowed(allowed: Boolean)
+
+    fun getLastChangelogShownFlow(): Flow<String?>
+    suspend fun updateLastChangelogShown(version: String)
 }
