@@ -1,4 +1,16 @@
 [
+    {
+        "version": "v1.0.0-beta02",
+        "changes": [
+          {
+            "text": "Added Google Drive sync to back up and restore your journals.",
+            "flavors": ["play"]
+          },
+          "Fallback music preview providers when Spotify is unavailable.",
+          "Show 'What's Changed' sheet after an update.",
+          "General style, layout, and animation improvements."
+        ]
+    },
   {
     "version": "v1.0.0-beta01",
     "changes": [

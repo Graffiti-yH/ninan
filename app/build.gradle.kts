@@ -20,8 +20,8 @@ val apkNamePrefix = "june"
 val versionMajor = 1
 val versionMinor = 0
 val versionPatch = 0
-val appVersionCode = 12
-val appVersionName = "$versionMajor.$versionMinor.$versionPatch-beta01"
+val appVersionCode = 13
+val appVersionName = "$versionMajor.$versionMinor.$versionPatch-beta02"
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
@@ -111,10 +111,14 @@ android {
 
     splits {
         abi {
-            isEnable = !isBuildingBundle
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true
+            if (project.hasProperty("fdroid") || isBuildingBundle) {
+                isEnable = false
+            } else {
+                isEnable = true
+                reset()
+                include("armeabi-v7a", "arm64-v8a")
+                isUniversalApk = true
+            }
         }
     }
 
