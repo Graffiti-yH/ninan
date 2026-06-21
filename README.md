@@ -109,4 +109,4 @@ Official APK releases are cryptographically signed to prove they were built unmo
   gh attestation verify name-of-apk.apk --repo DenserMeerkat/June
   ```
 
-[View our Privacy Policy](https://densermeerkat.github.io/June/PRIVACY)
+[Privacy Policy](https://densermeerkat.github.io/June/PRIVACY)
