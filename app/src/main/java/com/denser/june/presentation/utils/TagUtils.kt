@@ -3,6 +3,7 @@ package com.denser.june.presentation.utils
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.denser.june.core.R
 import com.denser.june.core.domain.model.enums.TagCategory
 
@@ -51,8 +52,8 @@ object TagUtils {
                 filledIconRes = R.drawable.view_cozy_24px_fill,
                 color = MaterialTheme.colorScheme.secondary,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                emptyMessage = "Categorize this entry",
-                description = "Broad categories like Work, Travel, or Dream."
+                emptyMessage = stringResource(R.string.tag_empty_spaces),
+                description = stringResource(R.string.tag_desc_spaces)
             )
 
             TagCategory.People -> CategoryUiSpec(
@@ -60,8 +61,8 @@ object TagUtils {
                 filledIconRes = R.drawable.groups_24px_fill,
                 color = MaterialTheme.colorScheme.primary,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                emptyMessage = "Who was there? (@name)",
-                description = "Track friends, family, or colleagues across entries."
+                emptyMessage = stringResource(R.string.tag_empty_people),
+                description = stringResource(R.string.tag_desc_people)
             )
 
             TagCategory.Topics -> CategoryUiSpec(
@@ -69,8 +70,8 @@ object TagUtils {
                 filledIconRes = R.drawable.cards_stack_24px_fill,
                 color = MaterialTheme.colorScheme.tertiary,
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                emptyMessage = "Capture any specifics (#topic)",
-                description = "Note the moods, settings, or details of your day."
+                emptyMessage = stringResource(R.string.tag_empty_topics),
+                description = stringResource(R.string.tag_desc_topics)
             )
         }
     }

@@ -1,0 +1,424 @@
+<resources>
+    <!-- 应用 -->
+    <string name="app_name">呢喃</string>
+
+    <!-- 通用操作 -->
+    <string name="done">完成</string>
+    <string name="reset">重置</string>
+    <string name="cancel">取消</string>
+    <string name="close">关闭</string>
+    <string name="confirm">确认</string>
+    <string name="save">保存</string>
+    <string name="discard">放弃</string>
+    <string name="delete">删除</string>
+    <string name="ok">确定</string>
+    <string name="okay">好的</string>
+    <string name="back">返回</string>
+    <string name="search">搜索</string>
+    <string name="clear_search">清除搜索</string>
+    <string name="copy">复制</string>
+    <string name="enable">启用</string>
+    <string name="later">稍后</string>
+    <string name="download">下载</string>
+    <string name="rename">重命名</string>
+    <string name="options">选项</string>
+    <string name="restore">恢复</string>
+    <string name="paste">粘贴</string>
+
+    <!-- 主题 -->
+    <string name="system">跟随系统</string>
+    <string name="light">浅色</string>
+    <string name="dark">深色</string>
+    <string name="app_follow_theme">应用</string>
+
+    <!-- 设置 -->
+    <string name="settings">设置</string>
+    <string name="search_settings">搜索设置…</string>
+    <string name="no_settings_found">未找到设置</string>
+    <string name="no_settings_found_desc">未找到与 \"%1$s\" 匹配的设置项。</string>
+
+    <!-- 设置分类 -->
+    <string name="general">通用</string>
+    <string name="general_desc">管理日记偏好</string>
+    <string name="appearance">外观</string>
+    <string name="appearance_desc">主题、字体、颜色、调色板</string>
+    <string name="privacy_and_security">隐私与安全</string>
+    <string name="privacy_and_security_desc">应用锁、生物识别、数据保护</string>
+    <string name="sync_and_backup">同步与备份</string>
+    <string name="sync_and_backup_desc">云同步、导出、导入</string>
+    <string name="bin">回收站</string>
+    <string name="bin_desc">查看或恢复已删除的日记</string>
+    <string name="about">关于</string>
+    <string name="about_desc">版本、许可证、开源库</string>
+
+    <!-- 设置项 -->
+    <string name="reminders">提醒</string>
+    <string name="reminders_desc">设置日记提醒</string>
+    <string name="include_time">包含时间</string>
+    <string name="include_time_desc">创建日记时始终启用时间</string>
+    <string name="time_format">时间格式</string>
+    <string name="time_format_12h">12 小时制</string>
+    <string name="time_format_24h">24 小时制</string>
+    <string name="time_format_12h_short">12时</string>
+    <string name="time_format_24h_short">24时</string>
+    <string name="map_settings">地图设置</string>
+    <string name="map_settings_desc">选择样式并管理 API 密钥</string>
+    <string name="markdown_editor">Markdown 编辑器</string>
+    <string name="markdown_editor_tile_desc">撰写日记时使用富文本格式</string>
+    <string name="markdown_enabled">已启用富文本格式</string>
+    <string name="markdown_disabled">纯文本模式</string>
+    <string name="start_of_week">每周起始日</string>
+    <string name="delete_all_journals">删除全部日记</string>
+    <string name="delete_all_journals_desc">将所有条目移至回收站</string>
+
+    <string name="app_theme">应用主题</string>
+    <string name="app_font">应用字体</string>
+    <string name="amoled">纯黑模式</string>
+    <string name="amoled_desc">为 AMOLED 屏幕优化</string>
+    <string name="material_theme">Material 主题</string>
+    <string name="material_theme_desc">基于壁纸的动态主题</string>
+    <string name="seed_color">种子颜色</string>
+    <string name="seed_color_desc">用于生成调色板的颜色</string>
+    <string name="palette_selection">调色板选择</string>
+    <string name="palette_selection_desc">选择主题变体调色板</string>
+
+    <string name="app_lock">应用锁</string>
+    <string name="app_lock_custom_pin">自定义 PIN</string>
+    <string name="app_lock_screen_lock">与屏幕锁定相同</string>
+    <string name="app_lock_none">无锁</string>
+    <string name="screen_privacy">屏幕隐私</string>
+    <string name="screen_privacy_desc">防止截图并在最近任务中隐藏应用内容</string>
+    <string name="permissions">权限</string>
+    <string name="permissions_desc">管理应用权限</string>
+
+    <string name="cloud_sync">云同步</string>
+    <string name="cloud_sync_desc">通过云端跨设备同步</string>
+    <string name="local_backup">本地备份</string>
+    <string name="local_backup_desc">在本地恢复或导出数据</string>
+
+    <string name="about_june">关于呢喃</string>
+    <string name="about_june_desc">版本和 GitHub 链接</string>
+    <string name="developer_profile">开发者信息</string>
+    <string name="developer_name">Denser Meerkat</string>
+    <string name="license">许可证</string>
+    <string name="license_desc">GPL-3.0 许可证</string>
+    <string name="about_libraries">关于开源库</string>
+    <string name="map_credits">地图致谢</string>
+    <string name="map_credits_desc">地图数据的版权和许可证</string>
+    <string name="changelog">更新日志</string>
+    <string name="changelog_desc">查看发布历史</string>
+    <string name="check_for_updates">检查更新</string>
+    <string name="check_for_updates_desc">检查是否有新版本可用</string>
+
+    <!-- 设置分类标签 -->
+    <string name="category_general">通用</string>
+    <string name="category_appearance">外观</string>
+    <string name="category_privacy_security">隐私与安全</string>
+    <string name="category_sync_backup">同步与备份</string>
+    <string name="category_about">关于</string>
+
+    <!-- 设置：删除日记对话框 -->
+    <string name="move_all_to_bin_title">全部移至回收站？</string>
+    <string name="move_all_to_bin_desc">这将把你所有的日记条目移至回收站。你可以在 30 天内恢复它们。</string>
+    <string name="move_all_to_bin_button">全部移至回收站</string>
+
+    <!-- 主页 -->
+    <string name="journals">日记</string>
+    <string name="tags">标签</string>
+    <string name="timeline">时间线</string>
+    <string name="bookmarks">书签</string>
+    <string name="drafts">草稿</string>
+    <string name="new_journal">新建日记</string>
+    <string name="recent">最近</string>
+    <string name="more_entries">更多条目</string>
+
+    <!-- 主页：空状态 -->
+    <string name="no_journals_yet">还没有日记</string>
+    <string name="no_journals_yet_desc">从今天开始记录你的旅程。创建第一篇日记，开启你的收藏。</string>
+    <string name="no_bookmarks">没有书签</string>
+    <string name="no_bookmarks_desc">把珍贵的瞬间留在手边。你标记的每条日记都会出现在这里，方便重温。</string>
+    <string name="no_drafts">没有草稿</string>
+    <string name="no_drafts_desc">未完成的思绪会留在这里。你开始的每一篇日记都会保存下来，等待完成。</string>
+
+    <!-- 标签 -->
+    <string name="no_entries">暂无条目</string>
+    <string name="no_entries_desc">没有符合当前筛选条件的日记。</string>
+    <string name="rename_tag">重命名</string>
+    <string name="delete_tag">删除</string>
+    <string name="no_spaces_yet">暂无空间</string>
+    <string name="no_spaces_yet_desc">给日记添加一个空间标签以开始使用。</string>
+    <string name="no_people_yet">暂无人物</string>
+    <string name="no_people_yet_desc">给日记添加一个人物标签以开始使用。</string>
+    <string name="no_topics_yet">暂无话题</string>
+    <string name="no_topics_yet_desc">给日记添加一个话题标签以开始使用。</string>
+
+    <!-- 标签分类 -->
+    <string name="tag_spaces">空间</string>
+    <string name="tag_spaces_singular">空间</string>
+    <string name="tag_people">人物</string>
+    <string name="tag_people_singular">人物</string>
+    <string name="tag_topics">话题</string>
+    <string name="tag_topics_singular">话题</string>
+
+    <!-- 标签工具 -->
+    <string name="tag_empty_spaces">为此条目分类</string>
+    <string name="tag_desc_spaces">宽泛的分类，如工作、旅行或梦境。</string>
+    <string name="tag_empty_people">谁在场？（@姓名）</string>
+    <string name="tag_desc_people">追踪朋友、家人或同事的出场记录。</string>
+    <string name="tag_empty_topics">捕捉具体细节（#话题）</string>
+    <string name="tag_desc_topics">记录心情、场景或一天的细节。</string>
+
+    <!-- 编辑器 -->
+    <string name="add_title">添加标题</string>
+    <string name="add_emoji">添加心情</string>
+    <string name="add_attachment">添加附件</string>
+    <string name="date_time_picker">日期和时间选择器</string>
+    <string name="tags_label">标签</string>
+    <string name="untitled">无标题</string>
+    <string name="add_title_placeholder">添加标题</string>
+
+    <!-- 编辑器：对话框 -->
+    <string name="capture_media">拍摄媒体</string>
+    <string name="record_video">录制视频</string>
+    <string name="take_photo">拍摄照片</string>
+    <string name="capture_media_prompt">你想要拍照还是录制视频？</string>
+    <string name="save_entry_title">保存条目？</string>
+    <string name="save_entry_prompt">离开之前要保存你的进度吗？</string>
+
+    <!-- 编辑器：添加项目面板 -->
+    <string name="add_item">添加项目</string>
+    <string name="take_photo_video">拍摄照片/视频</string>
+    <string name="add_photo_video">添加照片/视频</string>
+    <string name="add_song_link">添加歌曲链接</string>
+    <string name="add_location_map">添加位置与地图</string>
+
+    <!-- 编辑器：歌曲面板 -->
+    <string name="attach_song">附加歌曲</string>
+    <string name="song_url">歌曲链接</string>
+    <string name="paste_link_placeholder">在此粘贴链接…</string>
+    <string name="fetch_song">获取歌曲</string>
+    <string name="enable_internet_song">请启用网络访问以获取歌曲详情。</string>
+
+    <!-- 编辑器：位置对话框 -->
+    <string name="move_map_to_select">移动地图以选择</string>
+    <string name="network_restricted">网络受限</string>
+    <string name="locating">定位中…</string>
+    <string name="unknown_place">未知地点</string>
+    <string name="fetching_address">获取地址中…</string>
+    <string name="no_address">暂无地址信息</string>
+    <string name="maps_require_internet">地图和搜索需要网络连接。</string>
+
+    <!-- 编辑器：标签对话框 -->
+    <string name="manage_tags">管理标签</string>
+    <string name="tag_help">标签帮助</string>
+    <string name="save_changes_title">保存更改？</string>
+    <string name="save_changes_prompt">你的标签有未保存的更改。退出前要保存吗？</string>
+    <string name="add_tag_placeholder">添加标签…</string>
+    <string name="add_tag_action">添加标签</string>
+    <string name="add_tag_hint">添加%1$s标签</string>
+
+    <!-- 搜索 -->
+    <string name="search_your_journal">搜索你的日记</string>
+    <string name="search_placeholder">搜索你的日记</string>
+    <string name="search_idle_title">搜索你的日记</string>
+    <string name="search_idle_desc">输入关键词或选择上方筛选条件来查找特定条目。</string>
+    <string name="search_no_matches">未找到匹配项</string>
+    <string name="search_no_matches_desc">没有找到符合当前搜索条件或筛选条件的日记。</string>
+    <string name="search_filter_bookmarked">书签</string>
+    <string name="search_filter_draft">草稿</string>
+    <string name="search_filter_media">媒体</string>
+    <string name="search_filter_music">音乐</string>
+    <string name="search_filter_location">位置</string>
+
+    <!-- 日记选项面板 -->
+    <string name="cloud">云端</string>
+    <string name="local">本地</string>
+    <string name="remove_bookmark">取消书签</string>
+    <string name="bookmark">添加书签</string>
+    <string name="permanent_delete">永久删除</string>
+    <string name="words">%1$d 字</string>
+    <string name="synced">已同步</string>
+    <string name="not_synced">未同步</string>
+    <string name="created">创建于</string>
+    <string name="updated">更新于</string>
+    <string name="toggle_bookmark">切换书签</string>
+    <string name="action">操作</string>
+
+    <!-- 删除确认 -->
+    <string name="move_to_bin_message">移至回收站？30 天后将被永久删除。</string>
+    <string name="move_to_bin_button">移至回收站</string>
+    <string name="type_to_confirm_hint">在下方输入 \'%1$s\' 以确认。</string>
+
+    <!-- 日期/时间选择器 -->
+    <string name="date_tab">日期</string>
+    <string name="time_tab">时间</string>
+    <string name="today">今天</string>
+    <string name="now">此刻</string>
+    <string name="jump_to_today">跳转到今天</string>
+    <string name="jump_to_now">跳转到此刻</string>
+    <string name="datetime_at">于</string>
+
+    <!-- 通知 -->
+    <string name="notification_channel_name">提醒</string>
+    <string name="notification_channel_desc">日记提醒</string>
+    <string name="notif_title_1">该写日记了！</string>
+    <string name="notif_body_1">别忘了记录今天的所思所想。</string>
+    <string name="notif_title_2">亲爱的日记…</string>
+    <string name="notif_body_2">你的日记在等待着你的故事。</string>
+    <string name="notif_title_3">捕捉这一刻</string>
+    <string name="notif_body_3">坚持就是胜利！今天也写一点吧。</string>
+    <string name="notif_title_4">今天过得怎么样？</string>
+    <string name="notif_body_4">今天最美好的部分是什么？</string>
+    <string name="notif_title_5">每日反思</string>
+    <string name="notif_body_5">花一点时间回顾今天发生的事情。</string>
+    <string name="notif_title_6">写给自己的话</string>
+    <string name="notif_body_6">寥寥数语，一生的回忆。</string>
+    <string name="notif_title_7">放松一下，写点东西</string>
+    <string name="notif_body_7">在休息之前，回顾今天的旅程。</string>
+
+    <!-- 关于页面 -->
+    <string name="checking_for_updates">正在检查更新</string>
+    <string name="update_available">发现新版本 (%1$s)</string>
+    <string name="update_available_desc">呢喃有新版本可用。以下是更新内容：</string>
+    <string name="up_to_date">已是最新</string>
+    <string name="up_to_date_desc">你已经在使用最新版本的呢喃。</string>
+    <string name="internet_disabled_title">网络访问已禁用</string>
+    <string name="internet_disabled_desc">呢喃的隐私设置中已禁用网络访问。请在权限设置中启用以检查更新。</string>
+    <string name="update_check_failed">更新检查失败</string>
+    <string name="diagnostics">诊断信息</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    <string name="diagnostics_package_name">包名</string>
+    <string name="diagnostics_version_name">版本名称</string>
+    <string name="diagnostics_version_code">版本号</string>
+    <string name="diagnostics_signing_key">签名密钥 SHA-256</string>
+    <string name="diagnostics_device">设备</string>
+    <string name="diagnostics_android_os">Android 版本</string>
+    <string name="diagnostics_supported_abis">支持的 ABI</string>
+    <string name="unknown_error">发生未知错误</string>
+
+    <!-- 地图提供商 -->
+    <string name="maptiler">MapTiler</string>
+    <string name="stadia">Stadia Maps</string>
+    <string name="carto">CARTO</string>
+    <string name="mapbox">Mapbox</string>
+    <string name="api_key_valid">API 密钥有效且已验证！</string>
+    <string name="api_key_invalid">API 密钥无效。请核实。</string>
+
+    <!-- Tag Info -->
+    <string name="tag_info_title">标签使用指南</string>
+    <string name="tag_info_description">用空间、人物和话题标签标记日记，方便日后查找。</string>
+    <string name="got_it">知道了</string>
+
+    <!-- 编辑器：歌曲 -->
+    <string name="no_links_available">暂无可用链接</string>
+    <string name="edit_song">编辑歌曲</string>
+    <string name="remove">移除</string>
+    <string name="change_location">更改位置</string>
+    <string name="move_to_front">移到最前</string>
+    <string name="open_link">打开链接</string>
+    <string name="edit_link">编辑链接</string>
+    <string name="copy_url">复制 URL</string>
+    <string name="journal_media_title">日记媒体</string>
+
+    <!-- 编辑器：表情选择器 -->
+    <string name="emoji_picker_cancel">取消</string>
+
+    <!-- 编辑器：工具栏 -->
+    <string name="undo">撤销</string>
+    <string name="redo">重做</string>
+    <string name="bold">加粗</string>
+    <string name="italic">斜体</string>
+    <string name="underline">下划线</string>
+    <string name="strikethrough">删除线</string>
+    <string name="highlight">高亮</string>
+    <string name="link">链接</string>
+    <string name="blockquote">引用块</string>
+    <string name="inline_code">行内代码</string>
+    <string name="bullet_list">无序列表</string>
+    <string name="ordered_list">有序列表</string>
+    <string name="heading_1">标题 1</string>
+    <string name="heading_2">标题 2</string>
+    <string name="heading_3">标题 3</string>
+    <string name="heading_4">标题 4</string>
+    <string name="heading_5">标题 5</string>
+    <string name="heading_6">标题 6</string>
+
+    <!-- 地图 -->
+    <string name="toggle_dark_mode">切换深色模式</string>
+    <string name="zoom_in">放大</string>
+    <string name="zoom_out">缩小</string>
+    <string name="current_location">当前位置</string>
+    <string name="remove_location">移除位置</string>
+
+    <!-- 备份 -->
+    <string name="creating_backup">正在创建备份…</string>
+    <string name="create_backup">创建备份</string>
+    <string name="restoring">正在恢复…</string>
+    <string name="select_backup_file">选择备份文件</string>
+    <string name="create">创建</string>
+    <string name="backup_warning">这将创建一个包含你日记条目的 ZIP 文件。</string>
+    <string name="restore_warning">这将把备份与你的当前数据合并。\n\n• 匹配 ID 的条目将被覆盖。\n• 新条目将被添加。\n\n此操作无法撤销。</string>
+
+    <!-- 应用锁 -->
+    <string name="lock_your_journal">锁定你的日记</string>
+    <string name="change">更改</string>
+    <string name="lock_method_warning">你正在切换离开自定义 PIN。你当前的 PIN 将被移除，切换回来时需要重新设置。</string>
+
+    <!-- 权限 -->
+    <string name="manage_in_settings">在设置中管理</string>
+    <string name="app_permissions">应用权限</string>
+
+    <!-- 地图设置 -->
+    <string name="testing_key">正在测试密钥…</string>
+    <string name="test_api_key">测试 API 密钥</string>
+    <string name="active_label">活跃</string>
+    <string name="valid_label">有效</string>
+    <string name="invalid_label">无效</string>
+
+    <!-- 同步 -->
+    <string name="review">审核</string>
+    <string name="analyze">分析</string>
+    <string name="repair">修复</string>
+
+    <!-- 移除位置 -->
+    <string name="remove_location_title">移除位置</string>
+
+    <!-- 字体选择 -->
+    <string name="font_all">全部</string>
+
+    <!-- 标签对话框 -->
+    <string name="delete_tag_confirm">删除</string>
+
+    <!-- 锁定方式 -->
+    <string name="warning">警告</string>
+
+    <!-- 地图设置对话框 -->
+    <string name="previous_location">上一个位置</string>
+    <string name="next_location">下一个位置</string>
+    <string name="open_website">打开网站</string>
+    <string name="open_link_desc">打开链接</string>
+    <string name="github_link">GitHub 链接</string>
+    <string name="developer_profile_picture">开发者头像</string>
+    <string name="github">GitHub</string>
+    <string name="email">邮箱</string>
+    <string name="app_icon">应用图标</string>
+
+    <!-- 其他 -->
+    <string name="app_font_label">应用字体</string>
+    <string name="look_and_feel">外观与感觉</string>
+    <string name="palette_style">调色板风格</string>
+    <string name="font">字体</string>
+    <!-- 其他 -->
+    <string name="restore_all">全部恢复</string>
+    <string name="testing_connection">正在测试连接…</string>
+    <string name="test_connection">测试连接</string>
+    <string name="syncing">正在同步…</string>
+    <string name="sync_now">立即同步</string>
+    <string name="journaling_reminders">日记提醒</string>
+    <string name="bin_title">回收站</string>
+    <string name="bin_description">你删除的日记将在此保留 30 天，之后将被永久删除。</string>
+    <string name="delete_tag_warning">你即将删除：</string>
+    <string name="delete_tag_warning_desc">这将从所有条目中移除此标签。条目本身不会被删除。</string>
+    <string name="rename_tag_warning_switch">这将移动到 %1$s 标签页。</string>
+    <string name="rename_tag_warning_merge">已存在于 %1$s 中。这将合并所有条目。</string>
+</resources>

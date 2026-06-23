@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
@@ -73,7 +74,7 @@ fun SyncScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text("Cloud Sync") },
+                title = { Text(stringResource(R.string.cloud_sync)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },

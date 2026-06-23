@@ -4,6 +4,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.core.R
 import com.denser.june.core.domain.model.enums.LockType
@@ -21,7 +22,7 @@ fun AppLockTile() {
     val navigator = koinInject<AppNavigator>()
 
     SettingsItem(
-        title = "App Lock",
+        title = stringResource(R.string.app_lock),
         subtitle = if (state.isAppLockEnabled) {
             if (state.lockType == LockType.PIN) "Custom PIN" else "Same as screen lock"
         } else {

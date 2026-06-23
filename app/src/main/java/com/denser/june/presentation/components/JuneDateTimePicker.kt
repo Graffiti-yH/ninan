@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.activity.compose.BackHandler
@@ -131,7 +132,7 @@ fun JuneDateTimePicker(
                         .padding(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val segments = listOf("Date", "Time")
+                    val segments = listOf(stringResource(R.string.date_tab), stringResource(R.string.time_tab))
                     segments.forEachIndexed { index, label ->
                         val isSelected = selectedTab == index
                         val bgContainerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
@@ -225,11 +226,11 @@ fun JuneDateTimePicker(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.today_24px),
-                                contentDescription = "Jump to Today",
+                                contentDescription = stringResource(R.string.jump_to_today),
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Today", style = MaterialTheme.typography.labelMedium)
+                            Text(stringResource(R.string.today), style = MaterialTheme.typography.labelMedium)
                         }
                     } else {
                         Button(
@@ -248,11 +249,11 @@ fun JuneDateTimePicker(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.schedule_24px),
-                                contentDescription = "Jump to Now",
+                                contentDescription = stringResource(R.string.jump_to_now),
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Now", style = MaterialTheme.typography.labelMedium)
+                            Text(stringResource(R.string.now), style = MaterialTheme.typography.labelMedium)
                         }
                     }
                 }
@@ -343,7 +344,7 @@ fun JuneDateTimePicker(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedButton(onClick = onDismiss) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         FilledTonalButton(
@@ -356,7 +357,7 @@ fun JuneDateTimePicker(
                                 onDateTimeSelected(millis)
                             }
                         ) {
-                            Text("OK")
+                            Text(stringResource(R.string.ok))
                         }
                     }
                 }

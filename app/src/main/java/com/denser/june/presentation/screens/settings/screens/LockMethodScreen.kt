@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.core.R
@@ -74,7 +75,7 @@ fun LockMethodScreen() {
         topBar = {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
-                title = { Text("Lock your journal") },
+                title = { Text(stringResource(R.string.lock_your_journal)) },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     FilledIconButton(
@@ -203,17 +204,17 @@ fun LockMethodScreen() {
                             pendingAction?.invoke()
                             pendingAction = null
                         }) {
-                        Text("Change")
+                        Text(stringResource(R.string.change))
                     }
                 },
                 dismissButton = {
                     OutlinedButton(
                         onClick = { pendingAction = null }) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 },
                 text = {
-                    Text("You are switching away from Custom PIN. Your current PIN will be removed, and you will need to set it up again if you switch back.")
+                    Text(stringResource(R.string.lock_method_warning))
                 }
             )
         }

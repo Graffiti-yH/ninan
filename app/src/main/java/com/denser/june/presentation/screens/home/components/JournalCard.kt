@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -99,7 +100,7 @@ fun JournalCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = journal.title.ifBlank { journal.content.ifBlank { "Add title" } },
+                    text = journal.title.ifBlank { journal.content.ifBlank { stringResource(R.string.add_title) } },
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -119,7 +120,7 @@ fun JournalCard(
                         actionIcon ?: if (journal.isBookmarked) R.drawable.bookmark_added_24px_fill 
                         else R.drawable.bookmark_24px
                     ),
-                    contentDescription = if (actionIcon != null) "Action" else "Toggle Bookmark",
+                    contentDescription = if (actionIcon != null) stringResource(R.string.action) else stringResource(R.string.toggle_bookmark),
                 )
             }
             Spacer(modifier = Modifier.width(4.dp))
@@ -198,7 +199,7 @@ fun RecentJournalCard(
                     Spacer(modifier = Modifier.width(20.dp))
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = journal.title.ifBlank { journal.content.ifBlank { "Untitled" } },
+                        text = journal.title.ifBlank { journal.content.ifBlank { stringResource(R.string.untitled) } },
                         style = MaterialTheme.typography.titleLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -217,7 +218,7 @@ fun RecentJournalCard(
                                 actionIcon ?: if (journal.isBookmarked) R.drawable.bookmark_added_24px_fill 
                                 else R.drawable.bookmark_24px
                             ),
-                            contentDescription = if (actionIcon != null) "Action" else "Toggle Bookmark",
+                            contentDescription = if (actionIcon != null) stringResource(R.string.action) else stringResource(R.string.toggle_bookmark),
                         )
                     }
                     Spacer(modifier = Modifier.width(4.dp))

@@ -41,7 +41,7 @@ fun Long.toFullDate(): String {
 }
 
 fun Long.toFullDateTime(is24Hour: Boolean = false): String {
-    val pattern = if (is24Hour) "MMMM dd, yyyy 'at' HH:mm" else "MMMM dd, yyyy 'at' hh:mm a"
+    val pattern = if (is24Hour) "MMMM dd, yyyy HH:mm" else "MMMM dd, yyyy hh:mm a"
     val sdf = SimpleDateFormat(pattern, Locale.getDefault())
     return sdf.format(Date(this))
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
 import com.denser.june.presentation.navigation.AppNavigator
@@ -56,7 +57,7 @@ fun AboutSettingsScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = "About") },
+                title = { Text(text = stringResource(R.string.about)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -67,7 +68,7 @@ fun AboutSettingsScreen() {
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.arrow_back_24px),
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                         )
                     }
                 }
@@ -98,7 +99,7 @@ fun AboutSettingsScreen() {
                             if (throwable is InternetDisabledException) {
                                 showInternetDisabledDialog = true
                             } else {
-                                updateErrorMsg = throwable.message ?: "An unknown error occurred"
+                                updateErrorMsg = throwable.message ?: context.getString(R.string.unknown_error)
                             }
                         }
                     )
@@ -171,7 +172,7 @@ fun AboutSettingsScreen() {
     if (showCheckingUpdatesDialog) {
         JuneDialog(
             onDismissRequest = { showCheckingUpdatesDialog = false },
-            title = "Checking for updates",
+            title = stringResource(R.string.checking_for_updates),
             confirmButton = {},
             text = {
                 Row(
@@ -187,11 +188,11 @@ fun AboutSettingsScreen() {
     updateInfo?.let { (versionName, changelog, downloadUrl) ->
         JuneDialog(
             onDismissRequest = { updateInfo = null },
-            title = "Update Available ($versionName)",
+            title = stringResource(R.string.update_available, versionName),
             text = {
                 Column {
                     Text(
-                        text = "A new version of June is available. Here is what's new:",
+                        text = stringResource(R.string.update_available_desc),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -212,12 +213,12 @@ fun AboutSettingsScreen() {
                         }
                     }
                 ) {
-                    Text("Download")
+                    Text(stringResource(R.string.download))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { updateInfo = null }) {
-                    Text("Later")
+                    Text(stringResource(R.string.later))
                 }
             }
         )
@@ -226,11 +227,11 @@ fun AboutSettingsScreen() {
     if (showNoUpdateDialog) {
         JuneDialog(
             onDismissRequest = { showNoUpdateDialog = false },
-            title = "Up to date",
-            text = { Text("You are already using the latest version of June.") },
+            title = stringResource(R.string.up_to_date),
+            text = { Text(stringResource(R.string.up_to_date_desc)) },
             confirmButton = {
                 Button(onClick = { showNoUpdateDialog = false }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )
@@ -239,8 +240,8 @@ fun AboutSettingsScreen() {
     if (showInternetDisabledDialog) {
         JuneDialog(
             onDismissRequest = { showInternetDisabledDialog = false },
-            title = "Internet Access Disabled",
-            text = { Text("Internet access is disabled in June's privacy settings. Please enable it under Permissions to check for updates.") },
+            title = stringResource(R.string.internet_disabled_title),
+            text = { Text(stringResource(R.string.internet_disabled_desc)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -248,12 +249,12 @@ fun AboutSettingsScreen() {
                         navigator.navigateTo(Route.Permissions)
                     }
                 ) {
-                    Text("Enable")
+                    Text(stringResource(R.string.enable))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showInternetDisabledDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -262,11 +263,11 @@ fun AboutSettingsScreen() {
     updateErrorMsg?.let { errorMsg ->
         JuneDialog(
             onDismissRequest = { updateErrorMsg = null },
-            title = "Update Check Failed",
+            title = stringResource(R.string.update_check_failed),
             text = { Text(errorMsg) },
             confirmButton = {
                 Button(onClick = { updateErrorMsg = null }) {
-                    Text("Okay")
+                    Text(stringResource(R.string.okay))
                 }
             }
         )
@@ -318,24 +319,24 @@ fun AboutSettingsScreen() {
 
         JuneDialog(
             onDismissRequest = { showDiagnosticsDialog = false },
-            title = "Diagnostics",
+            title = stringResource(R.string.diagnostics),
             text = {
                 SelectionContainer {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        DiagnosticRow(label = "Package Name", value = context.packageName)
-                        DiagnosticRow(label = "Version Name", value = versionName)
-                        DiagnosticRow(label = "Version Code", value = versionCode.toString())
-                        DiagnosticRow(label = "Signing Key SHA-256", value = sha256)
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_package_name), value = context.packageName)
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_version_name), value = versionName)
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_version_code), value = versionCode.toString())
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_signing_key), value = sha256)
                         HorizontalDivider(
                             modifier = Modifier.padding(vertical = 4.dp),
                             color = MaterialTheme.colorScheme.outlineVariant
                         )
-                        DiagnosticRow(label = "Device", value = deviceModel)
-                        DiagnosticRow(label = "Android OS", value = androidOS)
-                        DiagnosticRow(label = "Supported ABIs", value = supportedAbis)
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_device), value = deviceModel)
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_android_os), value = androidOS)
+                        DiagnosticRow(label = stringResource(R.string.diagnostics_supported_abis), value = supportedAbis)
                     }
                 }
             },
@@ -345,21 +346,21 @@ fun AboutSettingsScreen() {
                         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("June App Diagnostics", diagnosticsText)
                         clipboard.setPrimaryClip(clip)
-                        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
                     }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.content_copy_24px),
-                        contentDescription = "Copy",
+                        contentDescription = stringResource(R.string.copy),
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Copy")
+                    Text(stringResource(R.string.copy))
                 }
             },
             dismissButton = {
                 OutlinedButton(onClick = { showDiagnosticsDialog = false }) {
-                    Text("Close")
+                    Text(stringResource(R.string.close))
                 }
             }
         )

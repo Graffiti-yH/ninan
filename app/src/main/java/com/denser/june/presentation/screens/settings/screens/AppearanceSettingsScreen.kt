@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.core.domain.model.enums.ThemeMode
@@ -45,7 +46,7 @@ fun AppearanceSettingsScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = "Appearance") },
+                title = { Text(text = stringResource(R.string.appearance)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -56,7 +57,7 @@ fun AppearanceSettingsScreen() {
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.arrow_back_24px),
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                         )
                     }
                 }
@@ -70,7 +71,7 @@ fun AppearanceSettingsScreen() {
         }
 
         CompositionLocalProvider(LocalSettingsTriggers provides triggers) {
-            val appearanceTiles = SettingsTileRegistry.getTilesForCategory("Appearance").associateBy { it.key }
+            val appearanceTiles = SettingsTileRegistry.getTilesForCategory(stringResource(R.string.category_appearance)).associateBy { it.key }
 
             LazyColumn(
                 modifier = Modifier

@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.components.JuneAppBarType
@@ -35,7 +36,7 @@ fun GeneralSettingsScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = "General") },
+                title = { Text(text = stringResource(R.string.general)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -46,7 +47,7 @@ fun GeneralSettingsScreen() {
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.arrow_back_24px),
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                         )
                     }
                 }
@@ -60,7 +61,7 @@ fun GeneralSettingsScreen() {
         }
 
         CompositionLocalProvider(LocalSettingsTriggers provides triggers) {
-            val generalTiles = SettingsTileRegistry.getTilesForCategory("General").associateBy { it.key }
+            val generalTiles = SettingsTileRegistry.getTilesForCategory(stringResource(R.string.category_general)).associateBy { it.key }
 
             LazyColumn(
                 modifier = Modifier
@@ -120,10 +121,10 @@ fun GeneralSettingsScreen() {
 
     if (showDeleteDialog) {
         JuneConfirmationDialog(
-            title = "Move all to Bin?",
-            description = "This will move all your journal entries to the Bin. You can restore them within 30 days.",
-            confirmText = "Delete",
-            confirmButtonText = "Move All to Bin",
+            title = stringResource(R.string.move_all_to_bin_title),
+            description = stringResource(R.string.move_all_to_bin_desc),
+            confirmText = stringResource(R.string.delete),
+            confirmButtonText = stringResource(R.string.move_all_to_bin_button),
             onDismiss = { showDeleteDialog = false },
             onConfirm = {
                 onAction(SettingsAction.OnDeleteJournals)

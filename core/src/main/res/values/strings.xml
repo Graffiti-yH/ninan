@@ -1,31 +1,424 @@
 <resources>
+    <!-- App -->
     <string name="app_name">June</string>
+
+    <!-- General Actions -->
+    <string name="done">Done</string>
+    <string name="reset">Reset</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="confirm">Confirm</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="delete">Delete</string>
+    <string name="ok">OK</string>
+    <string name="okay">Okay</string>
+    <string name="back">Back</string>
+    <string name="search">Search</string>
+    <string name="clear_search">Clear search</string>
+    <string name="copy">Copy</string>
+    <string name="enable">Enable</string>
+    <string name="later">Later</string>
+    <string name="download">Download</string>
+    <string name="rename">Rename</string>
+    <string name="options">Options</string>
+    <string name="restore">Restore</string>
+    <string name="paste">Paste</string>
+
+    <!-- Theme -->
     <string name="system">System</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    <string name="app_follow_theme">App</string>
+
+    <!-- Settings -->
     <string name="settings">Settings</string>
-    <string name="look_and_feel">Look &amp; Feel</string>
+    <string name="search_settings">Search settings…</string>
+    <string name="no_settings_found">No settings found</string>
+    <string name="no_settings_found_desc">We couldn\'t find any settings matching \"%1$s\".</string>
+
+    <!-- Settings Categories -->
+    <string name="general">General</string>
+    <string name="general_desc">Manage journaling preferences</string>
     <string name="appearance">Appearance</string>
+    <string name="appearance_desc">Theme, font, colors, palette</string>
+    <string name="privacy_and_security">Privacy &amp; Security</string>
+    <string name="privacy_and_security_desc">App lock, biometrics, data protection</string>
+    <string name="sync_and_backup">Sync &amp; Backup</string>
+    <string name="sync_and_backup_desc">Cloud sync, export, import</string>
+    <string name="bin">Bin</string>
+    <string name="bin_desc">View or restore deleted journals</string>
+    <string name="about">About</string>
+    <string name="about_desc">Version, licenses, libraries</string>
+
+    <!-- Settings Tiles -->
+    <string name="reminders">Reminders</string>
+    <string name="reminders_desc">Set journaling reminders</string>
+    <string name="include_time">Include time</string>
+    <string name="include_time_desc">Always enable time when creating journals</string>
+    <string name="time_format">Time format</string>
+    <string name="time_format_12h">12-Hour</string>
+    <string name="time_format_24h">24-Hour</string>
+    <string name="time_format_12h_short">12 Hr</string>
+    <string name="time_format_24h_short">24 Hr</string>
+    <string name="map_settings">Map settings</string>
+    <string name="map_settings_desc">Select style and manage API keys</string>
+    <string name="markdown_editor">Markdown editor</string>
+    <string name="markdown_editor_tile_desc">Use rich text formatting when writing journals</string>
+    <string name="markdown_enabled">Rich text formatting enabled</string>
+    <string name="markdown_disabled">Plain text mode</string>
+    <string name="start_of_week">Start of the week</string>
+    <string name="delete_all_journals">Delete all journals</string>
+    <string name="delete_all_journals_desc">Move all entries to Bin</string>
+
     <string name="app_theme">App Theme</string>
-    <string name="font">Font</string>
+    <string name="app_font">App Font</string>
     <string name="amoled">True Black Mode</string>
     <string name="amoled_desc">Optimized for AMOLED displays</string>
     <string name="material_theme">Material Theme</string>
     <string name="material_theme_desc">Theme based on your wallpaper</string>
     <string name="seed_color">Seed color</string>
     <string name="seed_color_desc">Color to generate palette from</string>
-    <string name="palette_style">Palette Style</string>
+    <string name="palette_selection">Palette Selection</string>
+    <string name="palette_selection_desc">Choose theme variant palette</string>
+
+    <string name="app_lock">App Lock</string>
+    <string name="app_lock_custom_pin">Custom PIN</string>
+    <string name="app_lock_screen_lock">Same as screen lock</string>
+    <string name="app_lock_none">No lock</string>
+    <string name="screen_privacy">Screen Privacy</string>
+    <string name="screen_privacy_desc">Prevent screenshots and hide app content in recents</string>
+    <string name="permissions">Permissions</string>
+    <string name="permissions_desc">Manage app permissions</string>
+
+    <string name="cloud_sync">Cloud Sync</string>
+    <string name="cloud_sync_desc">Sync across devices via Cloud</string>
+    <string name="local_backup">Local Backup</string>
+    <string name="local_backup_desc">Restore or export data locally</string>
+
+    <string name="about_june">About June</string>
+    <string name="about_june_desc">Version and GitHub link</string>
+    <string name="developer_profile">Developer profile</string>
+    <string name="developer_name">Denser Meerkat</string>
+    <string name="license">License</string>
+    <string name="license_desc">GPL-3.0 License</string>
     <string name="about_libraries">About Libraries</string>
-    <string name="done">Done</string>
-    <string name="reset">Reset</string>
-    <string name="cancel">Cancel</string>
-    <string name="close">Close</string>
-    <string name="confirm">Confirm</string>
-    <string name="app_follow_theme">App</string>
+    <string name="map_credits">Map Credits</string>
+    <string name="map_credits_desc">Credits and licenses for map data</string>
+    <string name="changelog">Changelog</string>
+    <string name="changelog_desc">View release history</string>
+    <string name="check_for_updates">Check for Updates</string>
+    <string name="check_for_updates_desc">Check if a newer version is available</string>
+
+    <!-- Settings Category Labels -->
+    <string name="category_general">General</string>
+    <string name="category_appearance">Appearance</string>
+    <string name="category_privacy_security">Privacy &amp; Security</string>
+    <string name="category_sync_backup">Sync &amp; Backup</string>
+    <string name="category_about">About</string>
+
+    <!-- Settings: Delete Journals Dialog -->
+    <string name="move_all_to_bin_title">Move all to Bin?</string>
+    <string name="move_all_to_bin_desc">This will move all your journal entries to the Bin. You can restore them within 30 days.</string>
+    <string name="move_all_to_bin_button">Move All to Bin</string>
+
+    <!-- Home -->
+    <string name="journals">Journals</string>
+    <string name="tags">Tags</string>
+    <string name="timeline">Timeline</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="drafts">Drafts</string>
+    <string name="new_journal">New Journal</string>
+    <string name="recent">Recent</string>
+    <string name="more_entries">More entries</string>
+
+    <!-- Home: Empty States -->
+    <string name="no_journals_yet">No journals yet</string>
+    <string name="no_journals_yet_desc">Start capturing your journey today. Create your first entry to start your collection.</string>
+    <string name="no_bookmarks">No bookmarks</string>
+    <string name="no_bookmarks_desc">Keep favorite moments in reach. Any entry you mark will appear here to revisit.</string>
+    <string name="no_drafts">No drafts</string>
+    <string name="no_drafts_desc">Your unfinished thoughts stay here. Any entry you start will be saved to finish later.</string>
+
+    <!-- Tags -->
+    <string name="no_entries">No entries</string>
+    <string name="no_entries_desc">No journals match the current filters.</string>
+    <string name="rename_tag">Rename</string>
+    <string name="delete_tag">Delete</string>
+    <string name="no_spaces_yet">No spaces yet</string>
+    <string name="no_spaces_yet_desc">Tag a journal entry with a space to get started.</string>
+    <string name="no_people_yet">No people yet</string>
+    <string name="no_people_yet_desc">Tag a journal entry with a person to get started.</string>
+    <string name="no_topics_yet">No topics yet</string>
+    <string name="no_topics_yet_desc">Tag a journal entry with a topic to get started.</string>
+
+    <!-- Tag Categories -->
+    <string name="tag_spaces">Spaces</string>
+    <string name="tag_spaces_singular">Space</string>
+    <string name="tag_people">People</string>
+    <string name="tag_people_singular">Person</string>
+    <string name="tag_topics">Topics</string>
+    <string name="tag_topics_singular">Topic</string>
+
+    <!-- Tag Utils -->
+    <string name="tag_empty_spaces">Categorize this entry</string>
+    <string name="tag_desc_spaces">Broad categories like Work, Travel, or Dream.</string>
+    <string name="tag_empty_people">Who was there? (@name)</string>
+    <string name="tag_desc_people">Track friends, family, or colleagues across entries.</string>
+    <string name="tag_empty_topics">Capture any specifics (#topic)</string>
+    <string name="tag_desc_topics">Note the moods, settings, or details of your day.</string>
+
+    <!-- Editor -->
+    <string name="add_title">Add title</string>
+    <string name="add_emoji">Add Emoji</string>
+    <string name="add_attachment">Add Attachment</string>
+    <string name="date_time_picker">Date and Time Picker</string>
+    <string name="tags_label">Tags</string>
+    <string name="untitled">Untitled</string>
+    <string name="add_title_placeholder">Add title</string>
+
+    <!-- Editor: Modals -->
+    <string name="capture_media">Capture Media</string>
+    <string name="record_video">Record Video</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="capture_media_prompt">Would you like to take a photo or record a video?</string>
+    <string name="save_entry_title">Save Entry?</string>
+    <string name="save_entry_prompt">Would you like to save your progress before leaving?</string>
+
+    <!-- Editor: Add Item Sheet -->
+    <string name="add_item">Add Item</string>
+    <string name="take_photo_video">Take photo / video</string>
+    <string name="add_photo_video">Add photo / video</string>
+    <string name="add_song_link">Add song link</string>
+    <string name="add_location_map">Add location &amp; map</string>
+
+    <!-- Editor: Song Sheet -->
+    <string name="attach_song">Attach Song</string>
+    <string name="song_url">Song URL</string>
+    <string name="paste_link_placeholder">Paste link here…</string>
+    <string name="fetch_song">Fetch Song</string>
+    <string name="enable_internet_song">Enable internet access to fetch song details.</string>
+
+    <!-- Editor: Location Dialog -->
+    <string name="move_map_to_select">Move map to select</string>
+    <string name="network_restricted">Network restricted</string>
+    <string name="locating">Locating…</string>
+    <string name="unknown_place">Unknown Place</string>
+    <string name="fetching_address">Fetching address…</string>
+    <string name="no_address">No address available</string>
+    <string name="maps_require_internet">Maps and search require internet access.</string>
+
+    <!-- Editor: Tags Dialog -->
+    <string name="manage_tags">Manage Tags</string>
+    <string name="tag_help">Tag Help</string>
+    <string name="save_changes_title">Save Changes?</string>
+    <string name="save_changes_prompt">You have unsaved changes to your tags. Do you want to save them before exiting?</string>
+    <string name="add_tag_placeholder">Add tag…</string>
+    <string name="add_tag_action">Add Tag</string>
+    <string name="add_tag_hint">Add %1$s tag</string>
+
+    <!-- Search -->
+    <string name="search_your_journal">Search your journal</string>
+    <string name="search_placeholder">Search your journal</string>
+    <string name="search_idle_title">Search your journal</string>
+    <string name="search_idle_desc">Type a keyword or select a filter above to find specific entries.</string>
+    <string name="search_no_matches">No matches found</string>
+    <string name="search_no_matches_desc">We couldn\'t find any journals matching your current search or filters.</string>
+    <string name="search_filter_bookmarked">Bookmarked</string>
+    <string name="search_filter_draft">Draft</string>
+    <string name="search_filter_media">Media</string>
+    <string name="search_filter_music">Music</string>
+    <string name="search_filter_location">Location</string>
+
+    <!-- Journal Options Sheet -->
+    <string name="cloud">Cloud</string>
+    <string name="local">Local</string>
+    <string name="remove_bookmark">Remove Bookmark</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="permanent_delete">Permanent Delete</string>
+    <string name="words">%1$d words</string>
+    <string name="synced">Synced</string>
+    <string name="not_synced">Not synced</string>
+    <string name="created">Created</string>
+    <string name="updated">Updated</string>
+    <string name="toggle_bookmark">Toggle Bookmark</string>
+    <string name="action">Action</string>
+
+    <!-- Delete Confirmation -->
+    <string name="move_to_bin_message">Move to bin? It will be permanently deleted after 30 days.</string>
+    <string name="move_to_bin_button">Move to bin</string>
+    <string name="type_to_confirm_hint">Type \'%1$s\' below to confirm.</string>
+
+    <!-- Date/Time Picker -->
+    <string name="date_tab">Date</string>
+    <string name="time_tab">Time</string>
+    <string name="today">Today</string>
+    <string name="now">Now</string>
+    <string name="jump_to_today">Jump to Today</string>
+    <string name="jump_to_now">Jump to Now</string>
+    <string name="datetime_at">at</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Reminders</string>
+    <string name="notification_channel_desc">Journaling reminders</string>
+    <string name="notif_title_1">Time to write!</string>
+    <string name="notif_body_1">Don\'t forget to record your thoughts for today.</string>
+    <string name="notif_title_2">Dear Diary…</string>
+    <string name="notif_body_2">Your journal is waiting for your story.</string>
+    <string name="notif_title_3">Capture the moment</string>
+    <string name="notif_body_3">Consistency is key! Write a little bit today.</string>
+    <string name="notif_title_4">How was your day?</string>
+    <string name="notif_body_4">What was the best part of your day?</string>
+    <string name="notif_title_5">Daily Reflection</string>
+    <string name="notif_body_5">Take a moment to reflect on what happened today.</string>
+    <string name="notif_title_6">Note to self</string>
+    <string name="notif_body_6">A few words now, a lifetime of memories later.</string>
+    <string name="notif_title_7">Unwind and write</string>
+    <string name="notif_body_7">Reflect on today\'s journey before you rest.</string>
+
+    <!-- About Screen -->
+    <string name="checking_for_updates">Checking for updates</string>
+    <string name="update_available">Update Available (%1$s)</string>
+    <string name="update_available_desc">A new version of June is available. Here is what\'s new:</string>
+    <string name="up_to_date">Up to date</string>
+    <string name="up_to_date_desc">You are already using the latest version of June.</string>
+    <string name="internet_disabled_title">Internet Access Disabled</string>
+    <string name="internet_disabled_desc">Internet access is disabled in June\'s privacy settings. Please enable it under Permissions to check for updates.</string>
+    <string name="update_check_failed">Update Check Failed</string>
+    <string name="diagnostics">Diagnostics</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="diagnostics_package_name">Package Name</string>
+    <string name="diagnostics_version_name">Version Name</string>
+    <string name="diagnostics_version_code">Version Code</string>
+    <string name="diagnostics_signing_key">Signing Key SHA-256</string>
+    <string name="diagnostics_device">Device</string>
+    <string name="diagnostics_android_os">Android OS</string>
+    <string name="diagnostics_supported_abis">Supported ABIs</string>
+    <string name="unknown_error">An unknown error occurred</string>
+
+    <!-- Map Providers -->
     <string name="maptiler">MapTiler</string>
     <string name="stadia">Stadia Maps</string>
     <string name="carto">CARTO</string>
     <string name="mapbox">Mapbox</string>
     <string name="api_key_valid">API Key is valid and verified!</string>
     <string name="api_key_invalid">Invalid API Key. Please verify.</string>
+
+    <!-- Tag Info -->
+    <string name="tag_info_title">How Tags Work</string>
+    <string name="tag_info_description">Tag entries by spaces, people and topics to find them later.</string>
+    <string name="got_it">Got it</string>
+
+    <!-- Editor: Song -->
+    <string name="no_links_available">No links available</string>
+    <string name="edit_song">Edit Song</string>
+    <string name="remove">Remove</string>
+    <string name="change_location">Change Location</string>
+    <string name="move_to_front">Move to Front</string>
+    <string name="open_link">Open Link</string>
+    <string name="edit_link">Edit Link</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="journal_media_title">Journal Media</string>
+
+    <!-- Editor: Emoji Picker -->
+    <string name="emoji_picker_cancel">Cancel</string>
+
+    <!-- Editor: Toolbar -->
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+    <string name="underline">Underline</string>
+    <string name="strikethrough">Strikethrough</string>
+    <string name="highlight">Highlight</string>
+    <string name="link">Link</string>
+    <string name="blockquote">Blockquote</string>
+    <string name="inline_code">Inline Code</string>
+    <string name="bullet_list">Bullet List</string>
+    <string name="ordered_list">Ordered List</string>
+    <string name="heading_1">Heading 1</string>
+    <string name="heading_2">Heading 2</string>
+    <string name="heading_3">Heading 3</string>
+    <string name="heading_4">Heading 4</string>
+    <string name="heading_5">Heading 5</string>
+    <string name="heading_6">Heading 6</string>
+
+    <!-- Map -->
+    <string name="toggle_dark_mode">Toggle Dark Mode</string>
+    <string name="zoom_in">Zoom In</string>
+    <string name="zoom_out">Zoom Out</string>
+    <string name="current_location">Current Location</string>
+    <string name="remove_location">Remove Location</string>
+
+    <!-- Backup -->
+    <string name="creating_backup">Creating Backup…</string>
+    <string name="create_backup">Create Backup</string>
+    <string name="restoring">Restoring…</string>
+    <string name="select_backup_file">Select Backup File</string>
+    <string name="create">Create</string>
+    <string name="backup_warning">This will create a ZIP file containing your journal entries.</string>
+    <string name="restore_warning">This will merge the backup with your current data.\n\n• Entries with matching IDs will be OVERWRITTEN.\n• New entries will be ADDED.\n\nThis action cannot be undone.</string>
+
+    <!-- App Lock -->
+    <string name="lock_your_journal">Lock your journal</string>
+    <string name="change">Change</string>
+    <string name="lock_method_warning">You are switching away from Custom PIN. Your current PIN will be removed, and you will need to set it up again if you switch back.</string>
+
+    <!-- Permissions -->
+    <string name="manage_in_settings">Manage in Settings</string>
+    <string name="app_permissions">App Permissions</string>
+
+    <!-- Map Settings -->
+    <string name="testing_key">Testing Key…</string>
+    <string name="test_api_key">Test API Key</string>
+    <string name="active_label">Active</string>
+    <string name="valid_label">Valid</string>
+    <string name="invalid_label">Invalid</string>
+
+    <!-- Sync -->
+    <string name="review">Review</string>
+    <string name="analyze">Analyze</string>
+    <string name="repair">Repair</string>
+
+    <!-- Remove Location Dialog -->
+    <string name="remove_location_title">Remove Location</string>
+
+    <!-- Font Selection -->
+    <string name="font_all">All</string>
+
+    <!-- Rename/Delete Tag Dialogs -->
+    <string name="delete_tag_confirm">Delete</string>
+
+    <!-- Lock Method Screen -->
+    <string name="warning">Warning</string>
+
+    <!-- Map Settings Dialog -->
+    <string name="previous_location">Previous Location</string>
+    <string name="next_location">Next Location</string>
+    <string name="open_website">Open Website</string>
+    <string name="open_link_desc">Open Link</string>
+    <string name="github_link">Github Link</string>
+    <string name="developer_profile_picture">Developer Profile Picture</string>
+    <string name="github">GitHub</string>
+    <string name="email">Email</string>
+    <string name="app_icon">App Icon</string>
+
+    <!-- Other -->
+    <string name="app_font_label">App Font</string>
+    <string name="look_and_feel">Look &amp; Feel</string>
+    <string name="palette_style">Palette Style</string>
+    <string name="font">Font</string>
+    <!-- Other -->
+    <string name="restore_all">Restore All</string>
+    <string name="testing_connection">Testing Connection…</string>
+    <string name="test_connection">Test Connection</string>
+    <string name="syncing">Syncing…</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="journaling_reminders">Journaling Reminders</string>
+    <string name="bin_title">Bin</string>
+    <string name="bin_description">Journals you delete will appear here for 30 days before being permanently removed.</string>
+    <string name="delete_tag_warning">You are about to delete:</string>
+    <string name="delete_tag_warning_desc">This will remove the tag from all entries. The entries themselves won\'t be deleted.</string>
+    <string name="rename_tag_warning_switch">This will move to the %1$s tab.</string>
+    <string name="rename_tag_warning_merge">Already exists in %1$s. This will merge all entries.</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.denser.june.presentation.navigation.AppNavigator
 import com.denser.june.presentation.components.JuneAppBarType
@@ -28,7 +29,7 @@ fun SyncBackupSettingsScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = "Sync & Backup") },
+                title = { Text(text = stringResource(R.string.sync_and_backup)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -39,7 +40,7 @@ fun SyncBackupSettingsScreen() {
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.arrow_back_24px),
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                         )
                     }
                 }
@@ -54,7 +55,7 @@ fun SyncBackupSettingsScreen() {
         ) {
             item {
                 SettingSection {
-                    val syncTiles = SettingsTileRegistry.getTilesForCategory("Sync & Backup")
+                    val syncTiles = SettingsTileRegistry.getTilesForCategory(stringResource(R.string.category_sync_backup))
                     syncTiles.forEach { tile ->
                         tile.content()
                     }

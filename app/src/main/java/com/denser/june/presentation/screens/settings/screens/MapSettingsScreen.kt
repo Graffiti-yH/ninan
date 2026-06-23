@@ -178,7 +178,7 @@ fun MapSettingsScreen() {
         topBar = {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
-                title = { Text("Map Settings") },
+                title = { Text(stringResource(R.string.map_settings)) },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     FilledIconButton(
@@ -831,7 +831,7 @@ fun InlineKeyTestSection(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Test API Key")
+                Text(stringResource(R.string.test_api_key))
             }
         }
 

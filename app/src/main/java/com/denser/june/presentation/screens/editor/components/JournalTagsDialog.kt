@@ -18,6 +18,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -76,22 +77,22 @@ fun JournalTagsDialog(
     if (showExitDialog) {
         JuneDialog(
             onDismissRequest = { showExitDialog = false },
-            title = "Save Changes?",
+            title = stringResource(R.string.save_changes_title),
             icon = R.drawable.file_save_24px,
             confirmButton = {
                 Button(onClick = {
                     showExitDialog = false
                     onSaveTags(localTags)
                     onDismiss()
-                }) { Text("Save") }
+                }) { Text(stringResource(R.string.save)) }
             },
             dismissButton = {
                 OutlinedButton(onClick = {
                     showExitDialog = false
                     onDismiss()
-                }) { Text("Discard") }
+                }) { Text(stringResource(R.string.discard)) }
             },
-            text = { Text("You have unsaved changes to your tags. Do you want to save them before exiting?") }
+            text = { Text(stringResource(R.string.save_changes_prompt)) }
         )
     }
 
@@ -106,7 +107,7 @@ fun JournalTagsDialog(
                     type = JuneAppBarType.CenterAligned,
                     title = {
                         Text(
-                            text = "Manage Tags",
+                            text = stringResource(R.string.manage_tags),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -121,7 +122,7 @@ fun JournalTagsDialog(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.close_24px),
-                                contentDescription = "Close",
+                                contentDescription = stringResource(R.string.close),
                             )
                         }
                     },
@@ -129,7 +130,7 @@ fun JournalTagsDialog(
                         IconButton(onClick = { showInfoDialog = true }) {
                             Icon(
                                 painter = painterResource(R.drawable.info_24px),
-                                contentDescription = "Tag Help",
+                                contentDescription = stringResource(R.string.tag_help),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -141,7 +142,7 @@ fun JournalTagsDialog(
                 JuneFloatingActionBar {
                     JuneFloatingAction(
                         onClick = { if (hasChanges) localTags = tags },
-                        label = "Reset",
+                        label = stringResource(R.string.reset),
                         icon = { Icon(painterResource(R.drawable.replay_24px), null) },
                         enabled = hasChanges,
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -154,7 +155,7 @@ fun JournalTagsDialog(
                             }
                             onDismiss()
                         },
-                        label = "Done",
+                        label = stringResource(R.string.done),
                         icon = {
                             Icon(painterResource(R.drawable.check_24px), null)
                         }
@@ -200,7 +201,7 @@ fun JournalTagsDialog(
                     val spec = TagUtils.getCategoryUiSpec(category)
                     val categoryTags = TagUtils.filterTagsByCategory(localTags, category)
                     TagSectionCard(
-                        title = category.label,
+                        title = stringResource(category.labelRes),
                         prefix = category.prefix,
                         iconRes = spec.iconRes,
                         tags = categoryTags,
@@ -289,7 +290,7 @@ fun TagSectionCard(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.add_2_24px),
-                        contentDescription = "Add $title tag",
+                        contentDescription = stringResource(R.string.add_tag_hint, title),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -404,7 +405,7 @@ fun TagInputArea(
                                 onInsertPrefix(category.prefix!!)
                                 focusRequester.requestFocus()
                             },
-                            label = { Text(category.singularLabel) },
+                            label = { Text(stringResource(category.singularLabelRes)) },
                             icon = {
                                 Text(
                                     category.prefix!!,
@@ -451,7 +452,7 @@ fun TagInputArea(
                     },
                     placeholder = {
                         Text(
-                            "Add tag...",
+                            stringResource(R.string.add_tag_placeholder),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                         )
@@ -501,7 +502,7 @@ fun TagInputArea(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.arrow_upward_24px),
-                                    contentDescription = "Add Tag",
+                                    contentDescription = stringResource(R.string.add_tag_action),
                                     modifier = Modifier.size(20.dp)
                                 )
                             }

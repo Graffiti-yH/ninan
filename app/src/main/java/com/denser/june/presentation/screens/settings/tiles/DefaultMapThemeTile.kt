@@ -23,7 +23,7 @@ fun DefaultMapThemeTile() {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     SettingsItem(
-        title = "Default map theme",
+        title = stringResource(R.string.map_settings),
         leadingContent = {
             Icon(
                 painter = painterResource(R.drawable.routine_24px),

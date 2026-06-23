@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
@@ -95,11 +96,12 @@ fun RenameTagDialog(
                     )
                 }
 
+                val targetCategoryLabel = stringResource(targetCategory.labelRes)
                 when (warningState) {
                     WarningType.Switch -> {
                         WarningCard(
                             iconRes = R.drawable.swap_horiz_24px,
-                            text = "This will move to the ${targetCategory.label} tab.",
+                            text = "This will move to the $targetCategoryLabel tab.",
                             containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
@@ -107,7 +109,7 @@ fun RenameTagDialog(
                     WarningType.Merge -> {
                         WarningCard(
                             iconRes = R.drawable.merge_type_24px,
-                            text = "Already exists in ${targetCategory.label}. This will merge all entries.",
+                            text = "Already exists in $targetCategoryLabel. This will merge all entries.",
                             containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
                             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -129,7 +131,7 @@ fun RenameTagDialog(
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Cancel") }
+            OutlinedButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

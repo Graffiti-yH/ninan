@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.denser.june.core.R
@@ -113,7 +114,7 @@ fun PermissionsScreen() {
         topBar = {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
-                title = { Text("Permissions") },
+                title = { Text(stringResource(R.string.permissions)) },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     FilledIconButton(
@@ -203,7 +204,7 @@ fun PermissionsScreen() {
                     }
                 )
                 SettingsItem(
-                    title = "Reminders",
+                    title = stringResource(R.string.reminders),
                     subtitle = if (hasNotificationPermission)
                         "Permission granted. Used to show journaling reminders."
                     else
@@ -241,7 +242,7 @@ fun PermissionsScreen() {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Manage in Settings")
+                    Text(stringResource(R.string.manage_in_settings))
                 }
             }
             Spacer(modifier = Modifier.height(32.dp + padding.calculateBottomPadding()))

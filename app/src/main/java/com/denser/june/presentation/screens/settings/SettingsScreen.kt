@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.denser.june.core.R
@@ -64,7 +65,7 @@ fun SettingsScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text(text = "Settings") },
+                title = { Text(text = stringResource(R.string.settings)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -102,11 +103,11 @@ fun SettingsScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    placeholder = { Text("Search settings...") },
+                    placeholder = { Text(stringResource(R.string.search_settings)) },
                     leadingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.search_24px),
-                            contentDescription = "Search"
+                            contentDescription = stringResource(R.string.search)
                         )
                     },
                     trailingIcon = {
@@ -114,7 +115,7 @@ fun SettingsScreen() {
                             IconButton(onClick = { searchQuery = "" }) {
                                 Icon(
                                     painter = painterResource(R.drawable.close_24px),
-                                    contentDescription = "Clear search"
+                                    contentDescription = stringResource(R.string.clear_search)
                                 )
                             }
                         }
@@ -138,8 +139,8 @@ fun SettingsScreen() {
                         item {
                             SettingSection {
                                 CategorySettingsItem(
-                                    title = "General",
-                                    subtitle = "Manage journaling preferences",
+                                    title = stringResource(R.string.general),
+                                    subtitle = stringResource(R.string.general_desc),
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.category_24px),
@@ -150,8 +151,8 @@ fun SettingsScreen() {
                                     onClick = { navigator.navigateTo(Route.GeneralSettings) }
                                 )
                                 CategorySettingsItem(
-                                    title = "Appearance",
-                                    subtitle = "Theme, font, colors, palette",
+                                    title = stringResource(R.string.appearance),
+                                    subtitle = stringResource(R.string.appearance_desc),
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.format_paint_24px),
@@ -162,8 +163,8 @@ fun SettingsScreen() {
                                     onClick = { navigator.navigateTo(Route.AppearanceSettings) }
                                 )
                                 CategorySettingsItem(
-                                    title = "Privacy & Security",
-                                    subtitle = "App lock, biometrics, data protection",
+                                    title = stringResource(R.string.privacy_and_security),
+                                    subtitle = stringResource(R.string.privacy_and_security_desc),
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.lock_24px),
@@ -174,8 +175,8 @@ fun SettingsScreen() {
                                     onClick = { navigator.navigateTo(Route.PrivacySecuritySettings) }
                                 )
                                 CategorySettingsItem(
-                                    title = "Sync & Backup",
-                                    subtitle = "Cloud sync, export, import",
+                                    title = stringResource(R.string.sync_and_backup),
+                                    subtitle = stringResource(R.string.sync_and_backup_desc),
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.home_storage_gear_24px),
@@ -186,8 +187,8 @@ fun SettingsScreen() {
                                     onClick = { navigator.navigateTo(Route.SyncBackupSettings) }
                                 )
                                 CategorySettingsItem(
-                                    title = "Bin",
-                                    subtitle = "View or restore deleted journals",
+                                    title = stringResource(R.string.bin),
+                                    subtitle = stringResource(R.string.bin_desc),
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.delete_24px),
@@ -198,8 +199,8 @@ fun SettingsScreen() {
                                     onClick = { navigator.navigateTo(Route.Bin) }
                                 )
                                 CategorySettingsItem(
-                                    title = "About",
-                                    subtitle = "Version, licenses, libraries",
+                                    title = stringResource(R.string.about),
+                                    subtitle = stringResource(R.string.about_desc),
                                     leadingContent = {
                                         Icon(
                                             painter = painterResource(R.drawable.info_24px),
@@ -222,8 +223,8 @@ fun SettingsScreen() {
                                 ) {
                                     JunePlaceholderPage(
                                         icon = R.drawable.search_off_24px,
-                                        title = "No settings found",
-                                        subtitle = "We couldn't find any settings matching \"$searchQuery\"."
+                                        title = stringResource(R.string.no_settings_found),
+                                        subtitle = stringResource(R.string.no_settings_found_desc, searchQuery)
                                     )
                                 }
                             }
@@ -251,10 +252,10 @@ fun SettingsScreen() {
 
     if (showDeleteDialog) {
         JuneConfirmationDialog(
-            title = "Move all to Bin?",
-            description = "This will move all your journal entries to the Bin. You can restore them within 30 days.",
-            confirmText = "Delete",
-            confirmButtonText = "Move All to Bin",
+            title = stringResource(R.string.move_all_to_bin_title),
+            description = stringResource(R.string.move_all_to_bin_desc),
+            confirmText = stringResource(R.string.delete),
+            confirmButtonText = stringResource(R.string.move_all_to_bin_button),
             onDismiss = { showDeleteDialog = false },
             onConfirm = {
                 onAction(SettingsAction.OnDeleteJournals)

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -37,15 +38,15 @@ fun TagInfoDialog(onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
         modifier = Modifier.padding(horizontal = 24.dp),
-        title = "How Tags Work",
+        title = stringResource(R.string.tag_info_title),
         icon = R.drawable.sell_24px,
         confirmButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Got it") }
+            OutlinedButton(onClick = onDismiss) { Text(stringResource(R.string.got_it)) }
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text(
-                    "Tag entries by spaces, people and topics to find them later.",
+                    stringResource(R.string.tag_info_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth()
@@ -56,7 +57,7 @@ fun TagInfoDialog(onDismiss: () -> Unit) {
                         TagInfoRow(
                             iconRes = spec.iconRes,
                             prefix = category.prefix,
-                            title = category.label,
+                            title = stringResource(category.labelRes),
                             description = spec.description,
                             color = spec.color,
                             containerColor = spec.containerColor

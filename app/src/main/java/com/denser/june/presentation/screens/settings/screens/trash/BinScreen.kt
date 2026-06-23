@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -61,7 +62,7 @@ fun BinScreen() {
         topBar = {
             JuneTopAppBar(
                 type = JuneAppBarType.CenterAligned,
-                title = { Text("Bin", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.bin_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -101,7 +102,7 @@ fun BinScreen() {
                             ) {
                                 DropdownMenuItem(
                                     modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                    text = { Text("Restore All") },
+                                    text = { Text(stringResource(R.string.restore_all)) },
                                     onClick = {
                                         showMenu = false
                                         showRestoreAllDialog = true

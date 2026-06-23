@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -79,16 +80,8 @@ fun JuneConfirmationDialog(
                     text = buildAnnotatedString {
                         append(description)
                         if (confirmText != null) {
-                            append("\n\nType ")
-                            withStyle(
-                                style = SpanStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            ) {
-                                append("'$confirmText'")
-                            }
-                            append(" below to confirm.")
+                            append("\n\n")
+                            append(stringResource(R.string.type_to_confirm_hint, confirmText))
                         }
                     },
                     style = MaterialTheme.typography.bodyMedium,
@@ -143,7 +136,7 @@ fun JuneConfirmationDialog(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         }

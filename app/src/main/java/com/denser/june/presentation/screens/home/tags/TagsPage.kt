@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -95,13 +96,13 @@ fun TagsPage() {
                         icon = {
                             Icon(
                                 painter = painterResource(if (isSelected) spec.filledIconRes else spec.iconRes),
-                                contentDescription = category.label,
+                                contentDescription = stringResource(category.labelRes),
                                 modifier = Modifier.size(22.dp)
                             )
                         },
                         text = {
                             Text(
-                                text = category.label,
+                                text = stringResource(category.labelRes),
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
                         },
@@ -148,7 +149,7 @@ fun TagsPage() {
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.more_vert_24px),
-                                                contentDescription = "Options",
+                                                contentDescription = stringResource(R.string.options),
                                                 modifier = Modifier.size(18.dp)
                                             )
                                         }
@@ -164,7 +165,7 @@ fun TagsPage() {
                                         ) {
                                             DropdownMenuItem(
                                                 modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                                text = { Text("Rename") },
+                                                text = { Text(stringResource(R.string.rename_tag)) },
                                                 onClick = {
                                                     showMenu = false
                                                     showRenameDialog = true
@@ -178,7 +179,7 @@ fun TagsPage() {
                                             )
                                             DropdownMenuItem(
                                                 modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                                text = { Text("Delete") },
+                                                text = { Text(stringResource(R.string.delete_tag)) },
                                                 onClick = {
                                                     showMenu = false
                                                     showDeleteDialog = true
@@ -251,8 +252,8 @@ fun TagsPage() {
                             JunePlaceholderPage(
                                 modifier = Modifier.fillParentMaxHeight(0.8f),
                                 icon = R.drawable.auto_stories_off_24px,
-                                title = "No entries",
-                                subtitle = "No journals match the current filters."
+                                title = stringResource(R.string.no_entries),
+                                subtitle = stringResource(R.string.no_entries_desc)
                             )
                         }
                     } else {
@@ -266,11 +267,16 @@ fun TagsPage() {
                     }
                 }
             } else {
+                val (emptyTitleRes, emptySubtitleRes) = when (selectedCategory) {
+                    TagCategory.Spaces -> R.string.no_spaces_yet to R.string.no_spaces_yet_desc
+                    TagCategory.People -> R.string.no_people_yet to R.string.no_people_yet_desc
+                    TagCategory.Topics -> R.string.no_topics_yet to R.string.no_topics_yet_desc
+                }
                 JunePlaceholderPage(
                     modifier = Modifier.weight(1f),
                     icon = currentCategorySpec.iconRes,
-                    title = "No ${selectedCategory.label.lowercase()} yet",
-                    subtitle = "Tag a journal entry with a ${selectedCategory.singularLabel.lowercase()} to get started."
+                    title = stringResource(emptyTitleRes),
+                    subtitle = stringResource(emptySubtitleRes)
                 )
             }
         }

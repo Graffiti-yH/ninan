@@ -44,6 +44,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -89,7 +90,7 @@ fun SearchScreen() {
                         TextField(
                             value = query,
                             onValueChange = viewModel::onQueryChange,
-                            placeholder = { Text("Search your journal") },
+                            placeholder = { Text(stringResource(R.string.search_placeholder)) },
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -102,7 +103,7 @@ fun SearchScreen() {
                                     IconButton(onClick = { viewModel.onQueryChange("") }) {
                                         Icon(
                                             painterResource(R.drawable.close_24px),
-                                            contentDescription = "Clear"
+                                            contentDescription = stringResource(R.string.clear_search)
                                         )
                                     }
                                 }
@@ -123,7 +124,7 @@ fun SearchScreen() {
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.arrow_back_24px),
-                                contentDescription = "Back",
+                                contentDescription = stringResource(R.string.back),
                             )
                         }
                     }
@@ -141,35 +142,35 @@ fun SearchScreen() {
                         onClick = viewModel::toggleBookmarkFilter,
                         icon = R.drawable.bookmark_added_24px_fill,
                         prefix = "is:",
-                        label = "Bookmarked"
+                        label = stringResource(R.string.search_filter_bookmarked)
                     )
                     SearchFilterChip(
                         selected = isDraft,
                         onClick = viewModel::toggleDraftFilter,
                         icon = R.drawable.edit_24px_fill,
                         prefix = "is:",
-                        label = "Draft"
+                        label = stringResource(R.string.search_filter_draft)
                     )
                     SearchFilterChip(
                         selected = hasMedia,
                         onClick = viewModel::toggleMediaFilter,
                         icon = R.drawable.photo_24px_fill,
                         prefix = "has:",
-                        label = "Media"
+                        label = stringResource(R.string.search_filter_media)
                     )
                     SearchFilterChip(
                         selected = hasSong,
                         onClick = viewModel::toggleSongFilter,
                         icon = R.drawable.music_note_24px,
                         prefix = "has:",
-                        label = "Music"
+                        label = stringResource(R.string.search_filter_music)
                     )
                     SearchFilterChip(
                         selected = hasLocation,
                         onClick = viewModel::toggleLocationFilter,
                         icon = R.drawable.location_on_24px_fill,
                         prefix = "has:",
-                        label = "Location"
+                        label = stringResource(R.string.search_filter_location)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                 }
@@ -191,8 +192,8 @@ fun SearchScreen() {
                 searchState.isIdle -> {
                     JunePlaceholderPage(
                         icon = R.drawable.search_24px,
-                        title = "Search your journal",
-                        subtitle = "Type a keyword or select a filter above to find specific entries.",
+                        title = stringResource(R.string.search_idle_title),
+                        subtitle = stringResource(R.string.search_idle_desc),
                         modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
                     )
                 }
@@ -205,8 +206,8 @@ fun SearchScreen() {
                 searchState.journals.isEmpty() -> {
                     JunePlaceholderPage(
                         icon = R.drawable.search_off_24px,
-                        title = "No matches found",
-                        subtitle = "We couldn't find any journals matching your current search or filters.",
+                        title = stringResource(R.string.search_no_matches),
+                        subtitle = stringResource(R.string.search_no_matches_desc),
                         modifier = Modifier.padding(bottom = padding.calculateBottomPadding())
                     )
                 }

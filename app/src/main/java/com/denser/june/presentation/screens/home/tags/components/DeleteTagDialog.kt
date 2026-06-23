@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
 import com.denser.june.presentation.utils.TagUtils
@@ -30,7 +31,7 @@ fun DeleteTagDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "You are about to delete:",
+                    text = stringResource(R.string.delete_tag_warning),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -61,11 +62,11 @@ fun DeleteTagDialog(
                     contentColor = MaterialTheme.colorScheme.onError
                 )
             ) {
-                Text("Delete")
+                Text(stringResource(R.string.delete_tag_confirm))
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Cancel") }
+            OutlinedButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

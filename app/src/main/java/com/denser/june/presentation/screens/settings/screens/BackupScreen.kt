@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -113,7 +114,7 @@ fun BackupScreen() {
             JuneTopAppBar(
                 type = JuneAppBarType.Large,
                 scrollBehavior = scrollBehavior,
-                title = { Text("Local Backup") },
+                title = { Text(stringResource(R.string.local_backup)) },
                 navigationIcon = {
                     FilledIconButton(
                         onClick = { navigator.navigateBack() },
@@ -184,7 +185,7 @@ fun BackupScreen() {
                                     Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Create Backup")
+                                Text(stringResource(R.string.create_backup))
                             }
                         }
                     }
@@ -226,7 +227,7 @@ fun BackupScreen() {
                                     Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Select Backup File")
+                                Text(stringResource(R.string.select_backup_file))
                             }
                         }
                     }
@@ -247,10 +248,10 @@ fun BackupScreen() {
                         showExportDialog = false
                         onAction(SettingsAction.OnExportJournals(includeMedia))
                     }
-                ) { Text("Create") }
+                ) { Text(stringResource(R.string.create)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showExportDialog = false }) { Text("Cancel") }
+                OutlinedButton(onClick = { showExportDialog = false }) { Text(stringResource(R.string.cancel)) }
             },
             text = {
                 Column {
@@ -298,13 +299,13 @@ fun BackupScreen() {
                         showRestoreWarning = null
                         onAction(SettingsAction.OnRestoreJournals(uri))
                     }
-                ) { Text("Restore") }
+                ) { Text(stringResource(R.string.restore)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showRestoreWarning = null }) { Text("Cancel") }
+                OutlinedButton(onClick = { showRestoreWarning = null }) { Text(stringResource(R.string.cancel)) }
             },
             text = {
-                Text("This will merge the backup with your current data.\n\n• Entries with matching IDs will be OVERWRITTEN.\n• New entries will be ADDED.\n\nThis action cannot be undone.")
+                Text(stringResource(R.string.restore_warning))
             }
         )
     }
