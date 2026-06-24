@@ -32,4 +32,5 @@ object Constants {
     const val NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
     const val NOMINATIM_REVERSE_URL = "https://nominatim.openstreetmap.org/reverse"
     const val AMAP_TILE_URL = "https://webrd01.is.autonavi.com/appmaptile"
+    const val AMAP_GEOCODING_URL = "https://restapi.amap.com/v3/place/text"
 }

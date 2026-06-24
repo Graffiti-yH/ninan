@@ -392,21 +392,6 @@ private fun AnalysisResults(
         // Overall Mood Card
         OverallMoodCard(result)
 
-        // Mood Timeline Chart
-        if (result.moodTimeline.isNotEmpty()) {
-            SectionCard(
-                title = stringResource(R.string.ai_mood_timeline),
-                icon = R.drawable.track_changes_24px
-            ) {
-                MoodLineChart(
-                    entries = result.moodTimeline,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                )
-            }
-        }
-
         // Personality Analysis
         if (result.personalityDimensions.isNotEmpty()) {
             SectionCard(

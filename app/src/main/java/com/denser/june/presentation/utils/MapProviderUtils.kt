@@ -127,10 +127,49 @@ object MapProviderUtils : KoinComponent {
     }
 
     suspend fun searchLocation(context: Context, query: String): List<MapSearchResult> {
+        val amapKey = journalPreferences.amapKey().first()
         val mapTilerKey = journalPreferences.maptilerKey().first()
+        val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
 
+        // 1) Try Amap geocoding (best for China, requires Amap API key)
+        if (amapKey.isNotBlank()) {
+            val url = "${Constants.AMAP_GEOCODING_URL}?key=$amapKey&keywords=$encodedQuery&offset=5&page=1&extensions=base"
+            val response = performGetRequest(context, url)
+            if (response != null) {
+                try {
+                    val json = JSONObject(response)
+                    if (json.optString("status") == "1") {
+                        val pois = json.optJSONArray("pois")
+                        if (pois != null && pois.length() > 0) {
+                            val results = mutableListOf<MapSearchResult>()
+                            for (i in 0 until pois.length()) {
+                                val poi = pois.getJSONObject(i)
+                                val name = poi.optString("name", "")
+                                val address = poi.optString("address", name)
+                                val location = poi.optString("location", "") // "lng,lat"
+                                val parts = location.split(",")
+                                if (parts.size == 2) {
+                                    results.add(
+                                        MapSearchResult(
+                                            name = name,
+                                            address = address,
+                                            latitude = parts[1].toDouble(),
+                                            longitude = parts[0].toDouble()
+                                        )
+                                    )
+                                }
+                            }
+                            if (results.isNotEmpty()) return results
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        // 2) Try MapTiler geocoding
         if (mapTilerKey.isNotBlank()) {
-            val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
             val url = "${Constants.MAPTILER_GEOCODING_BASE_URL}$encodedQuery.json?key=$mapTilerKey&limit=5"
             val response = performGetRequest(context, url)
             if (response != null) {
@@ -159,7 +198,7 @@ object MapProviderUtils : KoinComponent {
             }
         }
 
-        val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
+        // 3) Fallback to Nominatim (OpenStreetMap)
         val url = "${Constants.NOMINATIM_SEARCH_URL}?q=$encodedQuery&format=json&limit=5"
         val response = performGetRequest(context, url) ?: return emptyList()
         return try {
