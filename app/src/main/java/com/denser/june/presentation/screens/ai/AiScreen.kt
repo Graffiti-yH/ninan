@@ -135,6 +135,16 @@ fun AiScreen() {
                 )
             }
 
+            // Date range info
+            if (state.dateRangeLabel.isNotBlank()) {
+                Text(
+                    text = state.dateRangeLabel,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+
             // Success state — results
             if (state.analysisState is AnalysisState.Success) {
                 val result = (state.analysisState as AnalysisState.Success).result
@@ -157,6 +167,8 @@ fun AiScreen() {
 
 @Composable
 private fun AiStandardDialog(onDismiss: () -> Unit) {
+    val scrollState = rememberScrollState()
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -172,7 +184,10 @@ private fun AiStandardDialog(onDismiss: () -> Unit) {
             }
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(
+                modifier = Modifier.verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 Text(
                     text = stringResource(R.string.ai_standard_intro),
                     style = MaterialTheme.typography.bodyMedium
@@ -187,6 +202,18 @@ private fun AiStandardDialog(onDismiss: () -> Unit) {
                 )
                 Text(
                     text = stringResource(R.string.ai_standard_framework_desc),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // Personality Analysis Standard
+                Text(
+                    text = stringResource(R.string.ai_standard_personality_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(R.string.ai_standard_personality_desc),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -227,7 +254,7 @@ private fun AiStandardDialog(onDismiss: () -> Unit) {
                 )
 
                 // Disclaimer
-                Divider()
+                HorizontalDivider()
                 Text(
                     text = stringResource(R.string.ai_disclaimer),
                     style = MaterialTheme.typography.bodySmall,
@@ -364,6 +391,53 @@ private fun AnalysisResults(
 
         // Overall Mood Card
         OverallMoodCard(result)
+
+        // Mood Timeline Chart
+        if (result.moodTimeline.isNotEmpty()) {
+            SectionCard(
+                title = stringResource(R.string.ai_mood_timeline),
+                icon = R.drawable.track_changes_24px
+            ) {
+                MoodLineChart(
+                    entries = result.moodTimeline,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+            }
+        }
+
+        // Personality Analysis
+        if (result.personalityDimensions.isNotEmpty()) {
+            SectionCard(
+                title = "${stringResource(R.string.ai_personality)} (${result.personalityType})",
+                icon = R.drawable.person_24px
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Radar chart
+                    RadarChart(
+                        dimensions = result.personalityDimensions,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp)
+                    )
+
+                    // Personality summary
+                    if (result.personalitySummary.isNotBlank()) {
+                        Text(
+                            text = result.personalitySummary,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    // Dimension bars
+                    PersonalityDimensionList(
+                        dimensions = result.personalityDimensions
+                    )
+                }
+            }
+        }
 
         // Emotion Summary
         if (result.emotionSummary.isNotBlank()) {

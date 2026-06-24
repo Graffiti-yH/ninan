@@ -75,6 +75,14 @@ val coreModule = module {
             .addInterceptor(InternetInterceptor(get()))
             .build()
     }
+    single(named("AiOkHttpClient")) {
+        OkHttpClient.Builder()
+            .addInterceptor(InternetInterceptor(get()))
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(120, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
+    }
     single(named("DefaultJson")) {
         Json {
             ignoreUnknownKeys = true
@@ -97,7 +105,7 @@ val coreModule = module {
     singleOf(::DeezerFetcher)
     singleOf(::ItunesFetcher)
     singleOf(::SongRepositoryImpl).bind<SongRepository>()
-    single { AiRepositoryImpl(get(), get(), get<Json>(named("DefaultJson"))) }.bind<AiRepository>()
+    single { AiRepositoryImpl(get<OkHttpClient>(named("AiOkHttpClient")), get(), get<Json>(named("DefaultJson"))) }.bind<AiRepository>()
 
     single { SyncPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<SyncPreferences>()
     single<CloudProvider>(named("WebDAV")) { WebDAVProvider(get(), get(), get()) }

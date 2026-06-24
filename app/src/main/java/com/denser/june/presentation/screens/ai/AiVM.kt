@@ -16,13 +16,16 @@ import kotlinx.coroutines.withContext
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
 data class AiUiState(
     val analysisState: AnalysisState = AnalysisState.Idle,
     val selectedRange: AiDateRange = AiDateRange.THIS_MONTH,
     val journalCount: Int = 0,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val dateRangeLabel: String = ""
 )
 
 sealed interface AnalysisState {
@@ -84,7 +87,13 @@ class AiVM(
                     return@launch
                 }
 
-                _state.update { it.copy(journalCount = journals.size) }
+                val rangeLabel = formatDateRange(journals)
+                _state.update {
+                    it.copy(
+                        journalCount = journals.size,
+                        dateRangeLabel = rangeLabel
+                    )
+                }
 
                 val result = withContext(Dispatchers.IO) {
                     aiRepository.analyzeJournals(journals)
@@ -151,5 +160,14 @@ class AiVM(
             }
             AiDateRange.ALL -> null to null
         }
+    }
+
+    private fun formatDateRange(journals: List<com.denser.june.core.domain.model.Journal>): String {
+        if (journals.isEmpty()) return ""
+        val sorted = journals.sortedBy { it.dateTime }
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.systemDefault())
+        val start = formatter.format(Instant.ofEpochMilli(sorted.first().dateTime))
+        val end = formatter.format(Instant.ofEpochMilli(sorted.last().dateTime))
+        return "$start ~ $end"
     }
 }

@@ -56,11 +56,50 @@ class AiRepositoryImpl(
   "cognitiveDistortions": ["distortion1", "distortion2"],
   "suggestions": ["suggestion1", "suggestion2"],
   "positiveHighlights": ["positive1", "positive2"],
-  "riskWarning": null
+  "riskWarning": null,
+  "moodTimeline": [
+    {"date": "2024-01-15", "mood": "happy", "score": 8, "emoji": "😊"},
+    {"date": "2024-01-16", "mood": "anxious", "score": 4, "emoji": "😰"}
+  ],
+  "personalityType": "INFP",
+  "personalitySummary": "Brief analysis of the user's personality traits based on diary entries",
+  "personalityDimensions": [
+    {"key": "Fi", "name": "内倾情感", "score": 8, "description": "Strong internal value system..."},
+    {"key": "Fe", "name": "外倾情感", "score": 5, "description": "Moderate concern for harmony..."},
+    {"key": "Ti", "name": "内倾思维", "score": 6, "description": "Analytical when needed..."},
+    {"key": "Te", "name": "外倾思维", "score": 4, "description": "Prefers flexible approaches..."},
+    {"key": "Ni", "name": "内倾直觉", "score": 7, "description": "Thinks about future possibilities..."},
+    {"key": "Ne", "name": "外倾直觉", "score": 6, "description": "Generates ideas..."},
+    {"key": "Si", "name": "内倾感觉", "score": 5, "description": "Values past experiences..."},
+    {"key": "Se", "name": "外倾感觉", "score": 3, "description": "Less focused on physical details..."}
+  ]
 }""")
             appendLine()
             appendLine("moodTrend must be exactly one of: \"improving\", \"stable\", \"declining\"")
             appendLine("Set riskWarning to null if no serious concerns. Only populate it when you detect signs of self-harm, suicidal ideation, or severe distress.")
+            appendLine()
+            appendLine("## moodTimeline")
+            appendLine("Analyze EACH diary entry individually and assign a mood label and numeric score (1-10).")
+            appendLine("- score 1-3: very negative (distressed, devastated)")
+            appendLine("- score 4-5: somewhat negative (anxious, sad, frustrated)")
+            appendLine("- score 6-7: neutral or mixed (calm, contemplative, tired)")
+            appendLine("- score 8-10: positive (happy, grateful, excited, peaceful)")
+            appendLine("- Use the same date format as provided in the entries (YYYY-MM-DD)")
+            appendLine("- The moodTimeline array must have exactly one entry per diary entry, in the same order.")
+            appendLine()
+            appendLine("## personalityAnalysis")
+            appendLine("Analyze the user's personality traits based on the Jungian cognitive functions (荣格八维):")
+            appendLine("- Fi (Introverted Feeling): internal values and emotions")
+            appendLine("- Fe (Extraverted Feeling): external harmony and social needs")
+            appendLine("- Ti (Introverted Thinking): internal logic and consistency")
+            appendLine("- Te (Extraverted Thinking): external efficiency and organization")
+            appendLine("- Ni (Introverted Intuition): deep insight and future possibilities")
+            appendLine("- Ne (Extraverted Intuition): idea generation and pattern recognition")
+            appendLine("- Si (Introverted Sensation): past experiences and internal sensations")
+            appendLine("- Se (Extraverted Sensation): immediate physical experience")
+            appendLine("Rate each function from 1 (least prominent) to 10 (most prominent).")
+            appendLine("Infer the overall MBTI type (personalityType) based on the dominant functions.")
+            appendLine("Write personalitySummary in the same language as the diary entries.")
             appendLine("Return PURE JSON only — no markdown formatting, no code fences, no extra text.")
         }
     }
