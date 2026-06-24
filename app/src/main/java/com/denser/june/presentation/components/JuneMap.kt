@@ -237,6 +237,13 @@ fun MapAttributions(
                     style = MaterialTheme.typography.labelSmall
                 )
             }
+            MapStyleProvider.AMAP -> {
+                Text(
+                    text = "© 高德地图 © OpenStreetMap",
+                    color = contentColor,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         }
     }
 }

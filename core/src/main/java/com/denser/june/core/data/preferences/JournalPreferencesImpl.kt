@@ -34,6 +34,8 @@ class JournalPreferencesImpl(
         val MAPTILER_KEY_VERIFIED = booleanPreferencesKey("maptiler_key_verified")
         val STADIA_KEY_VERIFIED = booleanPreferencesKey("stadia_key_verified")
         val MAPBOX_KEY_VERIFIED = booleanPreferencesKey("mapbox_key_verified")
+        val AMAP_KEY = stringPreferencesKey("amap_key")
+        val AMAP_KEY_VERIFIED = booleanPreferencesKey("amap_key_verified")
         const val DEFAULT_REMINDER_TIME = "21:14"
     }
 
@@ -174,6 +176,15 @@ class JournalPreferencesImpl(
         }
     }
 
+    override fun amapKey(): Flow<String> = dataStore.data
+        .map { preferences -> preferences[AMAP_KEY] ?: "" }
+
+    override suspend fun setAmapKey(key: String) {
+        dataStore.edit { preferences ->
+            preferences[AMAP_KEY] = key
+        }
+    }
+
     override fun isMapProviderVerified(provider: MapStyleProvider): Flow<Boolean> = dataStore.data
         .map { preferences ->
             when (provider) {
@@ -181,6 +192,7 @@ class JournalPreferencesImpl(
                 MapStyleProvider.MAPTILER -> preferences[MAPTILER_KEY_VERIFIED] ?: false
                 MapStyleProvider.STADIA -> preferences[STADIA_KEY_VERIFIED] ?: false
                 MapStyleProvider.MAPBOX -> preferences[MAPBOX_KEY_VERIFIED] ?: false
+                MapStyleProvider.AMAP -> preferences[AMAP_KEY_VERIFIED] ?: false
             }
         }
 
@@ -191,6 +203,7 @@ class JournalPreferencesImpl(
                 MapStyleProvider.MAPTILER -> preferences[MAPTILER_KEY_VERIFIED] = verified
                 MapStyleProvider.STADIA -> preferences[STADIA_KEY_VERIFIED] = verified
                 MapStyleProvider.MAPBOX -> preferences[MAPBOX_KEY_VERIFIED] = verified
+                MapStyleProvider.AMAP -> preferences[AMAP_KEY_VERIFIED] = verified
             }
         }
     }

@@ -112,9 +112,13 @@ fun MapSettingsScreen() {
     val mapboxKey by journalPreferences.mapboxkey()
         .collectAsStateWithLifecycle(initialValue = "")
 
+    val amapKey by journalPreferences.amapKey()
+        .collectAsStateWithLifecycle(initialValue = "")
+
     var maptilerKeyInput by remember(mapTilerKey) { mutableStateOf(mapTilerKey) }
     var stadiaKeyInput by remember(stadiaKey) { mutableStateOf(stadiaKey) }
     var mapboxKeyInput by remember(mapboxKey) { mutableStateOf(mapboxKey) }
+    var amapKeyInput by remember(amapKey) { mutableStateOf(amapKey) }
 
     var isMaptilerKeyLocked by remember { mutableStateOf(true) }
     var isMaptilerKeyObscured by remember { mutableStateOf(true) }
@@ -122,13 +126,16 @@ fun MapSettingsScreen() {
     var isStadiaKeyObscured by remember { mutableStateOf(true) }
     var isMapboxKeyLocked by remember { mutableStateOf(true) }
     var isMapboxKeyObscured by remember { mutableStateOf(true) }
+    var isAmapKeyLocked by remember { mutableStateOf(true) }
+    var isAmapKeyObscured by remember { mutableStateOf(true) }
 
-    val tabs = listOf("CARTO", "MapTiler", "Stadia", "Mapbox")
+    val tabs = listOf("CARTO", "MapTiler", "Stadia", "Mapbox", "Amap")
     val selectedTabIndex = when (currentProvider) {
         MapStyleProvider.CARTO -> 0
         MapStyleProvider.MAPTILER -> 1
         MapStyleProvider.STADIA -> 2
         MapStyleProvider.MAPBOX -> 3
+        MapStyleProvider.AMAP -> 4
     }
 
     var keyTestStatus by remember(selectedTabIndex) { mutableStateOf<Boolean?>(null) }
@@ -145,12 +152,14 @@ fun MapSettingsScreen() {
     val isTilerConfigured = mapTilerKey.isNotBlank()
     val isStadiaConfigured = stadiaKey.isNotBlank()
     val isMapboxConfigured = mapboxKey.isNotBlank()
+    val isAmapConfigured = amapKey.isNotBlank()
 
     val isCurrentProviderConfigured = when (currentProvider) {
         MapStyleProvider.CARTO -> true
         MapStyleProvider.MAPTILER -> isTilerConfigured
         MapStyleProvider.STADIA -> isStadiaConfigured
         MapStyleProvider.MAPBOX -> isMapboxConfigured
+        MapStyleProvider.AMAP -> isAmapConfigured
     }
 
     val isCurrentKeyUnlocked = when (currentProvider) {
@@ -158,6 +167,7 @@ fun MapSettingsScreen() {
         MapStyleProvider.MAPTILER -> !isMaptilerKeyLocked
         MapStyleProvider.STADIA -> !isStadiaKeyLocked
         MapStyleProvider.MAPBOX -> !isMapboxKeyLocked
+        MapStyleProvider.AMAP -> !isAmapKeyLocked
     }
 
     var isMapLoading by remember { mutableStateOf(false) }
@@ -310,13 +320,14 @@ fun MapSettingsScreen() {
                     }
 
                     MapViewLifecycleEffect(previewMapView)
-                    val mapStyleUrl = remember(currentProvider, isPreviewDarkMode, mapTilerKey, stadiaKey, mapboxKey) {
+                    val mapStyleUrl = remember(currentProvider, isPreviewDarkMode, mapTilerKey, stadiaKey, mapboxKey, amapKey) {
                         MapProviderUtils.getStyleUrlWithKeys(
                             provider = currentProvider,
                             isDark = isPreviewDarkMode,
                             mapTilerKey = mapTilerKey,
                             stadiaKey = stadiaKey,
-                            mapboxKey = mapboxKey
+                            mapboxKey = mapboxKey,
+                            amapKey = amapKey
                         )
                     }
                       Box(
@@ -581,6 +592,7 @@ fun MapSettingsScreen() {
                             1 -> MapStyleProvider.MAPTILER
                             2 -> MapStyleProvider.STADIA
                             3 -> MapStyleProvider.MAPBOX
+                            4 -> MapStyleProvider.AMAP
                             else -> MapStyleProvider.CARTO
                         }
                         val isSelected = selectedTabIndex == index
@@ -781,6 +793,51 @@ fun MapSettingsScreen() {
                                     )
                                     if (isValid) {
                                         journalPreferences.setMapStyleProvider(MapStyleProvider.MAPBOX)
+                                    }
+                                    isTestingKey = false
+                                }
+                            },
+                            isActionsEnabled = !isMapLoading,
+                            providerUrl = Constants.MAPBOX_ACCOUNT_URL
+                        )
+                    }
+
+                    4 -> {
+                        ApiCredentialsSection(
+                            keyInput = amapKeyInput,
+                            onKeyChange = { key ->
+                                amapKeyInput = key
+                                scope.launch {
+                                    journalPreferences.setAmapKey(key.trim())
+                                    journalPreferences.setMapProviderVerified(
+                                        MapStyleProvider.AMAP,
+                                        false
+                                    )
+                                }
+                                keyTestStatus = null
+                            },
+                            isKeyLocked = isAmapKeyLocked,
+                            onKeyLockedChange = { isAmapKeyLocked = it },
+                            isKeyObscured = isAmapKeyObscured,
+                            onKeyObscuredChange = { isAmapKeyObscured = it },
+                            placeholder = "Amap API key",
+                            isTesting = isTestingKey,
+                            testStatus = keyTestStatus,
+                            onTest = {
+                                isTestingKey = true
+                                keyTestStatus = null
+                                scope.launch {
+                                    val isValid = MapProviderUtils.testApiKey(
+                                        MapStyleProvider.AMAP,
+                                        amapKeyInput.trim()
+                                    )
+                                    keyTestStatus = isValid
+                                    journalPreferences.setMapProviderVerified(
+                                        MapStyleProvider.AMAP,
+                                        isValid
+                                    )
+                                    if (isValid) {
+                                        journalPreferences.setMapStyleProvider(MapStyleProvider.AMAP)
                                     }
                                     isTestingKey = false
                                 }

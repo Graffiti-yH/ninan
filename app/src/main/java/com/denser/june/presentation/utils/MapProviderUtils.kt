@@ -31,7 +31,8 @@ object MapProviderUtils : KoinComponent {
         isDark: Boolean,
         mapTilerKey: String,
         stadiaKey: String,
-        mapboxKey: String
+        mapboxKey: String,
+        amapKey: String = ""
     ): String {
         return when (provider) {
             MapStyleProvider.MAPTILER -> {
@@ -51,6 +52,9 @@ object MapProviderUtils : KoinComponent {
                 val styleName = if (isDark) "dark-v10" else "streets-v11"
                 "${Constants.MAPBOX_MAPS_BASE_URL}$styleName?access_token=$mapboxKey"
             }
+            MapStyleProvider.AMAP -> {
+                generateAmapStyleUrl(amapKey)
+            }
         }
     }
 
@@ -61,7 +65,40 @@ object MapProviderUtils : KoinComponent {
         val mapTilerKey = journalPreferences.maptilerKey().first()
         val stadiaKey = journalPreferences.stadiaKey().first()
         val mapboxKey = journalPreferences.mapboxkey().first()
-        return getStyleUrlWithKeys(provider, isDark, mapTilerKey, stadiaKey, mapboxKey)
+        val amapKey = journalPreferences.amapKey().first()
+        return getStyleUrlWithKeys(provider, isDark, mapTilerKey, stadiaKey, mapboxKey, amapKey)
+    }
+
+    /** Generate a local style.json for Amap raster tiles and return file:// URI */
+    private fun generateAmapStyleUrl(amapKey: String): String {
+        val styleJson = buildString {
+            appendLine("{")
+            appendLine("  \"version\": 8,")
+            appendLine("  \"name\": \"Amap\",")
+            appendLine("  \"sources\": {")
+            appendLine("    \"amap-tiles\": {")
+            appendLine("      \"type\": \"raster\",")
+            appendLine("      \"tiles\": [")
+            appendLine("        \"${Constants.AMAP_TILE_URL}?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}&key=$amapKey\"")
+            appendLine("      ],")
+            appendLine("      \"tileSize\": 256,")
+            appendLine("      \"attribution\": \"© 高德地图\"")
+            appendLine("    }")
+            appendLine("  },")
+            appendLine("  \"layers\": [")
+            appendLine("    {")
+            appendLine("      \"id\": \"amap-tiles-layer\",")
+            appendLine("      \"type\": \"raster\",")
+            appendLine("      \"source\": \"amap-tiles\",")
+            appendLine("      \"minzoom\": 0,")
+            appendLine("      \"maxzoom\": 18")
+            appendLine("    }")
+            appendLine("  ]")
+            appendLine("}")
+        }
+        val file = java.io.File(context.cacheDir, "amap_style.json")
+        file.writeText(styleJson)
+        return "file://${file.absolutePath}"
     }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
@@ -240,6 +277,9 @@ object MapProviderUtils : KoinComponent {
                 "${Constants.MAPBOX_MAPS_BASE_URL}streets-v11?access_token=$key"
             }
             MapStyleProvider.CARTO -> return true
+            MapStyleProvider.AMAP -> {
+                "${Constants.AMAP_TILE_URL}?lang=zh_cn&size=1&scale=1&style=8&x=0&y=0&z=1&key=$key"
+            }
         }
 
         return withContext(Dispatchers.IO) {

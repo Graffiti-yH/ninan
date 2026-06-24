@@ -44,6 +44,9 @@ interface JournalPreferences {
     fun mapboxkey(): Flow<String>
     suspend fun setMapboxkey(key: String)
 
+    fun amapKey(): Flow<String>
+    suspend fun setAmapKey(key: String)
+
     fun isMapProviderVerified(provider: MapStyleProvider): Flow<Boolean>
     suspend fun setMapProviderVerified(provider: MapStyleProvider, verified: Boolean)
 }

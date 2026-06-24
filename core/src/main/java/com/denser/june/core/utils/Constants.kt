@@ -31,4 +31,5 @@ object Constants {
     const val MAPTILER_GEOCODING_BASE_URL = "https://api.maptiler.com/geocoding/"
     const val NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
     const val NOMINATIM_REVERSE_URL = "https://nominatim.openstreetmap.org/reverse"
+    const val AMAP_TILE_URL = "https://webrd01.is.autonavi.com/appmaptile"
 }

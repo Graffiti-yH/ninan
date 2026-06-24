@@ -19,8 +19,8 @@ val apkNamePrefix = "june"
 
 val versionMajor = 1
 val versionMinor = 0
-val versionPatch = 1
-val appVersionCode = 14
+val versionPatch = 2
+val appVersionCode = 15
 val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")

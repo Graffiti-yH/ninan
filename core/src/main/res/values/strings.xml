@@ -301,6 +301,7 @@
     <string name="stadia">Stadia Maps</string>
     <string name="carto">CARTO</string>
     <string name="mapbox">Mapbox</string>
+    <string name="amap">Amap</string>
     <string name="api_key_valid">API Key is valid and verified!</string>
     <string name="api_key_invalid">Invalid API Key. Please verify.</string>
 

@@ -301,6 +301,7 @@
     <string name="stadia">Stadia Maps</string>
     <string name="carto">CARTO</string>
     <string name="mapbox">Mapbox</string>
+    <string name="amap">高德地图</string>
     <string name="api_key_valid">API 密钥有效且已验证！</string>
     <string name="api_key_invalid">API 密钥无效。请核实。</string>
 
