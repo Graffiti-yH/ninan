@@ -421,4 +421,178 @@
     <string name="delete_tag_warning_desc">这将从所有条目中移除此标签。条目本身不会被删除。</string>
     <string name="rename_tag_warning_switch">这将移动到 %1$s 标签页。</string>
     <string name="rename_tag_warning_merge">已存在于 %1$s 中。这将合并所有条目。</string>
+
+    <!-- Google Drive 同步 -->
+    <string name="google_account">Google 账号</string>
+    <string name="connected_label">已连接</string>
+    <string name="link_google_drive">关联 Google Drive</string>
+    <string name="link_google_drive_desc">将日记私密同步到 Google Drive 的安全应用数据文件夹。</string>
+    <string name="sign_in_with_google">使用 Google 登录</string>
+    <string name="journals_private_secure">你的日记是私密且安全的。</string>
+    <string name="privacy_details">隐私详情</string>
+    <string name="google_avatar">Google 头像</string>
+    <string name="linked">已关联</string>
+    <string name="open_folder">打开文件夹</string>
+    <string name="disconnect">断开连接</string>
+    <string name="verifying_connection">正在验证连接…</string>
+    <string name="privacy_data_security">隐私与数据安全</string>
+    <string name="privacy_sheet_desc">Google 在登录时会显示标准提示。以下是你数据的实际情况：</string>
+    <string name="privacy_profile_email">个人资料与邮箱</string>
+    <string name="privacy_profile_email_desc">仅在你的设备上用于显示账号状态。开发者从未查看或收集此信息。</string>
+    <string name="privacy_direct_connection">直连传输</string>
+    <string name="privacy_direct_connection_desc">呢喃直接连接 Google Drive。你的文件不会经过任何第三方或开发者服务器。</string>
+    <string name="privacy_sandboxed_storage">沙盒存储</string>
+    <string name="privacy_sandboxed_storage_desc">呢喃仅限于自己的应用文件夹。无法查看、读取或修改你 Google Drive 中的其他任何文件。</string>
+    <string name="privacy_no_server_tracking">无服务器追踪</string>
+    <string name="privacy_no_server_tracking_desc">我们不运行数据库或服务器。你的思绪完全由你掌控，绝对私密。</string>
+
+    <!-- 同步子页面 -->
+    <string name="enable_cloud_sync">启用云同步</string>
+    <string name="enable_cloud_sync_desc">使用云存储服务在所有设备间同步你的日记。</string>
+    <string name="enable_internet_sync">请启用网络访问以使用云同步。</string>
+    <string name="webdav_configuration">WebDAV 配置</string>
+    <string name="server_url">服务器 URL</string>
+    <string name="server_url_placeholder">https://example.com/dav/user/</string>
+    <string name="username_label">用户名</string>
+    <string name="username_placeholder">你的用户名</string>
+    <string name="password_app_token">密码 / 应用令牌</string>
+    <string name="general_settings">通用设置</string>
+    <string name="automatic_sync">自动同步</string>
+    <string name="automatic_sync_desc">发生变化时立即同步</string>
+    <string name="autosync_wifi_only">仅 Wi-Fi 下自动同步</string>
+    <string name="autosync_wifi_only_desc">避免使用移动数据同步</string>
+    <string name="advanced">高级</string>
+    <string name="advanced_desc">分析与修复工具</string>
+    <string name="analyze_sync">分析同步</string>
+    <string name="analyze_sync_desc">分析云端同步健康状况</string>
+    <string name="repair_sync">修复同步</string>
+    <string name="repair_sync_desc">修复并重新验证同步状态</string>
+    <string name="sync_details">同步详情</string>
+    <string name="review_changes">同步前检查更改</string>
+    <string name="to_upload">待上传</string>
+    <string name="to_download">待下载</string>
+    <string name="to_delete_locally">待本地删除</string>
+    <string name="no_journal_changes">无日记更改</string>
+    <string name="no_media_changes">无媒体更改</string>
+    <string name="analysis_pending">分析待处理</string>
+    <string name="all_caught_up">全部最新</string>
+    <string name="check_for_differences">检查差异</string>
+    <string name="last_successful_sync">上次成功同步</string>
+    <string name="analyzing_cloud_differences">正在分析云端差异…</string>
+    <string name="all_journals_up_to_date">所有日记均为最新</string>
+    <string name="unsynced_changes_detected">检测到未同步的更改</string>
+    <string name="sync_error_prefix">错误：%1$s</string>
+    <string name="merging_changes">正在合并更改（已拉取 %1$d，已推送 %2$d）</string>
+
+    <!-- 备份页面 -->
+    <string name="backup_saved">备份保存成功</string>
+    <string name="backup_failed_save">文件保存失败</string>
+    <string name="restore_complete">恢复完成！</string>
+    <string name="invalid_backup_file">无效或损坏的备份文件</string>
+    <string name="backup_format_old">备份格式太旧</string>
+    <string name="restore_failed">恢复失败：%1$s</string>
+    <string name="backup_page_desc">安全导出你的数据或从之前的备份中恢复</string>
+    <string name="export_data">导出数据</string>
+    <string name="export_data_desc">将日记和媒体保存到安全文件。</string>
+    <string name="restore_data">恢复数据</string>
+    <string name="restore_data_desc">从之前保存的备份文件导入数据。</string>
+    <string name="create_backup_title">创建备份？</string>
+    <string name="include_media">包含媒体</string>
+    <string name="backup_size_warning">备份可能较大。将包含照片和视频。</string>
+    <string name="backup_no_media_warning">不会保存照片和视频。更快更小。</string>
+    <string name="restore_backup_title">恢复备份？</string>
+
+    <!-- 同步页面 -->
+    <string name="enable_internet_for_sync">请启用网络访问以使用云同步。</string>
+    <string name="cloud_sync_page_desc">使用云存储服务在所有设备间同步你的日记。</string>
+    <string name="google_drive">Google Drive</string>
+
+    <!-- WebDAV -->
+    <string name="password_placeholder">••••••••••</string>
+    <string name="hide_password">隐藏密码</string>
+    <string name="show_password">显示密码</string>
+
+    <!-- 同步通用设置 -->
+
+    <!-- 同步高级 -->
+    <string name="analyze_sync_title">分析同步</string>
+    <string name="analyze_sync_subtitle">分析云端同步健康状况</string>
+    <string name="repair_sync_title">修复同步</string>
+    <string name="repair_sync_subtitle">修复并重新验证同步状态</string>
+
+    <!-- 同步状态卡片 -->
+    <string name="sync_required">需要同步</string>
+    <string name="local_cloud_matching">本地与云端一致</string>
+    <string name="journals_media_changes">%1$s 篇日记 &amp; %2$s 个媒体</string>
+    <string name="journals_pending">%1$s 篇日记待处理</string>
+    <string name="media_pending">%1$s 个媒体文件待处理</string>
+
+    <!-- 同步分析 -->
+    <string name="local_label">本地</string>
+    <string name="cloud_label">云端</string>
+    <string name="x_journals">%1$s 篇日记</string>
+    <string name="x_media">%1$s 个媒体</string>
+
+    <!-- 同步详情对话框 -->
+    <string name="journals_tab">日记</string>
+    <string name="media_tab">媒体</string>
+    <string name="to_delete_on_cloud">云端待删除</string>
+
+    <!-- 同步验证 -->
+    <string name="connection_successful">连接成功！</string>
+    <string name="connection_failed">连接失败：%1$s</string>
+    <string name="unexpected_error">意外错误：%1$s</string>
+    <string name="link_google_account_first">请先关联你的 Google 账号</string>
+    <string name="server_url_empty">服务器 URL 不能为空</string>
+    <string name="username_empty">用户名不能为空</string>
+    <string name="password_empty">密码不能为空</string>
+    <string name="fill_webdav_details">请在锁定前填写所有 WebDAV 信息</string>
+    <string name="analysis_failed">分析失败：%1$s</string>
+
+    <!-- 时间线标签 -->
+    <string name="timeline_media">媒体</string>
+    <string name="timeline_music">音乐</string>
+    <string name="timeline_map">地图</string>
+
+    <!-- AI 分析 -->
+    <string name="ai">AI</string>
+    <string name="ai_analysis_title">AI 分析</string>
+    <string name="ai_analysis_desc">用 AI 分析你的日记</string>
+    <string name="ai_settings_title">AI 设置</string>
+    <string name="ai_settings_desc">配置 AI 服务商</string>
+    <string name="ai_api_config">API 配置</string>
+    <string name="ai_api_url_label">API 地址</string>
+    <string name="ai_api_key_label">API 密钥</string>
+    <string name="ai_model_label">模型名称</string>
+    <string name="ai_privacy_title">隐私说明</string>
+    <string name="ai_privacy_notice">你的日记内容将发送至你配置的 AI 服务进行处理。数据将遵循该服务的隐私政策。如需最大隐私保护，建议使用本地模型（如 Ollama）代替云端 API。</string>
+    <string name="ai_test_connection">测试连接</string>
+    <string name="testing">测试中…</string>
+    <string name="show_api_key">显示 API 密钥</string>
+    <string name="hide_api_key">隐藏 API 密钥</string>
+
+    <string name="ai_start_analysis">开始分析</string>
+    <string name="ai_analyzing">分析中…</string>
+    <string name="ai_re_analyze">重新分析</string>
+    <string name="ai_analyzing_entries">正在分析 %1$d 篇日记…</string>
+    <string name="ai_date_range_label">时间范围</string>
+    <string name="ai_range_this_week">本周</string>
+    <string name="ai_range_this_month">本月</string>
+    <string name="ai_range_last_3_months">近三月</string>
+    <string name="ai_range_all">全部</string>
+    <string name="ai_idle_hint">选择时间范围后点击分析，AI 将基于你的日记内容生成心理状态总结和改进建议。</string>
+    <string name="ai_analysis_failed">分析失败</string>
+    <string name="ai_entries_analyzed">基于 %1$d 篇日记</string>
+    <string name="ai_overall_mood">整体情绪</string>
+    <string name="ai_emotion_summary">情绪摘要</string>
+    <string name="ai_key_themes">关键主题</string>
+    <string name="ai_emotional_patterns">情绪模式</string>
+    <string name="ai_cognitive_distortions">认知偏差</string>
+    <string name="ai_suggestions">改进建议</string>
+    <string name="ai_positive_highlights">积极发现</string>
+    <string name="ai_risk_warning">⚠ 风险提醒</string>
+    <string name="ai_trend_improving">改善中</string>
+    <string name="ai_trend_stable">稳定</string>
+    <string name="ai_trend_declining">下降中</string>
+    <string name="ai_disclaimer">此分析由 AI 生成，仅供参考，不构成医疗建议。如你正经历心理困扰，请寻求专业帮助。</string>
 </resources>

@@ -85,7 +85,7 @@ fun SyncScreen() {
                     ) {
                         Icon(
                             painterResource(R.drawable.arrow_back_24px),
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 },
@@ -149,7 +149,7 @@ fun SyncScreen() {
                 ) {
                     SettingSection {
                         SettingsItem(
-                            title = "Enable Cloud Sync",
+                            title = stringResource(R.string.enable_cloud_sync),
                             leadingContent = {
                                 Icon(
                                     painterResource(R.drawable.cloud_off_24px),
@@ -212,7 +212,7 @@ fun SyncScreen() {
                     ) {
                         state.availableProviders.forEach { provider ->
                             val isSelected = state.selectedProvider == provider
-                            val providerDisplayName = if (provider == "GoogleDrive") "Google Drive" else provider
+                            val providerDisplayName = if (provider == "GoogleDrive") stringResource(R.string.google_drive) else provider
                             val iconRes = if (provider == "GoogleDrive") R.drawable.drive_export_24px else R.drawable.cloud_24px
 
                             Surface(
@@ -254,7 +254,7 @@ fun SyncScreen() {
                                         Spacer(modifier = Modifier.width(6.dp))
                                         Icon(
                                             painter = painterResource(R.drawable.check_circle_24px_fill),
-                                            contentDescription = "Active",
+                                            contentDescription = stringResource(R.string.active_label),
                                             modifier = Modifier.size(16.dp),
                                             tint = MaterialTheme.colorScheme.primary
                                         )

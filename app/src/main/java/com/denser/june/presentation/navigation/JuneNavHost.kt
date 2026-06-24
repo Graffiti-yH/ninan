@@ -33,6 +33,8 @@ import com.denser.june.presentation.screens.settings.screens.AboutSettingsScreen
 import com.denser.june.presentation.screens.settings.screens.reminder.ReminderScreen
 import com.denser.june.presentation.screens.settings.screens.sync.SyncScreen
 import com.denser.june.presentation.screens.settings.screens.trash.BinScreen
+import com.denser.june.presentation.screens.ai.AiScreen
+import com.denser.june.presentation.screens.settings.screens.ai.AiSettingsScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -166,6 +168,14 @@ fun JuneNavHost(
         composable<Route.Fonts> { backStackEntry ->
             val args = backStackEntry.toRoute<Route.Fonts>()
             FontSelectionScreen(type = args.type)
+        }
+
+        composable<Route.AiAnalysis> {
+            AiScreen()
+        }
+
+        composable<Route.AiSettings> {
+            AiSettingsScreen()
         }
     }
 }

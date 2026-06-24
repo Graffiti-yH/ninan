@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import com.denser.june.core.R
 import com.denser.june.core.domain.model.enums.LockType
@@ -11,6 +12,7 @@ import com.denser.june.core.domain.model.enums.ThemeMode
 import com.denser.june.presentation.screens.settings.SettingsState
 import com.denser.june.presentation.screens.settings.tiles.*
 import java.time.format.TextStyle
+import java.util.Locale
 import com.denser.june.core.domain.model.enums.TimeFormat
 
 data class SettingsTriggers(
@@ -35,10 +37,18 @@ data class SettingTile(
     val content: @Composable () -> Unit
 )
 
-object SettingsTileRegistry {
-    @Composable
-    fun getTiles(): List<SettingTile> {
-        val appThemeTitle = stringResource(R.string.app_theme)
+	object SettingsTileRegistry {
+	    @Volatile private var cachedTiles: List<SettingTile>? = null
+	    @Volatile private var cachedLocale: Locale? = null
+
+	    @Composable
+	    fun getTiles(): List<SettingTile> {
+	        val currentLocale = LocalConfiguration.current.locales[0]
+	        cachedTiles?.let { tiles ->
+	            if (cachedLocale == currentLocale) return tiles
+	        }
+
+	        val appThemeTitle = stringResource(R.string.app_theme)
         val amoledTitle = stringResource(R.string.amoled)
         val amoledDesc = stringResource(R.string.amoled_desc)
         val materialThemeTitle = stringResource(R.string.material_theme)
@@ -62,6 +72,10 @@ object SettingsTileRegistry {
         val startOfWeekTitle = stringResource(R.string.start_of_week)
         val deleteAllJournalsTitle = stringResource(R.string.delete_all_journals)
         val deleteAllJournalsDesc = stringResource(R.string.delete_all_journals_desc)
+        val aiAnalysisTitle = stringResource(R.string.ai_analysis_title)
+        val aiAnalysisDesc = stringResource(R.string.ai_analysis_desc)
+        val aiSettingsTitle = stringResource(R.string.ai_settings_title)
+        val aiSettingsDesc = stringResource(R.string.ai_settings_desc)
         val appFontTitle = stringResource(R.string.app_font)
         val paletteSelectionTitle = stringResource(R.string.palette_selection)
         val paletteSelectionDesc = stringResource(R.string.palette_selection_desc)
@@ -95,23 +109,7 @@ object SettingsTileRegistry {
         val categorySyncBackup = stringResource(R.string.category_sync_backup)
         val categoryAbout = stringResource(R.string.category_about)
 
-        return remember(
-            appThemeTitle, amoledTitle, amoledDesc, materialThemeTitle,
-            materialThemeDesc, seedColorTitle, seedColorDesc, aboutLibrariesTitle,
-            remindersTitle, remindersDesc, includeTimeTitle, includeTimeDesc,
-            timeFormatTitle, timeFormat12h, timeFormat24h,
-            mapSettingsTitle, mapSettingsDesc, markdownEditorTitle, markdownEnabled, markdownDisabled,
-            startOfWeekTitle, deleteAllJournalsTitle, deleteAllJournalsDesc,
-            appFontTitle, paletteSelectionTitle, paletteSelectionDesc,
-            appLockTitle, appLockCustomPin, appLockScreenLock, appLockNone,
-            screenPrivacyTitle, screenPrivacyDesc, permissionsTitle, permissionsDesc,
-            cloudSyncTitle, cloudSyncDesc, localBackupTitle, localBackupDesc,
-            aboutJuneTitle, aboutJuneDesc, developerProfileTitle, developerName,
-            licenseTitle, licenseDesc, mapCreditsTitle, mapCreditsDesc,
-            changelogTitle, changelogDesc, checkForUpdatesTitle, checkForUpdatesDesc,
-            categoryGeneral, categoryAppearance, categoryPrivacySecurity, categorySyncBackup, categoryAbout
-        ) {
-            listOf(
+        return listOf(
                 SettingTile(
                     key = "REMINDERS",
                     title = remindersTitle,
@@ -167,6 +165,22 @@ object SettingsTileRegistry {
                     category = categoryGeneral,
                     keywords = listOf("delete", "remove", "erase", "all", "journals", "clear"),
                     content = { DeleteAllJournalsTile() }
+                ),
+                SettingTile(
+                    key = "AI_ANALYSIS",
+                    title = aiAnalysisTitle,
+                    subtitle = { _, _ -> aiAnalysisDesc },
+                    category = categoryGeneral,
+                    keywords = listOf("ai", "analysis", "psychology", "mood", "emotion", "cbt", "mental", "analyze", "心理", "分析", "情绪"),
+                    content = { AiAnalysisTile() }
+                ),
+                SettingTile(
+                    key = "AI_SETTINGS",
+                    title = aiSettingsTitle,
+                    subtitle = { _, _ -> aiSettingsDesc },
+                    category = categoryGeneral,
+                    keywords = listOf("ai", "api", "openai", "key", "model", "配置", "接口", "密钥"),
+                    content = { AiSettingsTile() }
                 ),
                 SettingTile(
                     key = "APP_THEME",
@@ -318,7 +332,9 @@ object SettingsTileRegistry {
                     keywords = listOf("update", "check", "version", "github", "playstore", "latest"),
                     content = { CheckForUpdatesTile() }
                 ),
-            )
+            ).also { tiles ->
+            cachedTiles = tiles
+            cachedLocale = currentLocale
         }
     }
 

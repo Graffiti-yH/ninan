@@ -17,6 +17,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,9 +62,9 @@ fun BackupScreen() {
                     context.contentResolver.openOutputStream(targetUri)?.use { output ->
                         tempFile.inputStream().use { input -> input.copyTo(output) }
                     }
-                    Toast.makeText(context, "Backup saved successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.backup_saved), Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Toast.makeText(context, "Failed to save file", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.backup_failed_save), Toast.LENGTH_SHORT).show()
                 } finally {
                     onAction(SettingsAction.ResetBackup)
                 }
@@ -89,16 +90,16 @@ fun BackupScreen() {
     LaunchedEffect(state.restoreState) {
         when (state.restoreState) {
             is RestoreState.Restored -> {
-                Toast.makeText(context, "Restore Complete!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.restore_complete), Toast.LENGTH_SHORT).show()
                 onAction(SettingsAction.ResetBackup)
             }
 
             is RestoreState.Failure -> {
                 val errorMsg = when (state.restoreState.exception) {
-                    RestoreFailedException.InvalidFile -> "Invalid or Corrupted Backup File"
-                    RestoreFailedException.OldSchema -> "Backup format is too old"
+                    RestoreFailedException.InvalidFile -> context.getString(R.string.invalid_backup_file)
+                    RestoreFailedException.OldSchema -> context.getString(R.string.backup_format_old)
                 }
-                Toast.makeText(context, "Restore Failed: $errorMsg", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.restore_failed, errorMsg), Toast.LENGTH_LONG).show()
                 onAction(SettingsAction.ResetBackup)
             }
 
@@ -139,7 +140,7 @@ fun BackupScreen() {
                 modifier = Modifier.padding(horizontal = 24.dp)
             ) {
                 Text(
-                    text = "Securely export your data or restore from a previous backup",
+                    text = stringResource(R.string.backup_page_desc),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -152,7 +153,7 @@ fun BackupScreen() {
             ) {
                 SettingSection {
                     SettingsItem(
-                        title = "Export Data",
+                        title = stringResource(R.string.export_data),
                         subtitle = "Save your journals and media to a secure file.",
                         leadingContent = {
                             Icon(
@@ -191,7 +192,7 @@ fun BackupScreen() {
                     }
 
                     SettingsItem(
-                        title = "Restore Data",
+                        title = stringResource(R.string.restore_data),
                         subtitle = "Import data from a previously saved backup file.",
                         leadingContent = {
                             Icon(
@@ -240,7 +241,7 @@ fun BackupScreen() {
     if (showExportDialog) {
         JuneDialog(
             onDismissRequest = { showExportDialog = false },
-            title = "Create Backup?",
+            title = stringResource(R.string.create_backup_title),
             icon = R.drawable.upload_24px,
             confirmButton = {
                 Button(
@@ -265,7 +266,7 @@ fun BackupScreen() {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Include Media",
+                            text = stringResource(R.string.include_media),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Medium
                         )
@@ -290,7 +291,7 @@ fun BackupScreen() {
     if (showRestoreWarning != null) {
         JuneDialog(
             onDismissRequest = { showRestoreWarning = null },
-            title = "Restore Backup?",
+            title = stringResource(R.string.restore_backup_title),
             icon = R.drawable.cloud_sync_24px,
             confirmButton = {
                 Button(

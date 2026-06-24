@@ -10,10 +10,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.domain.model.Journal
+import com.denser.june.core.R
 import com.denser.june.presentation.screens.home.timeline.TimelineTab
 import com.denser.june.presentation.components.JunePlaceholderPage
 
@@ -44,7 +47,7 @@ fun TimelineTabs(
                         onClick = { onTabSelected(tab) },
                         text = {
                             Text(
-                                text = tab.label,
+                                text = stringResource(tab.labelRes),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )

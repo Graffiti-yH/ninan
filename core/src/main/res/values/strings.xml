@@ -421,4 +421,178 @@
     <string name="delete_tag_warning_desc">This will remove the tag from all entries. The entries themselves won\'t be deleted.</string>
     <string name="rename_tag_warning_switch">This will move to the %1$s tab.</string>
     <string name="rename_tag_warning_merge">Already exists in %1$s. This will merge all entries.</string>
+
+    <!-- Google Drive Sync -->
+    <string name="google_account">Google Account</string>
+    <string name="connected_label">Connected</string>
+    <string name="link_google_drive">Link Google Drive</string>
+    <string name="link_google_drive_desc">Sync journals privately to a secure app-data folder on your Google Drive.</string>
+    <string name="sign_in_with_google">Sign In with Google</string>
+    <string name="journals_private_secure">Your journals are private &amp; secure.</string>
+    <string name="privacy_details">Privacy Details</string>
+    <string name="google_avatar">Google Avatar</string>
+    <string name="linked">Linked</string>
+    <string name="open_folder">Open folder</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="verifying_connection">Verifying connection…</string>
+    <string name="privacy_data_security">Privacy &amp; Data Security</string>
+    <string name="privacy_sheet_desc">Google shows standard alerts when signing in. Here is what actually happens with your data:</string>
+    <string name="privacy_profile_email">Profile &amp; Email</string>
+    <string name="privacy_profile_email_desc">Used solely on your device to display your account status. The developer never sees or collects this info.</string>
+    <string name="privacy_direct_connection">Direct Connection</string>
+    <string name="privacy_direct_connection_desc">呢喃 connects directly to Google Drive. Your files never pass through any third-party or developer servers.</string>
+    <string name="privacy_sandboxed_storage">Sandboxed Storage</string>
+    <string name="privacy_sandboxed_storage_desc">呢喃 is restricted to its own app folder. It cannot see, read, or modify any other files in your Google Drive.</string>
+    <string name="privacy_no_server_tracking">No Server Tracking</string>
+    <string name="privacy_no_server_tracking_desc">We don\'t run databases or servers. Your thoughts remain entirely under your control and completely private.</string>
+
+    <!-- Sync Sub-screens -->
+    <string name="enable_cloud_sync">Enable Cloud Sync</string>
+    <string name="enable_cloud_sync_desc">Keep your journals in sync across all your devices using a cloud storage provider.</string>
+    <string name="enable_internet_sync">Enable internet access to use cloud sync.</string>
+    <string name="webdav_configuration">WebDAV Configuration</string>
+    <string name="server_url">Server URL</string>
+    <string name="server_url_placeholder">https://example.com/dav/user/</string>
+    <string name="username_label">Username</string>
+    <string name="username_placeholder">your-username</string>
+    <string name="password_app_token">Password / App Token</string>
+    <string name="general_settings">General Settings</string>
+    <string name="automatic_sync">Automatic Sync</string>
+    <string name="automatic_sync_desc">Sync changes as they happen</string>
+    <string name="autosync_wifi_only">Auto-sync on Wi-Fi only</string>
+    <string name="autosync_wifi_only_desc">Avoid syncing over mobile data</string>
+    <string name="advanced">Advanced</string>
+    <string name="advanced_desc">Analysis &amp; repair tools</string>
+    <string name="analyze_sync">Analyze Sync</string>
+    <string name="analyze_sync_desc">Analyze cloud sync health</string>
+    <string name="repair_sync">Repair Sync</string>
+    <string name="repair_sync_desc">Repair and revalidate sync state</string>
+    <string name="sync_details">Sync Details</string>
+    <string name="review_changes">Review changes before syncing</string>
+    <string name="to_upload">To Upload</string>
+    <string name="to_download">To Download</string>
+    <string name="to_delete_locally">To Delete Locally</string>
+    <string name="no_journal_changes">No journal changes</string>
+    <string name="no_media_changes">No media changes</string>
+    <string name="analysis_pending">Analysis pending</string>
+    <string name="all_caught_up">All caught up</string>
+    <string name="check_for_differences">Check for differences</string>
+    <string name="last_successful_sync">Last successful sync</string>
+    <string name="analyzing_cloud_differences">Analyzing cloud differences…</string>
+    <string name="all_journals_up_to_date">All journals are up to date</string>
+    <string name="unsynced_changes_detected">Unsynced changes detected</string>
+    <string name="sync_error_prefix">Error: %1$s</string>
+    <string name="merging_changes">Merging changes (%1$d pulled, %2$d pushed)</string>
+
+    <!-- Backup Screen -->
+    <string name="backup_saved">Backup saved successfully</string>
+    <string name="backup_failed_save">Failed to save file</string>
+    <string name="restore_complete">Restore Complete!</string>
+    <string name="invalid_backup_file">Invalid or Corrupted Backup File</string>
+    <string name="backup_format_old">Backup format is too old</string>
+    <string name="restore_failed">Restore Failed: %1$s</string>
+    <string name="backup_page_desc">Securely export your data or restore from a previous backup</string>
+    <string name="export_data">Export Data</string>
+    <string name="export_data_desc">Save your journals and media to a secure file.</string>
+    <string name="restore_data">Restore Data</string>
+    <string name="restore_data_desc">Import data from a previously saved backup file.</string>
+    <string name="create_backup_title">Create Backup?</string>
+    <string name="include_media">Include Media</string>
+    <string name="backup_size_warning">Backup size might be large. Photos &amp; videos will be included.</string>
+    <string name="backup_no_media_warning">Photos &amp; videos will not be saved. Faster and smaller.</string>
+    <string name="restore_backup_title">Restore Backup?</string>
+
+    <!-- Sync Screen -->
+    <string name="enable_internet_for_sync">Enable internet access to use cloud sync.</string>
+    <string name="cloud_sync_page_desc">Keep your journals in sync across all your devices using a cloud storage provider.</string>
+    <string name="google_drive">Google Drive</string>
+
+    <!-- WebDAV -->
+    <string name="password_placeholder">••••••••••</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+
+    <!-- Sync General Settings -->
+
+    <!-- Sync Advanced -->
+    <string name="analyze_sync_title">Analyze Sync</string>
+    <string name="analyze_sync_subtitle">Analyze cloud sync health</string>
+    <string name="repair_sync_title">Repair Sync</string>
+    <string name="repair_sync_subtitle">Repair and revalidate sync state</string>
+
+    <!-- Sync Status Card -->
+    <string name="sync_required">Sync required</string>
+    <string name="local_cloud_matching">Local &amp; cloud are matching</string>
+    <string name="journals_media_changes">%1$s journals &amp; %2$s media</string>
+    <string name="journals_pending">%1$s journals pending</string>
+    <string name="media_pending">%1$s media files pending</string>
+
+    <!-- Sync Analysis -->
+    <string name="local_label">Local</string>
+    <string name="cloud_label">Cloud</string>
+    <string name="x_journals">%1$s Journals</string>
+    <string name="x_media">%1$s Media</string>
+
+    <!-- Sync Details Dialog -->
+    <string name="journals_tab">Journals</string>
+    <string name="media_tab">Media</string>
+    <string name="to_delete_on_cloud">To Delete on Cloud</string>
+
+    <!-- Sync Validation -->
+    <string name="connection_successful">Connection successful!</string>
+    <string name="connection_failed">Connection failed: %1$s</string>
+    <string name="unexpected_error">Unexpected error: %1$s</string>
+    <string name="link_google_account_first">Please link your Google Account first</string>
+    <string name="server_url_empty">Server URL cannot be empty</string>
+    <string name="username_empty">Username cannot be empty</string>
+    <string name="password_empty">Password cannot be empty</string>
+    <string name="fill_webdav_details">Please fill all WebDAV details before locking</string>
+    <string name="analysis_failed">Analysis failed: %1$s</string>
+
+    <!-- Timeline Tabs -->
+    <string name="timeline_media">Media</string>
+    <string name="timeline_music">Music</string>
+    <string name="timeline_map">Map</string>
+
+    <!-- AI Analysis -->
+    <string name="ai">AI</string>
+    <string name="ai_analysis_title">AI Analysis</string>
+    <string name="ai_analysis_desc">Analyze your diary with AI</string>
+    <string name="ai_settings_title">AI Settings</string>
+    <string name="ai_settings_desc">Configure AI API provider</string>
+    <string name="ai_api_config">API Configuration</string>
+    <string name="ai_api_url_label">API URL</string>
+    <string name="ai_api_key_label">API Key</string>
+    <string name="ai_model_label">Model</string>
+    <string name="ai_privacy_title">Privacy</string>
+    <string name="ai_privacy_notice">Your diary entries will be sent to the AI service you configure. Data is processed according to the service\'s privacy policy. For maximum privacy, consider using a local model (e.g. Ollama) instead of cloud APIs.</string>
+    <string name="ai_test_connection">Test Connection</string>
+    <string name="testing">Testing…</string>
+    <string name="show_api_key">Show API key</string>
+    <string name="hide_api_key">Hide API key</string>
+
+    <string name="ai_start_analysis">Start Analysis</string>
+    <string name="ai_analyzing">Analyzing…</string>
+    <string name="ai_re_analyze">Re-analyze</string>
+    <string name="ai_analyzing_entries">Analyzing %1$d journal entries…</string>
+    <string name="ai_date_range_label">Date Range</string>
+    <string name="ai_range_this_week">This Week</string>
+    <string name="ai_range_this_month">This Month</string>
+    <string name="ai_range_last_3_months">Last 3 Months</string>
+    <string name="ai_range_all">All Time</string>
+    <string name="ai_idle_hint">Select a date range and start analysis to get a psychological summary and suggestions based on your diary entries.</string>
+    <string name="ai_analysis_failed">Analysis failed</string>
+    <string name="ai_entries_analyzed">Based on %1$d journal entries</string>
+    <string name="ai_overall_mood">Overall Mood</string>
+    <string name="ai_emotion_summary">Emotion Summary</string>
+    <string name="ai_key_themes">Key Themes</string>
+    <string name="ai_emotional_patterns">Emotional Patterns</string>
+    <string name="ai_cognitive_distortions">Cognitive Distortions</string>
+    <string name="ai_suggestions">Suggestions</string>
+    <string name="ai_positive_highlights">Positive Highlights</string>
+    <string name="ai_risk_warning">⚠ Risk Warning</string>
+    <string name="ai_trend_improving">Improving</string>
+    <string name="ai_trend_stable">Stable</string>
+    <string name="ai_trend_declining">Declining</string>
+    <string name="ai_disclaimer">This analysis is generated by AI and is for informational purposes only. It does not constitute medical advice. If you are experiencing distress, please seek professional help.</string>
 </resources>

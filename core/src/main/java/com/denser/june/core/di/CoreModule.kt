@@ -41,7 +41,11 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import android.content.Context
+import com.denser.june.core.data.preferences.AiPreferencesImpl
 import com.denser.june.core.data.remote.InternetInterceptor
+import com.denser.june.core.data.repository.AiRepositoryImpl
+import com.denser.june.core.domain.preferences.AiPreferences
+import com.denser.june.core.domain.repository.AiRepository
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -64,17 +68,21 @@ val coreModule = module {
     single { PrivacyPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<PrivacyPreferences>()
     single { FontPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<FontPreferences>()
     single { JournalPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<JournalPreferences>()
-
+    single { AiPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<AiPreferences>()
+    
     single {
         OkHttpClient.Builder()
             .addInterceptor(InternetInterceptor(get()))
             .build()
     }
-    single {
-        val json = Json {
+    single(named("DefaultJson")) {
+        Json {
             ignoreUnknownKeys = true
             coerceInputValues = true
         }
+    }
+    single {
+        val json = get<Json>(named("DefaultJson"))
         val contentType = "application/json".toMediaType()
 
         Retrofit.Builder()
@@ -89,6 +97,7 @@ val coreModule = module {
     singleOf(::DeezerFetcher)
     singleOf(::ItunesFetcher)
     singleOf(::SongRepositoryImpl).bind<SongRepository>()
+    single { AiRepositoryImpl(get(), get(), get<Json>(named("DefaultJson"))) }.bind<AiRepository>()
 
     single { SyncPreferencesImpl(get(named("PreferencesDataStore"))) }.bind<SyncPreferences>()
     single<CloudProvider>(named("WebDAV")) { WebDAVProvider(get(), get(), get()) }

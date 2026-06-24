@@ -18,6 +18,7 @@ import com.denser.june.presentation.screens.home.timeline.TimelineVM
 import com.denser.june.presentation.screens.settings.screens.sync.SyncVM
 import com.denser.june.presentation.screens.settings.screens.trash.BinVM
 import com.denser.june.presentation.screens.settings.screens.reminder.ReminderVM
+import com.denser.june.presentation.screens.ai.AiVM
 import com.denser.june.presentation.utils.StartupManager
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
@@ -56,6 +57,7 @@ val juneModules = module {
     viewModelOf(::BinVM)
     viewModelOf(::SyncVM)
     viewModelOf(::ReminderVM)
+    viewModelOf(::AiVM)
 
     singleOf(::JuneNavigator)
     single<AppNavigator> { get<JuneNavigator>() }

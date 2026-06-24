@@ -112,6 +112,18 @@ fun GeneralSettingsScreen() {
                     }
                 }
 
+                val aiTiles = listOfNotNull(
+                    generalTiles["AI_ANALYSIS"],
+                    generalTiles["AI_SETTINGS"]
+                )
+                if (aiTiles.isNotEmpty()) {
+                    item {
+                        SettingSection(title = stringResource(R.string.ai)) {
+                            aiTiles.forEach { it.content() }
+                        }
+                    }
+                }
+
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
                 }

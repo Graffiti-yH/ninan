@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.denser.june.core.R
@@ -83,10 +84,10 @@ fun GoogleDriveConfigSection(
     }
 
     val accountEmail = remember(isConnected) {
-        GoogleSignIn.getLastSignedInAccount(context)?.email ?: "Google Account"
+        GoogleSignIn.getLastSignedInAccount(context)?.email ?: context.getString(R.string.google_account)
     }
     val accountName = remember(isConnected) {
-        GoogleSignIn.getLastSignedInAccount(context)?.displayName ?: "Connected"
+        GoogleSignIn.getLastSignedInAccount(context)?.displayName ?: context.getString(R.string.connected_label)
     }
     val accountAvatar = remember(isConnected) {
         GoogleSignIn.getLastSignedInAccount(context)?.photoUrl?.toString()
@@ -114,7 +115,7 @@ fun GoogleDriveConfigSection(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.add_to_drive_24px),
-                        contentDescription = "Link Google Drive",
+                        contentDescription = stringResource(R.string.link_google_drive),
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -124,13 +125,13 @@ fun GoogleDriveConfigSection(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Link Google Drive",
+                            text = stringResource(R.string.link_google_drive),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Sync journals privately to a secure app-data folder on your Google Drive.",
+                            text = stringResource(R.string.link_google_drive_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(horizontal = 16.dp),
@@ -147,7 +148,7 @@ fun GoogleDriveConfigSection(
                         shape = RoundedCornerShape(12.dp),
                         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
                     ) {
-                        Text("Sign In with Google")
+                        Text(stringResource(R.string.sign_in_with_google))
                     }
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -163,13 +164,13 @@ fun GoogleDriveConfigSection(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Your journals are private & secure.",
+                            text = stringResource(R.string.journals_private_secure),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Icon(
                             painter = painterResource(R.drawable.info_24px),
-                            contentDescription = "Privacy Details",
+                            contentDescription = stringResource(R.string.privacy_details),
                             modifier = Modifier.size(18.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -196,7 +197,7 @@ fun GoogleDriveConfigSection(
                             if (accountAvatar != null) {
                                 AsyncImage(
                                     model = accountAvatar,
-                                    contentDescription = "Google Avatar",
+                                    contentDescription = stringResource(R.string.google_avatar),
                                     modifier = Modifier
                                         .size(40.dp)
                                         .clip(CircleShape),
@@ -205,7 +206,7 @@ fun GoogleDriveConfigSection(
                             } else {
                                 Icon(
                                     painter = painterResource(R.drawable.drive_export_24px),
-                                    contentDescription = "Linked",
+                                    contentDescription = stringResource(R.string.linked),
                                     modifier = Modifier.size(36.dp),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
@@ -238,7 +239,7 @@ fun GoogleDriveConfigSection(
                                  ) {
                                      Icon(
                                          painter = painterResource(R.drawable.settings_24px),
-                                         contentDescription = "Settings",
+                                         contentDescription = stringResource(R.string.settings),
                                          modifier = Modifier.size(18.dp)
                                      )
                                  }
@@ -255,7 +256,7 @@ fun GoogleDriveConfigSection(
                                          val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
                                          DropdownMenuItem(
                                              modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                             text = { Text("Open folder", style = MaterialTheme.typography.labelLarge) },
+                                                 text = { Text(stringResource(R.string.open_folder), style = MaterialTheme.typography.labelLarge) },
                                              onClick = {
                                                  showMenu = false
                                                  uriHandler.openUri(folderUrl!!)
@@ -271,7 +272,7 @@ fun GoogleDriveConfigSection(
                                      }
                                      DropdownMenuItem(
                                          modifier = Modifier.clip(RoundedCornerShape(16.dp)),
-                                         text = { Text("Disconnect", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.error) },
+                                         text = { Text(stringResource(R.string.disconnect), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.error) },
                                          onClick = {
                                              showMenu = false
                                              coroutineScope.launch {
@@ -305,7 +306,7 @@ fun GoogleDriveConfigSection(
                                     color = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Verifying connection...")
+                                Text(stringResource(R.string.verifying_connection))
                             } else {
                                 Icon(
                                     painter = painterResource(R.drawable.backup_24px),
@@ -313,7 +314,7 @@ fun GoogleDriveConfigSection(
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
-                                Text("Test Connection")
+                                Text(stringResource(R.string.test_connection))
                             }
                         }
                     }
@@ -332,7 +333,7 @@ fun GoogleDriveConfigSection(
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Syncing...")
+                        Text(stringResource(R.string.syncing))
                     } else {
                         Icon(
                             painter = painterResource(R.drawable.sync_24px),
@@ -340,7 +341,7 @@ fun GoogleDriveConfigSection(
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text("Sync Now", style = MaterialTheme.typography.labelLarge)
+                        Text(stringResource(R.string.sync_now), style = MaterialTheme.typography.labelLarge)
                     }
                 }
             }
@@ -377,7 +378,7 @@ fun GoogleDrivePrivacyBottomSheet(
         ) {
             item {
                 Text(
-                    text = "Privacy & Data Security",
+                    text = stringResource(R.string.privacy_data_security),
                     style = typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = colorScheme.onSurface,
@@ -387,7 +388,7 @@ fun GoogleDrivePrivacyBottomSheet(
                         .padding(top = 8.dp, bottom = 4.dp)
                 )
                 Text(
-                    text = "Google shows standard alerts when signing in. Here is what actually happens with your data:",
+                    text = stringResource(R.string.privacy_sheet_desc),
                     style = typography.bodyMedium,
                     color = colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -400,32 +401,32 @@ fun GoogleDrivePrivacyBottomSheet(
             item {
                 PrivacyItem(
                     iconRes = R.drawable.person_24px,
-                    title = "Profile & Email",
-                    description = "Used solely on your device to display your account status. The developer never sees or collects this info."
+                    title = stringResource(R.string.privacy_profile_email),
+                    description = stringResource(R.string.privacy_profile_email_desc)
                 )
             }
 
             item {
                 PrivacyItem(
                     iconRes = R.drawable.sync_24px,
-                    title = "Direct Connection",
-                    description = "June connects directly to Google Drive. Your files never pass through any third-party or developer servers."
+                    title = stringResource(R.string.privacy_direct_connection),
+                    description = stringResource(R.string.privacy_direct_connection_desc)
                 )
             }
 
             item {
                 PrivacyItem(
                     iconRes = R.drawable.folder_open_24px,
-                    title = "Sandboxed Storage",
-                    description = "June is restricted to its own app folder. It cannot see, read, or modify any other files in your Google Drive."
+                    title = stringResource(R.string.privacy_sandboxed_storage),
+                    description = stringResource(R.string.privacy_sandboxed_storage_desc)
                 )
             }
 
             item {
                 PrivacyItem(
                     iconRes = R.drawable.security_24px,
-                    title = "No Server Tracking",
-                    description = "We don't run databases or servers. Your thoughts remain entirely under your control and completely private."
+                    title = stringResource(R.string.privacy_no_server_tracking),
+                    description = stringResource(R.string.privacy_no_server_tracking_desc)
                 )
             }
 

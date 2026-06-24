@@ -187,6 +187,18 @@ fun SettingsScreen() {
                                     onClick = { navigator.navigateTo(Route.SyncBackupSettings) }
                                 )
                                 CategorySettingsItem(
+                                    title = stringResource(R.string.ai_analysis_title),
+                                    subtitle = stringResource(R.string.ai_analysis_desc),
+                                    leadingContent = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.track_changes_24px),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.secondary
+                                        )
+                                    },
+                                    onClick = { navigator.navigateTo(Route.AiAnalysis) }
+                                )
+                                CategorySettingsItem(
                                     title = stringResource(R.string.bin),
                                     subtitle = stringResource(R.string.bin_desc),
                                     leadingContent = {

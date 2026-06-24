@@ -64,7 +64,7 @@ fun WebDavConfigSection(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "WebDAV Configuration",
+                        text = stringResource(R.string.webdav_configuration),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
@@ -96,8 +96,8 @@ fun WebDavConfigSection(
                 JuneTextField(
                     value = webDavUrl,
                     onValueChange = onUrlChange,
-                    label = "Server URL",
-                    placeholder = "https://example.com/dav/user/",
+                    label = stringResource(R.string.server_url),
+                    placeholder = stringResource(R.string.server_url_placeholder),
                     leadingIcon = R.drawable.link_24px,
                     keyboardType = KeyboardType.Uri,
                     enabled = !isAnyBusy && !isConfigLocked,
@@ -106,8 +106,8 @@ fun WebDavConfigSection(
                 JuneTextField(
                     value = webDavUser,
                     onValueChange = onUserChange,
-                    label = "Username",
-                    placeholder = "your-username",
+                    label = stringResource(R.string.username_label),
+                    placeholder = stringResource(R.string.username_placeholder),
                     leadingIcon = R.drawable.person_24px,
                     enabled = !isAnyBusy && !isConfigLocked,
                     errorText = userError
@@ -115,8 +115,8 @@ fun WebDavConfigSection(
                 JuneTextField(
                     value = webDavPass,
                     onValueChange = onPassChange,
-                    label = "Password / App Token",
-                    placeholder = "••••••••••",
+                    label = stringResource(R.string.password_app_token),
+                    placeholder = stringResource(R.string.password_placeholder),
                     leadingIcon = R.drawable.lock_24px,
                     keyboardType = KeyboardType.Password,
                     enabled = !isAnyBusy && !isConfigLocked,
@@ -129,7 +129,7 @@ fun WebDavConfigSection(
                         ) {
                             Icon(
                                 painterResource(if (passVisible) R.drawable.visibility_24px else R.drawable.visibility_off_24px),
-                                contentDescription = if (passVisible) "Hide password" else "Show password",
+                                contentDescription = if (passVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                                 modifier = Modifier.size(20.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )

@@ -90,12 +90,13 @@ fun TimelineCalendarPage(
                             )
 
                             Box(modifier = Modifier.weight(1f)) {
+                                val clickAction = remember(date) { { onDateSelected(date) } }
                                 CalendarDayTile(
                                     date = date,
                                     entryCount = count,
                                     emoji = emoji,
                                     shape = dynamicShape,
-                                    onClick = { onDateSelected(date) }
+                                    onClick = clickAction
                                 )
                             }
                         } else {

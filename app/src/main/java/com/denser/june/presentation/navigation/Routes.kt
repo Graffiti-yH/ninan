@@ -77,4 +77,10 @@ sealed interface Route {
 
     @Serializable
     data object MapSettings : Route
+
+    @Serializable
+    data object AiAnalysis : Route
+
+    @Serializable
+    data object AiSettings : Route
 }
