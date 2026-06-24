@@ -595,4 +595,14 @@
     <string name="ai_trend_stable">稳定</string>
     <string name="ai_trend_declining">下降中</string>
     <string name="ai_disclaimer">此分析由 AI 生成，仅供参考，不构成医疗建议。如你正经历心理困扰，请寻求专业帮助。</string>
+    <string name="ai_analysis_standard">分析标准</string>
+    <string name="ai_standard_intro">AI 分析基于成熟的心理学框架，主要以认知行为疗法（CBT）为核心。以下是分析涵盖的内容：</string>
+    <string name="ai_standard_framework_title">📋 分析框架</string>
+    <string name="ai_standard_framework_desc">认知行为疗法（CBT）关注思维、情绪和行为之间的关系。AI 识别日记中的重复模式，基于这一循证方法提供洞察。</string>
+    <string name="ai_standard_dimensions_title">📊 分析维度</string>
+    <string name="ai_standard_dimensions_desc">• 整体情绪 — 总结主导情绪状态\n• 关键主题 — 生活中反复出现的主题和关注点\n• 情绪模式 — 情绪的典型发展方式\n• 认知偏差 — 非适应性的思维模式（见下文）\n• 改进建议 — 基于 CBT 的可行步骤\n• 积极发现 — 观察到的优势和积极面</string>
+    <string name="ai_standard_distortions_title">⚠️ 认知偏差监测</string>
+    <string name="ai_standard_distortions_desc">• 灾难化思维 — 假设最坏情况会发生\n• 非黑即白 — 认为事情全好或全坏\n• 过度概括 — 从单一事件得出广泛结论\n• 过度自责 — 对外部事件承担过多责任\n• 应该陈述 — 对事情"应该"如何的僵化规则\n• 情绪推理 — 认为感受就是事实\n• 贴标签 — 给自己或他人贴上全局负面标签\n• 读心术 — 假设你知道他人的想法</string>
+    <string name="ai_standard_trend_title">📈 情绪趋势指标</string>
+    <string name="ai_standard_trend_desc">• 改善中 — 情绪状态在该时间段内积极转变\n• 稳定 — 情绪状态一致\n• 下降中 — 出现越来越多的困扰或负面模式\n\n风险提醒：当 AI 检测到严重困扰迹象（自残、自杀意念）时，会显示显著的警告提示。</string>
 </resources>

@@ -32,6 +32,7 @@ fun AiScreen() {
     val state by vm.state.collectAsStateWithLifecycle()
     val navigator = koinInject<AppNavigator>()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    var showStandardDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -49,6 +50,12 @@ fun AiScreen() {
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showStandardDialog = true }) {
+                        Icon(
+                            painter = painterResource(R.drawable.info_24px),
+                            contentDescription = stringResource(R.string.ai_analysis_standard)
+                        )
+                    }
                     IconButton(onClick = { navigator.navigateTo(Route.AiSettings) }) {
                         Icon(
                             painter = painterResource(R.drawable.track_changes_24px),
@@ -142,6 +149,99 @@ fun AiScreen() {
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
+
+    if (showStandardDialog) {
+        AiStandardDialog(onDismiss = { showStandardDialog = false })
+    }
+}
+
+@Composable
+private fun AiStandardDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(R.drawable.info_24px),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.ai_analysis_standard))
+            }
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = stringResource(R.string.ai_standard_intro),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // CBT Framework
+                Text(
+                    text = stringResource(R.string.ai_standard_framework_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(R.string.ai_standard_framework_desc),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // Analysis Dimensions
+                Text(
+                    text = stringResource(R.string.ai_standard_dimensions_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(R.string.ai_standard_dimensions_desc),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // Cognitive Distortions
+                Text(
+                    text = stringResource(R.string.ai_standard_distortions_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = stringResource(R.string.ai_standard_distortions_desc),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // Mood Trend
+                Text(
+                    text = stringResource(R.string.ai_standard_trend_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(R.string.ai_standard_trend_desc),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                // Disclaimer
+                Divider()
+                Text(
+                    text = stringResource(R.string.ai_disclaimer),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.got_it))
+            }
+        }
+    )
 }
 
 @Composable
