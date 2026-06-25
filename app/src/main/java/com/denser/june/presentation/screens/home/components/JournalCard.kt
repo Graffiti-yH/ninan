@@ -39,7 +39,7 @@ fun JournalCard(
     onLongClick: (() -> Unit)? = null
 ) {
     val viewModel: JournalsVM = koinViewModel()
-    val navigator = koinInject<AppNavigator>()
+    val navigator: AppNavigator = koinInject()
 
     val mediaOperations = MediaOperations(onMediaClick = null)
 
@@ -147,7 +147,7 @@ fun RecentJournalCard(
         )
     } else {
         val viewModel: JournalsVM = koinViewModel()
-        val navigator = koinInject<AppNavigator>()
+        val navigator: AppNavigator = koinInject()
 
         val displayImages = remember(journal.images) {
             journal.images.reversed().take(3)

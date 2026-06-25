@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import org.koin.compose.koinInject
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,9 +80,16 @@ fun JournalMediaItem(
 
     val showVideoPlayer = isVideo && enablePlayback
 
+    val okHttpClient = koinInject<okhttp3.OkHttpClient>()
     val imageLoader = remember {
         ImageLoader.Builder(context)
+            .callFactory(okHttpClient)
             .components { add(VideoFrameDecoder.Factory()) }
+            .memoryCache {
+                coil.memory.MemoryCache.Builder(context)
+                    .maxSizePercent(0.15)
+                    .build()
+            }
             .build()
     }
     val shouldShowMoveToFront = path != operations.frontMediaPath
@@ -124,7 +132,10 @@ fun JournalMediaItem(
             )
         } else {
             AsyncImage(
-                model = File(path),
+                model = coil.request.ImageRequest.Builder(context)
+                    .data(File(path))
+                    .size(coil.size.Size(1024, 1024))
+                    .build(),
                 imageLoader = imageLoader,
                 contentDescription = null,
                 modifier = Modifier
