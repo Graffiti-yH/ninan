@@ -15,12 +15,12 @@ plugins {
 val appName = "June"
 val appId = "com.denser.june"
 val appNamespace = "com.denser.june"
-val apkNamePrefix = "june"
+val apkNamePrefix = "呢喃"
 
 val versionMajor = 1
 val versionMinor = 0
-val versionPatch = 5
-val appVersionCode = 18
+val versionPatch = 6
+val appVersionCode = 19
 val appVersionName = "$versionMajor.$versionMinor.$versionPatch"
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
